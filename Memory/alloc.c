@@ -4,37 +4,82 @@
 
 MemoryManager mgr;
 
-void InitMemory()
+void InitMemory() 
 {
-    mgr.free = MEMPOOL;
+    mgr.freeBlocks = (MemoryBlock*)mgr.memory;
+    mgr.freeBlocks->next = NULL;
+    mgr.freeBlocks->size = MEMPOOL - BLOCK_SIZE;
+    mgr.freeBlocks->used = 0;
 }
 
-void* AllocateMemory(DWORD size)
+void* AllocateMemory(DWORD size) 
 {
-    if (size == 0 || size > mgr.free) 
+    MemoryBlock* block = mgr.freeBlocks;
+    MemoryBlock* prev = NULL;
+
+    size = (size + BLOCK_SIZE - 1) / BLOCK_SIZE * BLOCK_SIZE;
+
+    while (block) 
     {
-        return 0x00;
+        if (!block->used && block->size >= size) 
+        {
+            if (block->size > size + BLOCK_SIZE) 
+            {
+                MemoryBlock* newBlock = (MemoryBlock*)((BYTE*)block + BLOCK_SIZE + size);
+                newBlock->size = block->size - size - BLOCK_SIZE;
+                newBlock->used = 0;
+                newBlock->next = block->next;
+
+                block->next = newBlock;
+                block->size = size;
+            }
+
+            block->used = 1;
+            return (BYTE*)block + BLOCK_SIZE;
+        }
+
+        prev = block;
+        block = block->next;
     }
 
-    void* ptr = mgr.memory + (MEMPOOL - mgr.free);
-    mgr.free -= size;
-
-    /*
-    Print("Allocation Size: ", 0x0F);
-    PrintInt(size, 0x0C);
-    Print("Address: ", 0x0F);
-    PrintInt((DWORD)ptr, 0x0C);
-    Print("Free: ", 0x0F);
-    PrintInt(mgr.free, 0x0C);
-    */
-
-    return ptr;
+    return NULL;
 }
 
-void FreeMemory(void* ptr, DWORD size)
+void FreeMemory(void* ptr, DWORD size) 
 {
-    if ((ptr >= (void*)(mgr.memory)) && (ptr < (void*)(mgr.memory + MEMPOOL)))
+    if (!ptr) return;
+
+    MemoryBlock* block = (MemoryBlock*)((BYTE*)ptr - BLOCK_SIZE);
+    block->used = 0;
+
+    MemoryBlock* current = mgr.freeBlocks;
+    
+    while (current) 
     {
-        mgr.free += size;
+        if ((BYTE*)current + BLOCK_SIZE + current->size == (BYTE*)block) 
+        {
+            current->size += BLOCK_SIZE + block->size;
+            current->next = block->next;
+            
+            return;
+        }
+
+        if ((BYTE*)block + BLOCK_SIZE + block->size == (BYTE*)current)
+        {
+            block->size += BLOCK_SIZE + current->size;
+            block->next = current->next;
+
+            if (mgr.freeBlocks == current) 
+            {
+                mgr.freeBlocks = block;
+            }
+            
+            return;
+        }
+
+        current = current->next;
     }
+
+    block->next = mgr.freeBlocks;
+    mgr.freeBlocks = block;
 }
