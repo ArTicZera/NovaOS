@@ -4,7 +4,7 @@
 #include "../Memory/vmm.h"
 #include "../FileSystem/memfs.h"
 
-#include "elf.h"
+#include "elfloader.h"
 
 int LoadELF(void* elfData) 
 {
