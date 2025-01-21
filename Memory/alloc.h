@@ -1,10 +1,17 @@
-#define MEMPOOL 8192
+#define MEMPOOL 0x100000 // Exemplo: 1 MB de memória para alocação
+#define BLOCK_SIZE sizeof(MemoryBlock)
 
-typedef struct
-{
+typedef struct MemoryBlock {
+    struct MemoryBlock* next;
+    DWORD size;
+    BYTE used;
+} MemoryBlock;
+
+typedef struct {
+    MemoryBlock* freeBlocks;
     BYTE memory[MEMPOOL];
-    DWORD free;
 } MemoryManager;
+
 
 void InitMemory();
 void* AllocateMemory(DWORD size);
