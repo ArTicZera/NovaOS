@@ -13,9 +13,11 @@
 #include "../Userspace/userspace.h"
 #include "../Include/math.h"
 #include "../ELF/elfloader.h"
-#include "../Programs/starfield.h"
 
 #include "shell.h"
+
+extern char stars[];
+extern DWORD starsSize;
 
 char* currentDir = "root> ";
 
@@ -221,6 +223,6 @@ void ProcessShellRun(char* proccess)
 {
     if (strcmp(proccess, "stars.exe") == 0x00)
     {
-        DrawStarfield();
+        ExecuteELF(stars);
     }
 }
