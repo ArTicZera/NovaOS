@@ -44,7 +44,7 @@ void UpdateStars()
     }
 }
 
-void DrawStarfield()
+void _start()
 {
     GenerateStars();
 
