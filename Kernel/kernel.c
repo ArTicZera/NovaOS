@@ -3,6 +3,7 @@
 #include "../Font/text.h"
 #include "../Interrupts/idt.h"
 #include "../Timer/timer.h"
+#include "../Memory/vmm.h"
 #include "../Drivers/keyboard.h"
 #include "../Drivers/mouse.h"
 #include "../Hardware/cpu.h"
@@ -25,6 +26,9 @@ void main(void)
     
     SetupIDT();
     Debug("IDT Loaded!\n", 0x00);
+
+    InitVirtualMemory();
+    Debug("Virtual Memory Manager Started!\n", 0x00);
 
     InitFileSystem();
     CreateFile("stars.exe", stars, starsSize);
