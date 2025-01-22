@@ -1,3 +1,14 @@
+/*
+    Coded by ArTic/JhoPro
+
+    This is like the cursor bitmap. Each bit its equivalent to a pixel.
+
+    0 - Draw nothing
+    1 - Draw a pixel
+
+    For hex, just convert it to bin. Example: 0x7C -> 0b1111100
+*/
+
 #define WFONT 8
 #define HFONT 16
 
