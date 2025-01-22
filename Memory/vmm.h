@@ -22,3 +22,4 @@ void UnmapPage(DWORD virtualAddress);
 DWORD TranslateAddress(DWORD virtualAddress);
 void* AllocateVirtualMemory(DWORD virtualAddress, DWORD size, BYTE writable, BYTE user);
 void FreeVirtualMemory(DWORD virtualAddress, DWORD size);
+int SetMemoryProtection(DWORD virtualAddress, DWORD size, BYTE protectionFlags);
