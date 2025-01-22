@@ -18,7 +18,6 @@
 #include "shell.h"
 
 extern char stars[];
-extern DWORD starsSize;
 
 char* currentDir = "root> ";
 
