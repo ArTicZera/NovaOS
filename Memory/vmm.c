@@ -84,3 +84,29 @@ void FreeVirtualMemory(DWORD virtualAddress, DWORD size)
         UnmapPage(virtualAddress + i * PAGE_SIZE);
     }
 }
+
+int SetMemoryProtection(DWORD virtualAddress, DWORD size, BYTE protectionFlags) 
+{
+    DWORD pages = (size + PAGE_SIZE - 1) / PAGE_SIZE;
+    DWORD pageIndex = virtualAddress / PAGE_SIZE;
+
+    for (DWORD i = 0; i < pages; i++) 
+    {
+        DWORD currentPage = pageIndex + i;
+
+        if (currentPage >= TOTAL_PAGES) 
+        {
+            return -1;
+        }
+
+        if (!vmm.pageTable[currentPage].present) 
+        {
+            return -1;
+        }
+
+        vmm.pageTable[currentPage].writable = (protectionFlags & PROT_WRITE) ? 1 : 0;
+        vmm.pageTable[currentPage].user = (protectionFlags & PROT_USER) ? 1 : 0;
+    }
+
+    return 0; // Sucesso
+}
