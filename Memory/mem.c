@@ -129,3 +129,26 @@ char* strcpy(char* dest, const char* src)
 
     return original_dest;
 }
+
+void* memmove(void* dest, const void* src, DWORD n) 
+{
+    LPBYTE d = (LPBYTE) dest;
+    const LPBYTE s = (LPBYTE) src;
+
+    if (d < s) 
+    {
+        for (DWORD i = 0; i < n; i++)
+         {
+            d[i] = s[i];
+        }
+    } 
+    else 
+    {
+        for (DWORD i = n; i > 0; i--) 
+        {
+            d[i - 1] = s[i - 1];
+        }
+    }
+
+    return dest;
+}
