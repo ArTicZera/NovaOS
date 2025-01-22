@@ -1,3 +1,9 @@
+/*
+    Coded by ArTic/JhoPro
+
+    A simple user interface with a GUI.
+*/
+
 #include "../Include/stdint.h"
 #include "../Graphics/graphics.h"
 #include "../Hardware/cmos.h"
@@ -7,10 +13,12 @@
 #include "../Font/text.h"
 #include "../FileSystem/memfs.h"
 #include "../Timer/timer.h"
-#include "GUI/gui.h"
 
-#include "run.h"
+#include "GUI/gui.h"
+#include "login.h"
+#include "desktop.h"
 #include "userspace.h"
+
 
 extern BYTE bootscr[];
 extern BYTE backgrd[];
@@ -187,7 +195,16 @@ void CloseWindow(int x, int y, int pressed)
 
         if (pressed && x >= buttonXStart && x < buttonXEnd && y >= buttonYStart && y < buttonYEnd)
         {
+            for (int j = i; j < totalWindows - 1; j++)
+            {
+                winmgr[j] = winmgr[j + 1];
+            }
+
+            totalWindows--;
+
             UpdateExplorer();
+
+            break;
         }
     }
 }
@@ -237,7 +254,6 @@ void DesktopIcons()
 
     int index = 0;
 
-    //Show Dirs
     for (int i = 0; i < MAXSUBDIR; i++)
     {
         if (fs->root.subdirs[i] != NULL && fs->root.subdirs[i]->name[0] != '\0')
@@ -290,6 +306,41 @@ void DesktopIcons()
     }
 }
 
+void HandleWindowDragging(WINDOW* window, int mouseX, int mouseY, int mousePressed)
+{
+    static int isDragging = 0;
+    static int offsetX = 0;
+    static int offsetY = 0;
+
+    if (mousePressed && window) 
+    {
+        if (!isDragging) 
+        {
+            if (mouseX >= window->x && mouseX <= window->x + window->w - 100 && mouseY >= window->y && mouseY <= window->y + 20) 
+            {
+                isDragging = 1;
+                offsetX = mouseX - window->x;
+                offsetY = mouseY - window->y;
+            }
+        }
+        
+        if (isDragging) 
+        {
+            window->x = mouseX - offsetX;
+            window->y = mouseY - offsetY;
+
+            if (window->x < 0) window->x = 0;
+            if (window->y < 0) window->y = 0;
+            if (window->x + window->w > WSCREEN) window->x = WSCREEN - window->w;
+            if (window->y + window->h > HSCREEN) window->y = HSCREEN - window->h;
+        }
+    } 
+    else 
+    {
+        isDragging = 0;
+    }
+}
+
 void DrawBootScr(void)
 {
     for (int y = 0; y < 128; y++)
@@ -316,19 +367,27 @@ void UserSpace()
 
     }
 
-    UpdateExplorer();
+    KeyboardState(3);
 
-    KeyboardState(TRUE);
+    LoginScreen();
+
+    KeyboardState(1);
+
+    UpdateExplorer();
 
     while (true)
     {
         int x, y, pressed;
         GetMouseState(&x, &y, &pressed);
 
+        DesktopEvents(x, y, pressed);
+
         StartButtonHandler(x, y, pressed);
-    
+
         //MaximizeWindow(x, y, pressed);
         MinimizeWindow(x, y, pressed);
         CloseWindow(x, y, pressed);
+
+        HandleWindowDragging(&winmgr[currentWindowID - 1], x, y, pressed);
     }
 }
