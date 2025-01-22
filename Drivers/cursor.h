@@ -11,8 +11,6 @@
 #define WCURSOR 12
 #define HCURSOR 19
 
-//BIT 1 = White
-//BIT 0 = Black
 BYTE cursor[] = 
 {
     0b10000000, 0b00000000,
