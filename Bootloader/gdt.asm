@@ -1,4 +1,4 @@
-;Coded by ArTic/JhoPro
+;Coded by ArTic/JhoPro and Daedalus
 ;
 ;This code loads a Global Descriptor Table, it allows to define memory 
 ;segments with many attributes and you can also separate the memory spaces 
