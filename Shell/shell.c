@@ -213,7 +213,7 @@ void ProcessShellCMD(char* command)
     }
     else
     {
-        Print("\n\nInvalid Command!", 0x0C);
+        Print("\n\nInvalid Command! Try again or use 'help' command.", 0x0C);
     }
 
     Print("\n\n", 0x00);
@@ -225,5 +225,9 @@ void ProcessShellRun(char* proccess)
     if (strcmp(proccess, "stars.exe") == 0x00)
     {
         ExecuteELF(stars);
+    }
+    else
+    {
+        Print("\n\nInvalid software!", 0x0C);
     }
 }
