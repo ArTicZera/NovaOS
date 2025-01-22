@@ -1,3 +1,10 @@
+/*
+    Coded by ArTic/JhoPro
+
+    Here I start every driver, table, memory, timer and show
+    informations about the system, like the CMOS memory and CPU
+*/
+
 #include "../Include/stdint.h"
 #include "../Graphics/graphics.h"
 #include "../Font/text.h"
@@ -15,6 +22,7 @@
 #include "../Userspace/GUI/gui.h"
 #include "../Userspace/userspace.h"
 
+//stars.exe
 extern char stars[];
 extern DWORD starsSize;
 
