@@ -1,3 +1,11 @@
+/*
+    Coded by ArTic/JhoPro and Daedalus
+
+    A simple keyboard driver. It gets the scan code in 0x80 and
+    it interprets as normal characters. It also set this to its
+    IRQ (Interrupt Request), so everytime is checked if its pressed
+*/
+
 #include "../Include/stdint.h"
 #include "../Include/ports.h"
 #include "../Interrupts/idt.h"
@@ -6,24 +14,25 @@
 #include "../Graphics/graphics.h"
 
 #include "../Userspace/GUI/gui.h"
-#include "../Userspace/run.h"
 #include "../Userspace/userspace.h"
+#include "../Userspace/login.h"
 
 #include "keyboard.h"
 
-//Events Variables
-int allowInput = 1;
-int enableText = 0;
+int allowInput = 1; //Allows you to type something
+int enableText = 0; //Enable text on screen
+
+//Other keys events
 int shift = 0;
 int caps = 0;
 int winPressed = 0;
 int rPressed = 0;
 
-//Shell command buffer
+//Command buffer for shell and others.
 char commandBuffer[50];
 int commandLength = 0;
 
-//Lower Case Scancode
+//Lower case characters in scan code order
 const char* lowercase[] = {
     " ", " ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
     "-", "=", "\b", " ", "q", "w", "e", "r", "t", "y", "u", "i",
@@ -32,7 +41,7 @@ const char* lowercase[] = {
     "b", "n", "m", ",", ".", "/", " ", "*", " ", " "
 };
 
-//Upper Case Scancode
+//The same with but in Upper case
 const char* uppercase[] = {
     " ", " ", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")",
     "_", "+", "\b", " ", "Q", "W", "E", "R", "T", "Y", "U", "I",
@@ -41,36 +50,38 @@ const char* uppercase[] = {
     "B", "N", "M", "<", ">", "?", " ", " ", " ", " "
 };
 
-//Set keyboard to write in screen
-//0 -> Don't write nothing
-//1 -> GUI
-//2 -> Shell (NO GUI)
 void KeyboardState(int state)
 {
     if (state == TRUE)
     {
+        //For GUI
         enableText = 1;
     }
     else if (state == 2)
     {
+        //For Shell
         enableText = 2;
+    }
+    else if (state == 0)
+    {
+        //Reserved
+        enableText = 0;
     }
     else
     {
-        enableText = 0;
+        //For Login page
+        enableText = 3;
     }
 }
 
 void KeyboardHandler()
 {
-    //Capture Scancode
+    //Read scan code
     uint8_t scan = inb(0x60);
 
-    //Extract the 7 bit
-    //0 - Key press event
-    //1 - Key release
+    //Check if its pressed
     uint8_t isPress = !(scan & 0x80);
-    scan &= 0x7F; // Remove o bit de liberação
+    scan &= 0x7F;
 
     if (allowInput)
     {
@@ -92,20 +103,21 @@ void KeyboardHandler()
 
             //Enter
             case 0x1C:
-                //Proccess commandfor Run
-                if (isPress && enableText != 2) 
-                {
-                    commandBuffer[commandLength] = '\0';
-                    ProcessRun(commandBuffer);
-                    commandLength = 0;
-                }
-                //Proccess command for Shell (NO GUI)
+                //If its for Shell, then process sh command
                 if (isPress && enableText == 2)
                 {
                     commandBuffer[commandLength] = '\0';
                     ProcessShellCMD(commandBuffer);
                     commandLength = 0;
                 }
+                //If its for Login, then save the password
+                if (isPress && enableText == 3)
+                {
+                    commandBuffer[commandLength] = '\0';
+                    SetPassword(commandBuffer);
+                    commandLength = 0;
+                }
+
                 break;
 
             //Win
@@ -114,32 +126,30 @@ void KeyboardHandler()
                 winPressed = isPress;
                 break;
 
-            //R
-            case 0x13:
-                rPressed = isPress;
+            default:
+                //If any other non-special key is being pressed, 
+                //then we start to load characters in our buffer
 
-                //Enter the scancode in buffer
-                if (isPress && enableText && commandLength < 49) 
+                //This IF is for Login
+                if (isPress && enableText == 3 && commandLength < 49)
                 {
-                    //If Shift or Caps Lock is enabled, set uppercase
-                    if (shift || caps) 
+                    if (shift || caps)
                     {
                         commandBuffer[commandLength] = uppercase[scan][0];
-                    } 
-                    else 
+                    }
+                    else
                     {
                         commandBuffer[commandLength] = lowercase[scan][0];
                     }
 
-                    //Draw pressed char and increase the next char buffer
-                    PrintOut(commandBuffer[commandLength], 0x0F);
+                    //Important, we have to hide the password
+                    PrintOut('*', 0x0F);
+
                     commandLength++;
                 }
-                break;
 
-            default:
-                //Do the same as in the other
-                if (isPress && enableText && commandLength < 49)
+                //That if is more general, except for 3
+                if (isPress && enableText != 3 && commandLength < 49)
                 {
                     if (shift || caps)
                     {
@@ -156,34 +166,12 @@ void KeyboardHandler()
                 }
                 break;
         }
-
-        //Check if WIN key is pressed, then it draws the Run window
-        if (winPressed && enableText != 2)
-        {
-            int StartWindowXY = GetStartWindowXY();
-            WINDOW run = { "NovaOS - Run", 0x13, 10, HSCREEN - 210, 340, 150, 1, TRUE };
-
-            DrawWindow(run, 0x01);
-
-            DrawIcon(run.x + 15,  run.y + 40, ICON_TERMINAL);
-            
-            SetCursorX(run.x + 60);
-            SetCursorY(run.y + 40);
-
-            Print("Type a name of a program to run.", 0x0F);
-
-            SetCursorX(run.x + 32);
-            SetCursorY(run.y + 100);
-
-            DrawRoundedRect(run.x + 16, run.y + 100, 300, 20, 10, 0x12);
-
-            GetWindow(run);
-        }
     }
 }
 
-//Setup Keyboard IRQ
 void InitKeyboard()
 {
+    //Install the keyboard handler to an IRQ
+    //Needed for the interrupt request
     IRQInstallHandler(0x01, &KeyboardHandler);
 }
