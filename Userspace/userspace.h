@@ -14,4 +14,6 @@ void RestoreStartArea();
 void MaximizeWindow(int x, int y, int pressed);
 void CloseWindow(int x, int y, int pressed);
 
+void HandleWindowDragging(WINDOW* window, int mouseX, int mouseY, int mousePressed);
+
 void GetWindow(WINDOW window);
