@@ -1,3 +1,11 @@
+/*
+    Coded by ArTic/JhoPro
+
+    I'll not say much about this because it doesn't evolves OS 
+    development. These functions was made just for programs. 
+    mostly like graphics programs.
+*/
+
 #include "stdint.h"
 
 #include "math.h"
