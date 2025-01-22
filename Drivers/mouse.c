@@ -17,8 +17,6 @@
 #include "cursor.h"
 #include "mouse.h"
 
-extern WINDOW* window;
-
 //Drawing Buffers
 BYTE MouseArea[WCURSOR * HCURSOR];
 BYTE MouseCursorAfter[WCURSOR * HCURSOR];
