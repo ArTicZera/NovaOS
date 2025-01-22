@@ -1,4 +1,4 @@
-;Coded by ArTic and jewelcodes
+;Coded by ArTic/JhoPro and jewelcodes
 ;
 ;The bootsector loads on the memory segment 0x7C00 and it has in total
 ;512 bytes long, but the last two is a identifier with a "MAGIC NUMBER"
