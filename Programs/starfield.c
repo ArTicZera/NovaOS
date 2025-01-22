@@ -1,4 +1,9 @@
-//ld -m elf_i386 -o final.elf file1.o file2.o
+/*
+    Coded by ArTic/JhoPro
+
+    Im not going to explain this code because it's not
+    about an OS development thing.
+*/
 
 #include "../Include/stdint.h"
 #include "../Graphics/graphics.h"
