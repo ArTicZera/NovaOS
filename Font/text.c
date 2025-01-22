@@ -1,3 +1,10 @@
+/*
+    Coded by ArTic/JhoPro
+
+    Here we have some implementations of drawing the characters on 
+    the screen, and some functions to draw strings, integers, and hex.
+*/
+
 #include "../Include/stdint.h"
 #include "../Graphics/graphics.h"
 
@@ -14,6 +21,7 @@ void DrawChar(BYTE* bitmap, BYTE color)
     {
         for (int x = WFONT - 1; x >= 0; x--)
         {
+            //Read each bit.
             if (bitmap[y] & (1 << x))
             {
                 SetPixel(i + cursorX, y + cursorY, color);
@@ -25,8 +33,11 @@ void DrawChar(BYTE* bitmap, BYTE color)
         i = 0;
     }
 
+    //Moves 8 pixels for the left
     cursorX += 8;
 
+    //In case the cursorX goes higher than 640,
+    //then reset the X and go to the next row.
     if (cursorX >= WSCREEN)
     {
         cursorX = 0;
@@ -39,6 +50,7 @@ void Print(const char* str, BYTE color)
 {
     for (int i = 0; str[i] != '\0'; i++)
     {
+        //If its '\n' goest to the next line.
         if (str[i] == '\n')
         {
             cursorX = 0;
@@ -56,10 +68,14 @@ void Print(const char* str, BYTE color)
             }
         }
 
+        //Look how I draw with the 'isoFont' bitmap (declared on font.h)
+        //I use it with the size of a HFONT * the ASCII character, then
+        //we get into the char bitmap to draw.
         DrawChar(isoFont + str[i] * HFONT, color);
     }
 }
 
+//Just for debugging code
 void Debug(const CHAR* str, int debug)
 {
     switch (debug)
@@ -78,6 +94,7 @@ void Debug(const CHAR* str, int debug)
     Print(str, 0x0F);
 }
 
+//An implementation of 'itoa' from scratch
 void IntToString(int value, char* buffer)
 {
     char temp[11];
@@ -113,6 +130,7 @@ void IntToString(int value, char* buffer)
     buffer[j] = '\0';
 }
 
+//We just convert using IntToString and print the string
 void PrintInt(int value, BYTE color) 
 {
     char buffer[11];
@@ -120,6 +138,7 @@ void PrintInt(int value, BYTE color)
     Print(buffer, color);
 }
 
+//Simple way to convert a value to HEX
 void PrintHex(int value, BYTE color)
 {
     char buffer[9];
@@ -137,11 +156,13 @@ void PrintHex(int value, BYTE color)
     Print(buffer, color);
 }
 
+//Thats our custom DrawChar, but with ASCII data
 void PrintOut(char letter, BYTE color)
 {
     DrawChar(isoFont + letter * HFONT, color);
 }
 
+//ASCII to Integer
 int atoi(const char* str) 
 {
     int result = 0;
@@ -171,6 +192,10 @@ int atoi(const char* str)
 
     return sign * result;
 }
+
+//Here till the end consists of getting cursorX and cursorY
+//for manipulation and set it to his own X and Y. Good for
+//other .c files
 
 int GetCursorX()
 {
