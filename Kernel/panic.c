@@ -1,3 +1,9 @@
+/*
+    Coded by ArTic/JhoPro
+
+    "Read Screen of Death"
+*/
+
 #include "../Include/stdint.h"
 #include "../Graphics/graphics.h"
 #include "../Font/text.h"
