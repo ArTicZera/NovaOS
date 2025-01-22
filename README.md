@@ -20,7 +20,7 @@ NovaOS will only work on QEMU, so it can have more easily and readable operation
 - ✅ **File System**
 - ✅ **Shell**
 - ✅ **Graphical Interface (GUI)**
-- ❌ **ELF Loader**
+- ✅ **ELF Loader**
 - ❌ **Network Driver**
 - ❌ **Processes**
 - ❌ **Multitasking**
