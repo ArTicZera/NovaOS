@@ -16,14 +16,16 @@ int LoadELF(void* elfData)
 
     ELF32_Header* elfHeader = (ELF32_Header*)elfData;
 
-    if (*(DWORD*)elfHeader->e_ident != ELFMAGIC) {
+    if (*(DWORD*)elfHeader->e_ident != ELFMAGIC) 
+    {
         Debug("Invalid ELF File\n", 0x01);
         return -1;
     }
 
     Debug("Valid ELF File!\n", 0x00);
 
-    if (elfHeader->e_machine != ELFARCH) {
+    if (elfHeader->e_machine != ELFARCH) 
+    {
         Debug("Unsupported Architecture\n", 0x01);
         return -1;
     }
@@ -41,29 +43,56 @@ int LoadELF(void* elfData)
             DWORD fileSize = programHeader[i].p_filesz;
             DWORD offset = programHeader[i].p_offset;
 
+            DWORD alignedAddr = ALIGN_DOWN(virtualAddr, PAGE_SIZE);
+            DWORD alignedSize = ALIGN_UP(memSize, PAGE_SIZE);
+
             Debug("Mapping Segment\n", 0x00);
             Debug("Virtual Address: ", 0x00);
             PrintHex(virtualAddr, 0x0F);
             Print("\n", 0x00);
 
-            if (!AllocateVirtualMemory(virtualAddr, memSize, 1, 1)) 
+            if (!AllocateVirtualMemory(alignedAddr, alignedSize, 1, 1)) 
             {
                 Debug("Failed to Allocate Virtual Memory\n", 0x01);
                 return -1;
             }
 
-            BYTE* dest = (BYTE*)TranslateAddress(virtualAddr);
-            BYTE* src = (BYTE*)elfData + offset;
+            LPBYTE dest = (LPBYTE)TranslateAddress(virtualAddr);
+            LPBYTE src  = (LPBYTE)elfData + offset;
 
             memcpy(dest, src, fileSize);
-            memset(dest + fileSize, 0x00, memSize - fileSize);
+
+            if (memSize > fileSize)
+            {
+                memset(dest + fileSize, 0x00, memSize - fileSize);
+            }
+
+            if (programHeader[i].p_flags == 0)
+            {
+                memset(dest, 0, memSize);
+            }
+
+            if (programHeader[i].p_flags & 0x1) //Exec
+            {
+                Debug("Executable!\n", 0x02);
+                SetMemoryProtection((DWORD)dest, alignedSize, PROT_EXEC | PROT_READ);
+            }
+            else if (programHeader[i].p_flags & 0x2) //Write
+            {
+                Debug("Write!\n", 0x02);
+                SetMemoryProtection((DWORD)dest, alignedSize, PROT_WRITE | PROT_READ);
+            }
+            else //Read
+            {
+                Debug("Read!\n", 0x02);
+                SetMemoryProtection((DWORD)dest, alignedSize, PROT_READ);
+            }
 
             if (i == 0) 
             {
                 relocationOffs = (DWORD)dest - virtualAddr;
-                physicalMem = relocationOffs + virtualAddr;
             }
-
+            
             Debug("Segment Loaded at Physical Address: ", 0x00);
             PrintHex((DWORD)dest, 0x0F);
             Print("\n", 0x00);
@@ -81,7 +110,6 @@ int LoadELF(void* elfData)
 
     return 0;
 }
-
 
 void ExecuteELF(void* elf)
 {
