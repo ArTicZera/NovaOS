@@ -1,3 +1,9 @@
+/*
+  Coded by ArTic/JhoPro
+
+  Just declares some short definitions for some variable.
+*/
+
 typedef unsigned char  uint8_t,  BYTE, UCHAR;
 typedef unsigned short uint16_t, WORD, UWORD;
 typedef unsigned int   uint32_t, DWORD, UINT;
