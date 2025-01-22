@@ -1,3 +1,11 @@
+/*
+    Coded by ArTic/JhoPro and someone that I forgot (sorry xd)
+
+    The PCI (Peripheral Component Interconnect) is kinda of hardware bus
+    to conect peripheral devices, like GPUs, Sound and Network. In this
+    code we read the PCI and shows the devices connected.
+*/
+
 #include "../Include/stdint.h"
 #include "../Include/ports.h"
 #include "../Font/text.h"
@@ -20,6 +28,7 @@ DWORD PCIConfigReadWord(BYTE bus, BYTE slot, BYTE func, BYTE offset)
     
     //Read Data
     tmp = inl(PCI_CONFIG_DATA);
+    
     return tmp;
 }
 
