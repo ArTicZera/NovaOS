@@ -36,7 +36,7 @@ i686-elf-gcc -ffreestanding -m32 -g -c Userspace/run.c       -o Binaries/run.o
 i686-elf-gcc -ffreestanding -m32 -g -c Programs/starfield.c  -o Programs/Binaries/starfield.o
 
 echo "Linking Programs"
-i686-elf-ld -Ttext 0x1000 Programs/Binaries/starfield.o Binaries/graphics.o Binaries/math.o -o Programs/Binaries/stars.elf
+i686-elf-ld -Ttext 0x100000 Programs/Binaries/starfield.o Binaries/graphics.o Binaries/math.o -o Programs/Binaries/stars.elf
 
 echo "Making Kernel Entry"
 nasm -felf Kernel/entry.asm -o Binaries/entry.o
