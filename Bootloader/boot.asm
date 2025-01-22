@@ -1,3 +1,9 @@
+;Coded by ArTic and jewelcodes
+;
+;The bootsector loads on the memory segment 0x7C00 and it has in total
+;512 bytes long, but the last two is a identifier with a "MAGIC NUMBER"
+;Which is 0xAA55. When the VM boots up it will check this number for boot.
+
 [BITS    16]
 [ORG 0x7C00]
 
