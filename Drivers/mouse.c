@@ -1,3 +1,11 @@
+/*
+   Coded by ArTic/JhoPro
+
+   This driver is better to use in systems with a GUI, but if
+   you tests the IMG file, I prefer enabling this driver on the
+   C kernel launch.
+*/
+
 #include "../Include/stdint.h"
 #include "../Include/ports.h"
 #include "../Graphics/graphics.h"
