@@ -1,3 +1,9 @@
+/*
+    Coded by ArTic/JhoPro
+
+    Poorly implemented disk functions. Maybe it's inaccurate.
+*/
+
 #include "../Include/stdint.h"
 #include "../Include/ports.h"
 #include "../Font/text.h"
