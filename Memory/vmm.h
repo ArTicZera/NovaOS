@@ -2,6 +2,11 @@
 #define TOTAL_PAGES 1024
 #define VIRTUAL_MEMORY_SIZE (PAGE_SIZE * TOTAL_PAGES)
 
+#define PROT_READ  0x1 //Read
+#define PROT_WRITE 0x2 //Write
+#define PROT_EXEC  0x4 //Exe
+#define PROT_USER  0x8 //User
+
 typedef struct PageTableEntry 
 {
     DWORD physicalAddress;
