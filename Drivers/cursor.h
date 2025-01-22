@@ -1,3 +1,13 @@
+/*
+    Coded by ArTic/JhoPro
+
+    Each bit (0/1) represents a pixel.
+    - 0 : Skip drawing in the pixel.
+    - 1 : Draws a white pixel
+
+    In the end it will result in a cursor.
+*/
+
 #define WCURSOR 12
 #define HCURSOR 19
 
