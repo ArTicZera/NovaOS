@@ -35,5 +35,8 @@ typedef struct
 #define PTNULL 0x00
 #define PTLOAD 0x01
 
+#define ALIGN_DOWN(addr, align) ((addr) & ~((align) - 1))
+#define ALIGN_UP(addr, align)   (((addr) + ((align) - 1)) & ~((align) - 1))
+
 int LoadELF(void* elfData);
 void ExecuteELF(void* elf);
