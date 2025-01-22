@@ -1,3 +1,11 @@
+/*
+    Coded by mell-o-tron
+
+    I was getting triple fault with my IDT, so I just copied from 
+    his repo. My bad, but that was too much harder for me.
+*/
+
+
 #include "../Include/stdint.h"
 #include "../Include/ports.h"
 #include "../Font/text.h"
