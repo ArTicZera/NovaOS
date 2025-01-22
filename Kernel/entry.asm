@@ -1,21 +1,32 @@
-[BITS          32]
-[EXTERN      main]
+;Coded by ArTic/JhoPro
+;
+;Here it's the entry of our kernel! We can call a C function from here
+;and as you can see, load a bunch of data to be used by the kernel,
+;since images, icons, programs, etc.
 
-[GLOBAL   bootscr]
-[GLOBAL   backgrd]
+[BITS        32]
+[EXTERN    main]
 
+;Images
+[GLOBAL bootscr]
+[GLOBAL backgrd]
+
+;General Icons
 [GLOBAL     error]
 [GLOBAL   warning]
 [GLOBAL  question]
 [GLOBAL      info]
 [GLOBAL      user]
+[GLOBAL     user2]
 [GLOBAL  terminal]
 
+;Extension Icons
+[GLOBAL       non]
 [GLOBAL       txt]
 [GLOBAL       dir]
 [GLOBAL       exe]
-[GLOBAL       non]
 
+;ELF Programs
 [GLOBAL starsSize]
 [GLOBAL     stars]
 
@@ -32,19 +43,20 @@ section .data
         bootscr: incbin "Include/bootscr.vad"
         backgrd: incbin "Include/background.vad"
 
-        ;Message Box Icons
+        ;General Icons
         error:    incbin "Include/Icons/error.vad"
         warning:  incbin "Include/Icons/warning.vad"
         question: incbin "Include/Icons/question.vad"
         info:     incbin "Include/Icons/info.vad"
-        user:     incbin "Include/Icons/user.vad"
+        user:     incbin "Include/Icons/user1.vad"
+        user2:    incbin "Include/Icons/user2.vad"
         terminal: incbin "Include/Icons/terminal.vad"
 
-        ;Files/Dir Icons
-        txt:      incbin "Include/Icons/txt.vad"
-        dir:      incbin "Include/Icons/dir.vad"
-        exe:      incbin "Include/Icons/exe.vad"
-        non:      incbin "Include/Icons/default.vad"
+        ;File Extensions
+        txt: incbin "Include/Icons/txt.vad"
+        dir: incbin "Include/Icons/dir.vad"
+        exe: incbin "Include/Icons/exe.vad"
+        non: incbin "Include/Icons/default.vad"
 
         ;Programs
         starsBase: equ $ - stars
