@@ -1,3 +1,10 @@
+;Coded by ArTic/JhoPro
+;
+;In this part, we prepares the system to be in Protected Mode! 
+;We change the data registers from GDT Data Segment. And also
+;important: the Stack.
+
+
 [BITS    32]
 
 pmode:
