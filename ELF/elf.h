@@ -1,4 +1,3 @@
-//
 typedef struct 
 {
     BYTE  e_ident[16];
