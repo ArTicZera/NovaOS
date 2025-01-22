@@ -1,3 +1,10 @@
+/*
+    Coded by ArTic/JhoPro
+
+    In this part we get more informations of the CPU like
+    the vendor, name and manufacturer. Just by calling 'cpuid'
+*/
+
 #include "../Include/stdint.h"
 #include "../Font/text.h"
 
