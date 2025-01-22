@@ -1,3 +1,4 @@
+//VESA Video Memory
 #define VIDMEM 0xFD000000
 
 #define WSCREEN 640
