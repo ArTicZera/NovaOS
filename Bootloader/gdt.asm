@@ -1,3 +1,10 @@
+;Coded by ArTic/JhoPro
+;
+;This code loads a Global Descriptor Table, it allows to define memory 
+;segments with many attributes and you can also separate the memory spaces 
+;between the kernel and users and many more things. One of then too, is
+;that it enables you to change to Protected Mode.
+
 [BITS    16]
 
 SetupGDT:
