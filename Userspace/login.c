@@ -7,7 +7,7 @@
 #include "GUI/gui.h"
 #include "login.h"
 
-extern char user[];
+extern char user2[];
 
 char userPass[16];
 int loginLoop = 1;
@@ -22,10 +22,6 @@ void LoginScreen()
     int x = WSCREEN / 2 - w / 2;
     int y = HSCREEN / 2 - h / 2 - 50;
 
-    WINDOW login = { "", 0x0F, x, y, w, h };
-
-    DrawRect(x, y, w, h, 0x13);
-
     y += h / 4;
 
     //Draw User Icon
@@ -33,7 +29,7 @@ void LoginScreen()
     {
         for (int xs = 0; xs < 32; xs++)
         {
-            BYTE color = user[ys * 32 + (xs + 8)];
+            BYTE color = user2[ys * 32 + (xs + 8)];
 
             if (color != 0x00 && color != 28)
             {
