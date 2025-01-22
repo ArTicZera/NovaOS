@@ -1,3 +1,5 @@
+;Coded by mell-o-tron
+
 [BITS        32]
 [GLOBAL LoadIDT]
 
