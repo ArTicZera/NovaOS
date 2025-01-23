@@ -1,3 +1,9 @@
+/*
+    Coded by ArTic/JhoPro
+
+    GUI functions and etc.
+*/
+
 #include "../../Include/stdint.h"
 #include "../../Graphics/graphics.h"
 #include "../../Font/text.h"
@@ -8,6 +14,7 @@
 
 int StartWindowXY = 80;
 
+//Import icons
 extern BYTE error[];
 extern BYTE warning[];
 extern BYTE info[];
@@ -20,9 +27,10 @@ extern BYTE txt[];
 extern BYTE dir[];
 extern BYTE exe[];
 
+//Draw a simple window using DrawRoundedRect and with the buttons
 void DrawWindow(WINDOW window, int nextWindow)
 {
-    DrawRoundedRect(window.x, window.y, window.w, window.h, 15, 0x13);
+    DrawRoundedRect(window.x, window.y, window.w, window.h, 5, 0x13);
 
     if (window.title)
     {
@@ -43,50 +51,6 @@ void DrawWindow(WINDOW window, int nextWindow)
             StartWindowXY = 80;
         }
     }
-}
-
-void DrawWindowTransition(WINDOW window)
-{
-    if (window.transition)
-    {
-        return;
-    }
-
-    const int steps = 10;
-    const int delay = 1000;
-
-    int targetX = window.x;
-    int targetY = window.y;
-    int targetW = window.w;
-    int targetH = window.h;
-
-    int startX = targetX + (targetW / 2);
-    int startY = targetY + (targetH / 2);
-    int startW = 0;
-    int startH = 0;
-
-    for (int i = 0; i <= steps; i++)
-    {
-        int currentX = startX + (targetX - startX) * i / steps;
-        int currentY = startY + (targetY - startY) * i / steps;
-        int currentW = startW + (targetW - startW) * i / steps;
-        int currentH = startH + (targetH - startH) * i / steps;
-
-        DrawRoundedRect(currentX, currentY, currentW, currentH, 15, 0x13);
-        
-        if (window.title)
-        {
-            SetCursorX(currentX + 10);
-            SetCursorY(currentY + 4);
-            Print(window.title, 0x0F);
-        }
-
-        DrawWindowButtons(window);
-
-        for (volatile int d = 0; d < delay * 10000; d++) { }
-    }
-
-    window.transition = TRUE;
 }
 
 void DrawStartMenu(WINDOW window)
