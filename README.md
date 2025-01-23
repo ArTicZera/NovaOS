@@ -1,5 +1,6 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/ArTicZera/NovaOS?style=flat-square)
 ![GitHub forks](https://img.shields.io/github/forks/ArTicZera/NovaOS?style=flat-square)
+![GitHub Contributors](https://img.shields.io/github/contributors/ArTicZera/NovaOS?style=flat-square)
 
 <br />
 <div align = "center">
