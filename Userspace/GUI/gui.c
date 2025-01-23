@@ -1,6 +1,7 @@
 #include "../../Include/stdint.h"
 #include "../../Graphics/graphics.h"
 #include "../../Font/text.h"
+#include "../../Timer/timer.h"
 
 #include "gui.h"
 #include "../userspace.h"
@@ -12,11 +13,12 @@ extern BYTE warning[];
 extern BYTE info[];
 extern BYTE question[];
 extern BYTE user[];
+extern BYTE user2[];
 extern BYTE terminal[];
 extern BYTE non[];
 extern BYTE txt[];
-extern BYTE exe[];
 extern BYTE dir[];
+extern BYTE exe[];
 
 void DrawWindow(WINDOW window, int nextWindow)
 {
@@ -43,11 +45,55 @@ void DrawWindow(WINDOW window, int nextWindow)
     }
 }
 
+void DrawWindowTransition(WINDOW window)
+{
+    if (window.transition)
+    {
+        return;
+    }
+
+    const int steps = 10;
+    const int delay = 1000;
+
+    int targetX = window.x;
+    int targetY = window.y;
+    int targetW = window.w;
+    int targetH = window.h;
+
+    int startX = targetX + (targetW / 2);
+    int startY = targetY + (targetH / 2);
+    int startW = 0;
+    int startH = 0;
+
+    for (int i = 0; i <= steps; i++)
+    {
+        int currentX = startX + (targetX - startX) * i / steps;
+        int currentY = startY + (targetY - startY) * i / steps;
+        int currentW = startW + (targetW - startW) * i / steps;
+        int currentH = startH + (targetH - startH) * i / steps;
+
+        DrawRoundedRect(currentX, currentY, currentW, currentH, 15, 0x13);
+        
+        if (window.title)
+        {
+            SetCursorX(currentX + 10);
+            SetCursorY(currentY + 4);
+            Print(window.title, 0x0F);
+        }
+
+        DrawWindowButtons(window);
+
+        for (volatile int d = 0; d < delay * 10000; d++) { }
+    }
+
+    window.transition = TRUE;
+}
+
 void DrawStartMenu(WINDOW window)
 {
     DrawRect(window.x, window.y, window.w, window.h, window.color);
 
-    DrawIcon(window.x + 15, window.y + 15, ICON_USER);
+    DrawIcon(window.x + 15, window.y + 15, ICON_USER1);
 
     SetCursorX(window.x + 67);
     SetCursorY(window.y + 22);
@@ -73,7 +119,7 @@ void DrawIcon(int startX, int startY, ICON icon)
         case ICON_QUESTION:
             iconBitmap = question;
             break;
-        case ICON_USER:
+        case ICON_USER1:
             iconBitmap = user;
             break;
         case ICON_TERMINAL:
@@ -100,7 +146,7 @@ void DrawIcon(int startX, int startY, ICON icon)
     }
 }
 
-void DrawDesktopIcon(EXTICON exticon, char* filename, int x, int y)
+void DrawDesktopIcon(EXTICON exticon, char* name, int x, int y)
 {
     const BYTE* iconBitmap = NULL;
 
@@ -117,6 +163,9 @@ void DrawDesktopIcon(EXTICON exticon, char* filename, int x, int y)
             break;
         case ICON_DEFAULT:
             iconBitmap = non;
+            break;
+        case ICON_USER2:
+            iconBitmap = user2;
             break;
         default:
             return;
@@ -141,7 +190,7 @@ void DrawDesktopIcon(EXTICON exticon, char* filename, int x, int y)
     SetCursorX(x + 20);
     SetCursorY(y + 60);
 
-    Print(filename, 0x0F);
+    Print(name, 0x0F);
 }
 
 void DrawMessageBox(WINDOW msgbox, ICON icon, char* text, int nextWindow)
@@ -273,6 +322,11 @@ void DrawWindowButtons(WINDOW window)
     };
 
     DrawButton(window.x + window.w - (3 * buttonSize) - 30, window.y + 5, 5, minimizeIcon, 0x0F);
+}
+
+WINDOW ReturnWindow(WINDOW window)
+{
+    return window;
 }
 
 int GetStartWindowXY()
