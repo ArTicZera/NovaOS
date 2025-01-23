@@ -5,7 +5,7 @@ typedef enum
     ICON_WARNING,
     ICON_INFO,
     ICON_QUESTION,
-    ICON_USER,
+    ICON_USER1,
     ICON_TERMINAL
 } ICON;
 
@@ -14,7 +14,8 @@ typedef enum
     ICON_TEXT,
     ICON_DIR,
     ICON_EXE,
-    ICON_DEFAULT
+    ICON_DEFAULT,
+    ICON_USER2
 } EXTICON;
 
 typedef struct
@@ -37,6 +38,8 @@ typedef struct
 
     int orgX, orgY;
     int orgW, orgH;
+
+    int transition;
 } WINDOW;
 
 typedef struct GUIEvent
@@ -54,6 +57,7 @@ typedef struct GraphicsBuffer
 } GraphicsBuffer;
 
 void DrawWindow(WINDOW window, int nextWindow);
+void DrawWindowTransition(WINDOW window);
 void DrawRoundedRect(int x, int y, int w, int h, int radius, BYTE color);
 void DrawButton(int x, int y, int size, const char* icon, BYTE color);
 void DrawMessageBox(WINDOW msgbox, ICON icon, char* text, int nextWindow);
@@ -61,6 +65,7 @@ void DrawIcon(int startX, int startY, ICON icon);
 void DrawWindowButtons(WINDOW window);
 void WindowClear(WINDOW window);
 void DrawStartMenu(WINDOW window);
-void DrawDesktopIcon(EXTICON exticon, char* filename, int x, int y);
+void DrawDesktopIcon(EXTICON exticon, char* name, int x, int y);
 
 int GetStartWindowXY();
+WINDOW ReturnWindow(WINDOW window);
