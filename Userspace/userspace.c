@@ -16,7 +16,6 @@
 
 #include "GUI/gui.h"
 #include "login.h"
-#include "desktop.h"
 #include "userspace.h"
 
 
