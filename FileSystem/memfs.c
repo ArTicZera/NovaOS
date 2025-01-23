@@ -1,3 +1,10 @@
+/*
+    Coded by ArTic/JhoPro
+
+    A RAM File system implementation. It's very simple and useful
+    We can create files, directories, etc.
+*/
+
 #include "../Include/stdint.h"
 #include "../Memory/mem.h"
 #include "../Font/text.h"
