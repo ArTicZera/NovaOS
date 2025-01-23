@@ -1,3 +1,11 @@
+/*
+    Coded by ArTic/JhoPro
+
+    This is a NO GUI Shell. It prints the current dir,
+    process commands from 'keyboard.c' and parses to
+    to run it.
+*/
+
 #include "../Include/stdint.h"
 #include "../Drivers/keyboard.h"
 #include "../Drivers/mouse.h"
@@ -17,10 +25,10 @@
 
 #include "shell.h"
 
+//ELF32 Executable
 extern char stars[];
 
-char* currentDir = "root> ";
-
+//Shows a welcome message
 void PrintWelcomeMSG()
 {
     SetCursorX(0x00);
@@ -32,6 +40,8 @@ void PrintWelcomeMSG()
     Print("Type 'gfx' to start using the GUI.\n\n", 0x0F);
 }
 
+//Print the first shell screen and
+//Set keyboard state to 0x02.
 void StartShellNoGUI()
 {
     PrintWelcomeMSG();
@@ -50,11 +60,13 @@ void ProcessShellCMD(char* command)
     int argCount = 0;
     int i = 0;
 
+    //Copy its content
     while (command[i] != ' ' && command[i] != '\0')
     {
         cmd[cmdIndex++] = command[i++];
     }
 
+    //Set last char to '\0'
     cmd[cmdIndex] = '\0';
 
     if (command[i] == ' ') i++;
@@ -63,6 +75,7 @@ void ProcessShellCMD(char* command)
     {
         if (command[i] == '\'') 
         {
+            //Checks if it's inside of ''
             if (inQuotes) 
             {
                 if (argCount < 2) 
@@ -87,6 +100,7 @@ void ProcessShellCMD(char* command)
         ClearScreen();
     }
 
+    //Here starts the parser
     if (strcmp(cmd, "help") == 0x00)
     {
         Print("\n\nclear - ", 0x0A);  Print("Clear the screen.", 0x0F);
@@ -219,6 +233,7 @@ void ProcessShellCMD(char* command)
     PrintCurrentDir();
 }
 
+//Runs some ELF32 files
 void ProcessShellRun(char* proccess)
 {
     if (strcmp(proccess, "stars.exe") == 0x00)
