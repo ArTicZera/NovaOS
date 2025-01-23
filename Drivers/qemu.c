@@ -1,3 +1,7 @@
+/*
+    Coded by ArTic/JhoPro
+*/
+
 #include "../Include/stdint.h"
 #include "../Include/ports.h"
 
