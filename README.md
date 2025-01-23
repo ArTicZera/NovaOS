@@ -1,3 +1,6 @@
+![GitHub Repo stars](https://img.shields.io/github/stars/ArTicZera/NovaOS?style=flat-square)
+![GitHub forks](https://img.shields.io/github/forks/ArTicZera/NovaOS?style=flat-square)
+
 <br />
 <div align = "center">
   <a href = "https://github.com/ArTicZera/NovaOS">
