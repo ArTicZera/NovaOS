@@ -1,3 +1,9 @@
+/*
+    Coded by ArTic/JhoPro
+
+    User login screen. It saves the password.
+*/
+
 #include "../Include/stdint.h"
 #include "../Graphics/graphics.h"
 #include "../Drivers/keyboard.h"
