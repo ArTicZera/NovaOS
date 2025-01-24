@@ -1,7 +1,7 @@
 #define MAXFILENAME 0x0F
 #define MAXFILES    0x0A
 #define MAXSUBDIR   0x05
-#define FSADDRESS   0x2000
+#define FSADDRESS   0xC00000
 
 typedef struct Directory Directory;
 
