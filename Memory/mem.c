@@ -1,3 +1,10 @@
+/*
+    Coded by ArTic/JhoPro
+
+    The most important functions for an OS,
+    since we need to manipulate data from memory
+*/
+
 #include "../Include/stdint.h"
 
 #include "mem.h"
