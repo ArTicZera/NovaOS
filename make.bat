@@ -5,10 +5,12 @@ cls
 echo "Compiling ASM Files"
 nasm -fbin Bootloader/boot.asm   -o Binaries/boot.bin
 nasm -felf Interrupts/idt.asm    -o Binaries/asmidt.o 
+nasm -felf GDT/gdt.asm           -o Binaries/asmgdt.o
 
 echo "Compiling C Files"
 i686-elf-gcc -ffreestanding -m32 -g -c Kernel/kernel.c       -o Binaries/kernel.o
 i686-elf-gcc -ffreestanding -m32 -g -c Kernel/panic.c        -o Binaries/panic.o
+i686-elf-gcc -ffreestanding -m32 -g -c GDT/gdt.c             -o Binaries/gdt.o
 i686-elf-gcc -ffreestanding -m32 -g -c Graphics/graphics.c   -o Binaries/graphics.o
 i686-elf-gcc -ffreestanding -m32 -g -c Include/ports.c       -o Binaries/ports.o
 i686-elf-gcc -ffreestanding -m32 -g -c Include/math.c        -o Binaries/math.o
@@ -42,7 +44,7 @@ echo "Making Kernel Entry"
 nasm -felf Kernel/entry.asm -o Binaries/entry.o
 
 echo "Linking ELF Files"
-i686-elf-ld -o Binaries/fullkernel.bin -Ttext 0x7E00 Binaries/entry.o Binaries/kernel.o Binaries/panic.o Binaries/graphics.o Binaries/ports.o Binaries/math.o Binaries/text.o Binaries/mem.o Binaries/alloc.o Binaries/vmm.o Binaries/asmidt.o Binaries/idt.o Binaries/timer.o Binaries/keyboard.o Binaries/cpu.o Binaries/pci.o Binaries/disk.o Binaries/cmos.o Binaries/mouse.o Binaries/qemu.o Binaries/memfs.o Binaries/elf.o Binaries/shell.o Binaries/gui.o Binaries/userspace.o Binaries/login.o --oformat binary
+i686-elf-ld -o Binaries/fullkernel.bin -Ttext 0x7E00 Binaries/entry.o Binaries/kernel.o Binaries/panic.o Binaries/asmgdt.o Binaries/gdt.o Binaries/graphics.o Binaries/ports.o Binaries/math.o Binaries/text.o Binaries/mem.o Binaries/alloc.o Binaries/vmm.o Binaries/asmidt.o Binaries/idt.o Binaries/timer.o Binaries/keyboard.o Binaries/cpu.o Binaries/pci.o Binaries/disk.o Binaries/cmos.o Binaries/mouse.o Binaries/qemu.o Binaries/memfs.o Binaries/elf.o Binaries/shell.o Binaries/gui.o Binaries/userspace.o Binaries/login.o --oformat binary
 
 echo "Mounting IMG"
 cat Binaries/boot.bin Binaries/fullkernel.bin > "NovaOS.img"
