@@ -21,6 +21,7 @@
 #include "../Shell/shell.h"
 #include "../Userspace/GUI/gui.h"
 #include "../Userspace/userspace.h"
+#include "../GDT/gdt.h"
 
 //stars.exe
 extern char stars[];
@@ -31,6 +32,9 @@ void main(void)
     Debug("VESA 640x480 8BPP Started!\n", 0x00);
 
     Debug("Kernel loaded!\n", 0x00);
+
+    InitGDT();
+    Debug("GDT Initialized!\n", 0x00);
     
     SetupIDT();
     Debug("IDT Loaded!\n", 0x00);
