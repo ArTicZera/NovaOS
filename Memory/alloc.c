@@ -1,3 +1,10 @@
+/*
+    Coded by ArTic/JhoPro
+
+    This Memory Allocation system uses memory blocks.
+    It's very simple and I like it
+*/
+
 #include "../Include/stdint.h"
 
 #include "alloc.h"
