@@ -40,6 +40,7 @@ NovaOS will only work on QEMU, so it can have more easily and readable operation
 - ✅ **Shell**
 - ✅ **Graphical Interface (GUI)**
 - ✅ **ELF Loader**
+- ✅ **Task State Segment (TSS)**
 - ❌ **Network Driver**
 - ❌ **Processes**
 - ❌ **Multitasking**
