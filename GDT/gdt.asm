@@ -1,3 +1,5 @@
+;Coded by OliveStem
+
 global gdt_flush
 
 gdt_flush:
