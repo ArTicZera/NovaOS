@@ -1,3 +1,7 @@
+/*
+    Coded by OliveStem
+*/
+
 #include "../Include/stdint.h"
 #include "../Memory/mem.h"
 
