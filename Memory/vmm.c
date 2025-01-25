@@ -1,3 +1,10 @@
+/*
+    Coded by ArTic/JhoPro and a little bit of ChatGPT
+
+    This is a useful Virtual Memory Manager for our
+    programs and has an implementation of pages.
+*/
+
 #include "../Include/stdint.h"
 
 #include "vmm.h"
