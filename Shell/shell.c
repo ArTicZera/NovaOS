@@ -53,44 +53,39 @@ void StartShellNoGUI()
 void ProcessShellCMD(char* command)
 {
     char cmd[16] = {0};
-    char args[2][16] = {{0}, {0}};
+    char args[2][16] = {{0}};
     int cmdIndex = 0;
-    int inQuotes = 0;
     int argIndex = 0;
     int argCount = 0;
     int i = 0;
 
-    //Copy its content
     while (command[i] != ' ' && command[i] != '\0')
     {
         cmd[cmdIndex++] = command[i++];
     }
-
-    //Set last char to '\0'
     cmd[cmdIndex] = '\0';
 
     if (command[i] == ' ') i++;
 
-    for (; command[i] != '\0'; i++)
+    while (command[i] != '\0' && argCount < 2)
     {
-        if (command[i] == '\'') 
+        if (command[i] == ' ')
         {
-            //Checks if it's inside of ''
-            if (inQuotes) 
-            {
-                if (argCount < 2) 
-                {
-                    args[argCount][argIndex] = '\0';
-                    argCount++;
-                }
-                argIndex = 0;
-            }
-            inQuotes = !inQuotes;
-        } 
-        else if (inQuotes && argCount < 2) 
+            args[argCount][argIndex] = '\0';
+            argCount++;
+            argIndex = 0;
+        }
+        else
         {
             args[argCount][argIndex++] = command[i];
         }
+        i++;
+    }
+
+    if (argIndex > 0 && argCount < 2)
+    {
+        args[argCount][argIndex] = '\0';
+        argCount++;
     }
 
     if (GetCursorY() >= 448)
