@@ -44,7 +44,10 @@ void main(void)
     Debug("Virtual Memory Manager Started!\n", 0x00);
 
     InitFileSystem();
+    MakeDir("shell");
+    ChangeDir("shell");
     CreateFile("stars.exe", stars, starsSize);
+    ChangeDir("..");
     Debug("MemFS File System Loaded!\n", 0x00);
 
     InitTimer();
