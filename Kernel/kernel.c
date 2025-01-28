@@ -35,6 +35,7 @@ void main(void)
 
     InitGDT();
     Debug("GDT Initialized!\n", 0x00);
+    Debug("TSS Initialized!\n", 0x00);
     
     SetupIDT();
     Debug("IDT Loaded!\n", 0x00);
