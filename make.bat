@@ -36,9 +36,11 @@ i686-elf-gcc -ffreestanding -m32 -g -c Userspace/GUI/gui.c   -o Binaries/gui.o
 i686-elf-gcc -ffreestanding -m32 -g -c Userspace/login.c     -o Binaries/login.o
 
 i686-elf-gcc -ffreestanding -m32 -g -c Programs/starfield.c  -o Programs/Binaries/starfield.o
+i686-elf-gcc -ffreestanding -m32 -g -c Programs/scroll.c     -o Programs/Binaries/scroll.o
 
 echo "Linking Programs"
 i686-elf-ld -Ttext 0x100000 Programs/Binaries/starfield.o Binaries/graphics.o Binaries/math.o -o Programs/Binaries/stars.elf
+i686-elf-ld -Ttext 0x100000 Programs/Binaries/scroll.o Binaries/graphics.o Binaries/text.o Binaries/math.o -o Programs/Binaries/scroll.elf
 
 echo "Making Kernel Entry"
 nasm -felf Kernel/entry.asm -o Binaries/entry.o
