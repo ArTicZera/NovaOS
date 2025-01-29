@@ -25,7 +25,10 @@
 
 //stars.exe
 extern char stars[];
+extern char scroll[];
+
 extern DWORD starsSize;
+extern DWORD scrollSize;
 
 void main(void)
 {
@@ -47,6 +50,7 @@ void main(void)
     MakeDir("shell");
     ChangeDir("shell");
     CreateFile("stars.exe", stars, starsSize);
+    CreateFile("scroll.exe", scroll, scrollSize);
     ChangeDir("..");
     Debug("MemFS File System Loaded!\n", 0x00);
 
