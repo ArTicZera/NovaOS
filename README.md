@@ -44,6 +44,7 @@ NovaOS will only work on QEMU, so it can have more easily and readable operation
 - ❌ **Network Driver**
 - ❌ **Processes**
 - ❌ **Multitasking**
+- ❌ **Installation Setup**
 - ❌ **User Documentation**
 
 # ⚙️ Building
