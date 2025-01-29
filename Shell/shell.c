@@ -230,9 +230,9 @@ void ProcessShellCMD(char* command)
 }
 
 //Runs some ELF32 files
-void ProcessShellRun(char* proccess)
+void ProcessShellRun(char* process)
 {
-    if (strcmp(proccess, "stars.exe") == 0x00)
+    if (strcmp(process, "stars.exe") == 0x00)
     {
         ExecuteELF(stars);
     }
