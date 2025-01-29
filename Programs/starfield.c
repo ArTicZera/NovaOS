@@ -9,7 +9,14 @@
 #include "../Graphics/graphics.h"
 #include "../Include/math.h"
 
-#include "starfield.h"
+typedef struct
+{
+    float x, y, z;
+    float speed;
+    VERTEX vector;
+} STAR;
+
+#define MAXSTARS 0xFF
 
 STAR stars[MAXSTARS];
 
