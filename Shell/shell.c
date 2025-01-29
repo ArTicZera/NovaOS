@@ -27,6 +27,7 @@
 
 //ELF32 Executable
 extern char stars[];
+extern char scroll[];
 
 //Shows a welcome message
 void PrintWelcomeMSG()
@@ -234,6 +235,10 @@ void ProcessShellRun(char* proccess)
     if (strcmp(proccess, "stars.exe") == 0x00)
     {
         ExecuteELF(stars);
+    }
+    else if (strcmp(process, "scroll.exe") == 0x00)
+    {
+        ExecuteELF(scroll);
     }
     else
     {
