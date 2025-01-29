@@ -23,10 +23,11 @@
 #include "../Userspace/userspace.h"
 #include "../GDT/gdt.h"
 
-//stars.exe
+//ELF32 Programs
 extern char stars[];
 extern char scroll[];
 
+//Size of Programs
 extern DWORD starsSize;
 extern DWORD scrollSize;
 
