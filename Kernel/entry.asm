@@ -27,8 +27,10 @@
 [GLOBAL       exe]
 
 ;ELF Programs
-[GLOBAL starsSize]
-[GLOBAL     stars]
+[GLOBAL  starsSize]
+[GLOBAL      stars]
+[GLOBAL scrollSize]
+[GLOBAL     scroll]
 
 section .text
         global  _start
@@ -63,3 +65,8 @@ section .data
         stars:     incbin "Programs/Binaries/stars.elf"
         stars_end: 
         starsSize: dd stars_end - stars
+
+        scrollBase: equ $ - scroll
+        scroll:     incbin "Programs/Binaries/scroll.elf"
+        scroll_end: 
+        scrollSize: dd scroll_end - scroll
