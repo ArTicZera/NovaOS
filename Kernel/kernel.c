@@ -62,6 +62,7 @@ void main(void)
     Debug("Keyboard Started!\n", 0x00);
 
     InitMouse();
+    SetCursorX(0x00);
     Debug("Mouse Started!\n", 0x00);
 
     ShowCMOSMem();
