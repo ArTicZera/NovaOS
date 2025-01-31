@@ -52,5 +52,5 @@ i686-elf-ld -o Binaries/fullkernel.bin -Ttext 0x7E00 Binaries/entry.o Binaries/k
 echo "Mounting IMG"
 cat Binaries/boot.bin Binaries/fullkernel.bin > "NovaOS.img"
 
-echo "Running NovaOS (WITH ETHERNET)"
-qemu-system-i386 -net nic,model=rtl8139 -net user -drive format=raw,file="NovaOS.img" 
+echo "Running NovaOS (WITH RTL8139 NETWORK DRIVER)"
+qemu-system-i386 -net ic,model=rtl8139 -net user -drive format=raw,file="NovaOS.img" 
