@@ -17,6 +17,7 @@
 #include "../Hardware/pci.h"
 #include "../Hardware/disk.h"
 #include "../Hardware/cmos.h"
+#include "../Network/net.h"
 #include "../FileSystem/memfs.h"
 #include "../Shell/shell.h"
 #include "../Userspace/GUI/gui.h"
@@ -64,6 +65,9 @@ void main(void)
     InitMouse();
     SetCursorX(0x00);
     Debug("Mouse Started!\n", 0x00);
+
+    InitEthernet();
+    Debug("Ethernet Started!\n", 0x00);
 
     ShowCMOSMem();
     ListDisks();
