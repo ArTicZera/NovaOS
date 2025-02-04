@@ -311,7 +311,9 @@ void HandleWindowDragging(WINDOW* window, int mouseX, int mouseY, int mousePress
     static int offsetX = 0;
     static int offsetY = 0;
 
-    if (mousePressed && window) 
+    if (!window) return;
+
+    if (mousePressed) 
     {
         if (!isDragging) 
         {
@@ -322,7 +324,7 @@ void HandleWindowDragging(WINDOW* window, int mouseX, int mouseY, int mousePress
                 offsetY = mouseY - window->y;
             }
         }
-        
+
         if (isDragging) 
         {
             window->x = mouseX - offsetX;
@@ -332,6 +334,9 @@ void HandleWindowDragging(WINDOW* window, int mouseX, int mouseY, int mousePress
             if (window->y < 0) window->y = 0;
             if (window->x + window->w > WSCREEN) window->x = WSCREEN - window->w;
             if (window->y + window->h > HSCREEN) window->y = HSCREEN - window->h;
+
+            UpdateExplorer();
+            DrawWindow(*window, 0);
         }
     } 
     else 
