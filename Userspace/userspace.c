@@ -119,12 +119,7 @@ void StartButtonHandler(int x, int y, int pressed)
 void GetWindow(WINDOW window)
 {
     winmgr[currentWindowID] = window;
-
-    winmgr[currentWindowID].orgX = window.x;
-    winmgr[currentWindowID].orgY = window.y;
-    winmgr[currentWindowID].orgW = window.w;
-    winmgr[currentWindowID].orgH = window.h;
-
+    
     currentWindowID++;
     totalWindows++;
 }
