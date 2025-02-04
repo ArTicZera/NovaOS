@@ -26,20 +26,7 @@ typedef struct
     int x, y;
     int w, h;
 
-    int state; //0 = invisible, 1 = minimized, 2 = fullscreen
-    int focus;
-
-    int isDragging;
-
-    int dragOffsetX;
-    int dragOffsetY;
-
     int isMaximized;
-
-    int orgX, orgY;
-    int orgW, orgH;
-
-    int transition;
 } WINDOW;
 
 typedef struct GUIEvent
