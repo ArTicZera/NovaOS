@@ -30,7 +30,7 @@ extern BYTE exe[];
 //Draw a simple window using DrawRoundedRect and with the buttons
 void DrawWindow(WINDOW window, int nextWindow)
 {
-    DrawRoundedRect(window.x, window.y, window.w, window.h, 5, 0x13);
+    DrawRoundedRect(window.x, window.y, window.w, window.h, 5, window.color);
 
     if (window.title)
     {
