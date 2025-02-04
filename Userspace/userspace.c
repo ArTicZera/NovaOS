@@ -384,7 +384,7 @@ void UserSpace()
         int x, y, pressed;
         GetMouseState(&x, &y, &pressed);
 
-        //DesktopEvents(x, y, pressed);
+        DesktopEvents(x, y, pressed);
 
         StartButtonHandler(x, y, pressed);
 
