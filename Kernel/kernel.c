@@ -11,6 +11,7 @@
 #include "../Interrupts/idt.h"
 #include "../Timer/timer.h"
 #include "../Memory/vmm.h"
+#include "../Memory/alloc.h"
 #include "../Drivers/keyboard.h"
 #include "../Drivers/mouse.h"
 #include "../Hardware/cpu.h"
@@ -65,6 +66,9 @@ void main(void)
     InitMouse();
     SetCursorX(0x00);
     Debug("Mouse Started!\n", 0x00);
+
+    InitMemory();
+    Debug("Memory Initialized!\n", 0x00);
 
     InitEthernet();
     Debug("Ethernet Started!\n", 0x00);
