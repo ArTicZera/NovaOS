@@ -72,9 +72,38 @@ void DesktopEvents(int x, int y, int pressed)
                 title[i] = '\0';
 
                 int pos = GetStartWindowXY();
-                WINDOW window = { title, 0x13, pos, pos, 320, 200 };
+                WINDOW window = { title, 0x12, pos, pos, 320, 200 };
                 DrawWindow(window, 0x00);
                 GetWindow(window);
+
+                FileSystem* fs = (FileSystem*) FSADDRESS;
+                Directory* selectedDir = NULL;
+
+                for (int i = 0; i < MAXSUBDIR; i++)
+                {
+                    if (fs->root.subdirs[i] != NULL && strcmp(fs->root.subdirs[i]->name, item->name) == 0)
+                    {
+                        selectedDir = fs->root.subdirs[i];
+                        
+                        break;
+                    }
+                }
+
+                if (selectedDir != NULL)
+                {
+                    int fileX = pos + 10;
+                    int fileY = pos + 40;
+
+                    for (int i = 0; i < MAXFILES; i++)
+                    {
+                        if (selectedDir->files[i].filename[0] != '\0')
+                        {
+                            DrawDesktopIcon(ICON_DEFAULT, selectedDir->files[i].filename, fileX, fileY);
+                            
+                            fileX += 100;
+                        }
+                    }
+                }
             }
             else if (item->type == 1)
             {
