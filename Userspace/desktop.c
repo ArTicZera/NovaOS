@@ -7,6 +7,7 @@
 #include "../Graphics/graphics.h"
 #include "../Font/text.h"
 #include "../Memory/mem.h"
+#include "../FileSystem/memfs.h"
 
 #include "GUI/gui.h"
 #include "userspace.h"
