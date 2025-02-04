@@ -382,6 +382,7 @@ void UserSpace()
     while (true)
     {
         int x, y, pressed;
+        
         GetMouseState(&x, &y, &pressed);
 
         DesktopEvents(x, y, pressed);
