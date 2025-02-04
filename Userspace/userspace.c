@@ -22,7 +22,7 @@
 extern BYTE bootscr[];
 extern BYTE backgrd[];
 
-WINDOW startMenu = { "", 0x12, 0, HSCREEN - 285, 150, 250, 1, TRUE, 0, 0, 0 };
+WINDOW startMenu = { "", 0x12, 0, HSCREEN - 285, 150, 250, 0 };
 WINDOW* winmgr;
 
 int inUserSpace = 0x00;
