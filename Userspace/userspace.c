@@ -250,14 +250,18 @@ void UserspaceState(int state)
 void DesktopIcons()
 {
     FileSystem* fs = (FileSystem*) FSADDRESS;
-
+    
     int index = 0;
 
     for (int i = 0; i < MAXSUBDIR; i++)
     {
         if (fs->root.subdirs[i] != NULL && fs->root.subdirs[i]->name[0] != '\0')
         {
-            DrawDesktopIcon(ICON_DIR, fs->root.subdirs[i]->name, 10, 10 + (index * 76));
+            int x = 10;
+            int y = 10 + (index * 76);
+            DrawDesktopIcon(ICON_DIR, fs->root.subdirs[i]->name, x, y);
+            SetDesktopIndex(fs->root.subdirs[i]->name, 0x00, x, y);
+
             index++;
         }
     }
@@ -266,7 +270,7 @@ void DesktopIcons()
     {
         if (fs->root.files[i].filename[0] != '\0')
         {
-            const char* filename = fs->root.files[i].filename;
+            char* filename = fs->root.files[i].filename;
             const char* extension = NULL;
 
             for (const char* p = filename; *p != '\0'; p++) 
@@ -299,7 +303,11 @@ void DesktopIcons()
                 icon = ICON_DEFAULT;
             }
 
-            DrawDesktopIcon(icon, fs->root.files[i].filename, 10, 10 + (index * 76));
+            int x = 10;
+            int y = 10 + (index * 76);
+            DrawDesktopIcon(icon, filename, x, y);
+            SetDesktopIndex(filename, 0x01, x, y);
+
             index++;
         }
     }
