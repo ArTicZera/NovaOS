@@ -42,6 +42,7 @@ NovaOS will only work on QEMU, so it can have more easily and readable operation
 - ✅ **ELF Loader**
 - ✅ **Task State Segment (TSS)**
 - ✅ **Network Driver**
+- ❌ **Audio Driver**
 - ❌ **Processes**
 - ❌ **Multitasking**
 - ❌ **Installation Setup**
