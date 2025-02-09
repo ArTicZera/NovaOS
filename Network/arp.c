@@ -29,7 +29,8 @@ void ARPRequest(DWORD targetIp)
     memcpy(arpHdr.senderHwAddr, "\x00\x0C\x29\x3D\x59\x0A", ARP_HW_ADDR_LEN);
     memset(arpHdr.targetHwAddr, 0x00, ARP_HW_ADDR_LEN);
 
-    RTL8139SendPacket(&arpHdr, sizeof(arpHdr), 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+    // Send ARP request to broadcast address
+    RTL8139SendPacket(&arpHdr, sizeof(arpHdr), "\xFF\xFF\xFF\xFF\xFF\xFF", 0x01);
 }
 
 void ARPReply(ARPHeader *arpHdr)
@@ -47,7 +48,6 @@ void ARPReply(ARPHeader *arpHdr)
         ARPEntry* entry = &arpTable[arpTableSize++];
 
         entry->ipAddress = ntohl(arpHdr->senderProtoAddr);
-
         memcpy(entry->macAddress, arpHdr->senderHwAddr, ARP_HW_ADDR_LEN);
     }
 }
@@ -59,7 +59,6 @@ BYTE ARPLookup(DWORD ip, LPBYTE mac)
         if (arpTable[i].ipAddress == ip)
         {
             memcpy(mac, arpTable[i].macAddress, ARP_HW_ADDR_LEN);
-
             return TRUE;
         }
     }
@@ -71,7 +70,7 @@ void ARPReceivePacket(LPBYTE packet, int length)
 {
     if (length < sizeof(ARPHeader))
     {
-        //Too short packet
+        // Too short packet
         return;
     }
 
@@ -79,15 +78,11 @@ void ARPReceivePacket(LPBYTE packet, int length)
 
     if (ntohs(arpHdr->hwType) != ARP_HW_TYPE_ETHERNET || ntohs(arpHdr->protoType) != ARP_PROTO_IP)
     {
-        //Hardware or protocol type not supported
+        // Hardware or protocol type not supported
         return;
     }
 
-    if (ntohs(arpHdr->opcode) == ARP_REQUEST)
-    {
-        ARPReply(arpHdr);
-    }
-    else if (ntohs(arpHdr->opcode) == ARP_REPLY)
+    if (ntohs(arpHdr->opcode) == ARP_REQUEST || ntohs(arpHdr->opcode) == ARP_REPLY)
     {
         ARPReply(arpHdr);
     }
