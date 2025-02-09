@@ -71,7 +71,7 @@ void main(void)
     InitMemory();
     Debug("Memory Initialized!\n", 0x00);
 
-    InitEthernet();]
+    InitEthernet();
     InitARP();
     Debug("Ethernet Started!\n", 0x00);
 
