@@ -6,6 +6,8 @@
 #include "../Hardware/pci.h"
 #include "../Font/text.h"
 
+#include "iptcp.h"
+#include "icmp.h"
 #include "net.h"
 
 rtl8139 rtl8139Device;
@@ -13,8 +15,13 @@ rtl8139 rtl8139Device;
 static DWORD rxBuffer;
 static DWORD iobase;
 
+static BYTE currentTx = 0;
+
 static int readptr;
 static char transmitDesc;
+
+static BYTE RTL8139SLOT;
+static BYTE RTL8139BUS;
 
 BYTE* GetMAC()
 {
@@ -42,6 +49,9 @@ DWORD RTL8139_FIND_DEVICE()
 
                 if (bar & 0x01)
                 {
+                    RTL8139BUS  = bus;
+                    RTL8139SLOT = slot;
+
                     return bar & ~0x3;
                 }
             }
@@ -83,40 +93,71 @@ void InitRTL8139()
 
     //Enables RX and TX
     outb(iobase + RTL8139_REG_COMMAND, RTL8139_CMD_RX_EN | RTL8139_CMD_TX_EN);
-
-    transmitDesc = 0;
-    readptr = 0;
-    outl(iobase + RTL8139_REG_RX_ADDR_LOW, rxBuffer);
 }
 
-void ReceivePacket()
+void RTL8139SendPacket(void* packet, WORD length, BYTE* dstMac, WORD etherType)
 {
-    WORD packetLength = *(LPWORD) (rxBuffer + readptr + 2);
+    EthernetFrame ethFrame;
+    memcpy(ethFrame.dstMac, dstMac, 6);
+    memcpy(ethFrame.srcMac, GetMAC(), 6);
+    ethFrame.etherType = htons(etherType);
 
-    readptr = (readptr + packetLength + 7) & (~3);
+    BYTE txBuffer[sizeof(EthernetFrame) + length];
+    memcpy(txBuffer, &ethFrame, sizeof(EthernetFrame));
+    memcpy(txBuffer + sizeof(EthernetFrame), packet, length);
+
+    // Send the packet using the RTL8139 driver
+    DWORD txAddr = RTL8139_REG_TX_ADDR_LOW + (currentTx * 4);
+    DWORD txStatus = RTL8139_REG_TX_ADDR_HIGH + (currentTx * 4);
+
+    memcpy((void*)inl(iobase + txAddr), txBuffer, sizeof(txBuffer));
+    outl(iobase + txStatus, sizeof(txBuffer) & 0xFFFF);
+
+    currentTx = (currentTx + 1) % 4;
+
+    BYTE buffer[2048];
+    int length = RTL8139ReceivePacket(buffer, sizeof(buffer));
+
+    if (length > 0)
+    {
+        EthernetFrame* ethFrame = (EthernetFrame*)buffer;
+        IPHeader* ipHdr = (IPHeader*)(buffer + sizeof(EthernetFrame));
+
+        if (ntohs(ethFrame->etherType) == ETHERNET_IP)
+        {
+            if (ipHdr->protocol == 1) // ICMP
+            {
+                ICMPHeader* icmpHdr = (ICMPHeader*)(buffer + sizeof(EthernetFrame) + sizeof(IPHeader));
+                HandleICMPReply(icmpHdr, length - sizeof(EthernetFrame) - sizeof(IPHeader));
+            }
+        }
+    }
+}
+
+int RTL8139ReceivePacket(LPBYTE buffer, int bufferLength)
+{
+    WORD packetLength = *(LPWORD)(rxBuffer + readptr + 2); 
+
+    if (packetLength == 0 || packetLength > bufferLength) 
+    {
+        return 0;
+    }
+
+    memcpy(buffer, (void*)(rxBuffer + readptr), packetLength);
+
+    readptr = (readptr + packetLength + 3) & (~3);
+
     outw(iobase + 0x38, readptr - 0x10);
+
+    return packetLength;
 }
 
 void RTL8139Handler()
 {
     WORD intrStatus = inw(iobase + RTL8139_REG_INTR_STATUS);
 
-    if (intrStatus & TER)
+    if (1)
     {
-        Debug("RTL8139 TER Set", 0x02);
-    }
-    if (intrStatus & RER)
-    {
-        Debug("RTL8139 RER Set", 0x02);
-    }
-    if (intrStatus & TOK)
-    {
-        //Transmition
-    }
-    if (intrStatus & ROK)
-    {
-        ReceivePacket();
-
         Debug("Packet Received!\n", 0x02);
     }
 
@@ -134,7 +175,8 @@ void InitEthernet()
     else
     {
         InitRTL8139();
-        Debug("RTL8139 Enabled!\n", 0x00);
-        IRQInstallHandler(RTL8139_IRQ, &RTL8139Handler);
+
+        BYTE irq = PCIConfigReadWord(RTL8139BUS, RTL8139SLOT, 0x00, 0x3C) & 0xFF;
+        IRQInstallHandler(irq, &RTL8139Handler);
     }
 }
