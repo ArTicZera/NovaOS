@@ -6,6 +6,7 @@
 #include "../Hardware/pci.h"
 #include "../Font/text.h"
 
+#include "netutils.h"
 #include "iptcp.h"
 #include "icmp.h"
 #include "net.h"
@@ -63,20 +64,20 @@ DWORD RTL8139_FIND_DEVICE()
 
 void InitRTL8139()
 {
-    //Turn on RTL8139
+    // Turn on RTL8139
     outb(iobase + 0x52, 0x00);
 
-    //Software Reset
+    // Software Reset
     outb(iobase + RTL8139_REG_COMMAND, RTL8139_CMD_RESET);
 
     while ((inb(iobase + RTL8139_REG_COMMAND) & RTL8139_CMD_RESET) != 0x00) 
     { 
-
+        // Wait for reset to complete
     }
 
     GetMAC();
     
-    //Init Receive Buffer
+    // Init Receive Buffer
     rxBuffer = (DWORD)AllocateMemory(8192 + 16);
 
     if (!rxBuffer)
@@ -87,11 +88,11 @@ void InitRTL8139()
 
     outl(iobase + RTL8139_REG_RX_ADDR_LOW, rxBuffer);
 
-    //Enable interruptions
+    // Enable interruptions
     outw(iobase + RTL8139_REG_INTR_STATUS, 0xFFFF);
     outb(iobase + RTL8139_REG_COMMAND, 0x0C);
 
-    //Enables RX and TX
+    // Enable RX and TX
     outb(iobase + RTL8139_REG_COMMAND, RTL8139_CMD_RX_EN | RTL8139_CMD_TX_EN);
 }
 
@@ -114,24 +115,6 @@ void RTL8139SendPacket(void* packet, WORD length, BYTE* dstMac, WORD etherType)
     outl(iobase + txStatus, sizeof(txBuffer) & 0xFFFF);
 
     currentTx = (currentTx + 1) % 4;
-
-    BYTE buffer[2048];
-    int length = RTL8139ReceivePacket(buffer, sizeof(buffer));
-
-    if (length > 0)
-    {
-        EthernetFrame* ethFrame = (EthernetFrame*)buffer;
-        IPHeader* ipHdr = (IPHeader*)(buffer + sizeof(EthernetFrame));
-
-        if (ntohs(ethFrame->etherType) == ETHERNET_IP)
-        {
-            if (ipHdr->protocol == 1) // ICMP
-            {
-                ICMPHeader* icmpHdr = (ICMPHeader*)(buffer + sizeof(EthernetFrame) + sizeof(IPHeader));
-                HandleICMPReply(icmpHdr, length - sizeof(EthernetFrame) - sizeof(IPHeader));
-            }
-        }
-    }
 }
 
 int RTL8139ReceivePacket(LPBYTE buffer, int bufferLength)
@@ -156,9 +139,27 @@ void RTL8139Handler()
 {
     WORD intrStatus = inw(iobase + RTL8139_REG_INTR_STATUS);
 
-    if (1)
+    if (intrStatus & 0x01) // Packet received
     {
         Debug("Packet Received!\n", 0x02);
+
+        BYTE buffer[2048];
+        int length = RTL8139ReceivePacket(buffer, sizeof(buffer));
+
+        if (length > 0)
+        {
+            EthernetFrame* ethFrame = (EthernetFrame*)buffer;
+            IPHeader* ipHdr = (IPHeader*)(buffer + sizeof(EthernetFrame));
+
+            if (ntohs(ethFrame->etherType) == ETHERNET_IP)
+            {
+                if (ipHdr->protocol == 1) // ICMP
+                {
+                    ICMPHeader* icmpHdr = (ICMPHeader*)(buffer + sizeof(EthernetFrame) + sizeof(IPHeader));
+                    HandleICMPReply(icmpHdr, length - sizeof(EthernetFrame) - sizeof(IPHeader));
+                }
+            }
+        }
     }
 
     outw(iobase + RTL8139_REG_INTR_STATUS, intrStatus);
