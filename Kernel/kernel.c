@@ -19,6 +19,7 @@
 #include "../Hardware/disk.h"
 #include "../Hardware/cmos.h"
 #include "../Network/net.h"
+#include "../Network/arp.h"
 #include "../FileSystem/memfs.h"
 #include "../Shell/shell.h"
 #include "../Userspace/GUI/gui.h"
@@ -70,7 +71,8 @@ void main(void)
     InitMemory();
     Debug("Memory Initialized!\n", 0x00);
 
-    InitEthernet();
+    InitEthernet();]
+    InitARP();
     Debug("Ethernet Started!\n", 0x00);
 
     ShowCMOSMem();
