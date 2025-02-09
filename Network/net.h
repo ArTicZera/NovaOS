@@ -18,7 +18,6 @@
 
 #define RTL8139_IRQ              10
 
-
 #define ROK (1<<0)
 #define RER	(1<<1)
 #define TOK (1<<2)
@@ -34,7 +33,9 @@ typedef struct
 DWORD RTL8139_FIND_DEVICE();
 BYTE* GetMAC();
 
+void RTL8139SendPacket(void* packet, WORD length, BYTE* dstMac, WORD etherType);
+int RTL8139ReceivePacket(LPBYTE buffer, int bufferLength);
+
 void InitRTL8139();
-void ReceivePacket();
 void RTL8139Handler();
 void InitEthernet();
