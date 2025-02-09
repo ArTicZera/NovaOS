@@ -10,6 +10,7 @@
 #include "../Drivers/keyboard.h"
 #include "../Drivers/mouse.h"
 #include "../Drivers/qemu.h"
+#include "../Network/icmp.h"
 #include "../Hardware/cpu.h"
 #include "../Hardware/cmos.h"
 #include "../Graphics/graphics.h"
@@ -156,7 +157,7 @@ void ProcessShellCMD(char* command)
         Print(" #####         ####           user@novaos-vm\n", 0x4C);
         Print(" #######      #####           --------------\n", 0x4C);
         Print(" ##########   ###### #######  OS: ", 0x4C); Print("NovaOS x86\n", 0x0F);
-        Print(" ###  #######  ############   Kernel: ", 0x4C); Print("Alpha 1.7\n", 0x0F);
+        Print(" ###  #######  ############   Kernel: ", 0x4C); Print("Alpha 1.8\n", 0x0F);
         Print(" ###     ###### #########     Resolution: ", 0x4C); Print("640x480\n", 0x0F);
         Print(" ###       ############       Video Mode: ", 0x4C); Print("VESA BIOS Extensions\n", 0x0F);
         Print(" ###        ##########        CPU: ", 0x4C); ShowCPUName();
@@ -218,6 +219,10 @@ void ProcessShellCMD(char* command)
     else if (strcmp(cmd, "run") == 0x00)
     {
         ProcessShellRun(args[0]);
+    }
+    else if (strcmp(cmd, "ping") == 0x00)
+    {
+        SendPing(args[0]);
     }
     else
     {
