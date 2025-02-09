@@ -15,7 +15,7 @@ void HandleICMPReply(ICMPHeader* icmpHdr, int length)
         return;
     }
 
-    if (icmpHdr->type == 0x00)
+    if (icmpHdr->type == 0x00) // ICMP Echo Reply
     {
         Debug("Received Echo Reply!\n", 0x02);
     }
@@ -57,7 +57,7 @@ void SendPing(const char* dstIp)
     ipHeader->protocol = 1; // ICMP
     ipHeader->checksum = 0;
     ipHeader->srcIp = htonl(MY_IP); // Replace with your source IP
-    ipHeader->dstIp = htonl(dstIpDword);
+    ipHeader->dstIp = htonl(dstIpDWORD);
     ipHeader->checksum = CalculateChecksum((LPWORD)ipHeader, sizeof(IPHeader));
 
     // Construct ICMP header
@@ -67,6 +67,8 @@ void SendPing(const char* dstIp)
     icmpHeader->checksum = 0;
     icmpHeader->id = htons(1); // Random ID
     icmpHeader->sequence = htons(1); // Sequence number
+
+    // Calculate ICMP checksum
     icmpHeader->checksum = CalculateChecksum((LPWORD)icmpHeader, sizeof(ICMPHeader));
 
     Debug("Sending ICMP Echo Request...\n", 0x02);
