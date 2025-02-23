@@ -22,7 +22,10 @@ NovaOS is a x86 protected mode operating system made in C and x86 Assembly by Ar
 
 
 # ✨ Showcase Video
-https://github.com/user-attachments/assets/a0811d8d-ad4b-4c1e-9a27-c164b22fbce8
+https://github.com/user-attachments/assets/83935faa-3283-430f-b691-2e1115c4d2a7
+
+
+https://github.com/user-attachments/assets/6422312e-26cf-408d-883a-c8334bc61d39
 
 # ⚠️ Important
 NovaOS will only work on QEMU, so it can have more easily and readable operations and functions.
