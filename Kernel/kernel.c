@@ -14,6 +14,7 @@
 #include "../Memory/alloc.h"
 #include "../Drivers/keyboard.h"
 #include "../Drivers/mouse.h"
+#include "../Drivers/sb16.h"
 #include "../Hardware/cpu.h"
 #include "../Hardware/pci.h"
 #include "../Hardware/disk.h"
@@ -29,10 +30,12 @@
 //ELF32 Programs
 extern char stars[];
 extern char scroll[];
+extern char bytebeat[];
 
 //Size of Programs
 extern DWORD starsSize;
 extern DWORD scrollSize;
+extern DWORD bbeatSize;
 
 void main(void)
 {
@@ -55,6 +58,7 @@ void main(void)
     ChangeDir("shell");
     CreateFile("stars.exe", stars, starsSize);
     CreateFile("scroll.exe", scroll, scrollSize);
+    CreateFile("bytebeat.exe", bytebeat, bbeatSize);
     ChangeDir("..");
     Debug("MemFS File System Loaded!\n", 0x00);
 
@@ -74,6 +78,9 @@ void main(void)
     InitEthernet();
     InitARP();
     Debug("Ethernet Started!\n", 0x00);
+
+    SetupSoundBlaster();
+    Debug("Sound Blaster 16 Initialized!\n", 0x00);
 
     ShowCMOSMem();
     ListDisks();
