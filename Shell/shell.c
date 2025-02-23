@@ -29,6 +29,7 @@
 //ELF32 Executable
 extern char stars[];
 extern char scroll[];
+extern char bytebeat[];
 
 //Shows a welcome message
 void PrintWelcomeMSG()
@@ -243,6 +244,10 @@ void ProcessShellRun(char* process)
     else if (strcmp(process, "scroll.exe") == 0x00)
     {
         ExecuteELF(scroll);
+    }
+    else if (strcmp(process, "bytebeat.exe") == 0x00)
+    {
+        ExecuteELF(bytebeat);
     }
     else
     {
