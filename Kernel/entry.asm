@@ -31,6 +31,8 @@
 [GLOBAL      stars]
 [GLOBAL scrollSize]
 [GLOBAL     scroll]
+[GLOBAL  bbeatSize]
+[GLOBAL   bytebeat]
 
 section .text
         global  _start
@@ -70,3 +72,8 @@ section .data
         scroll:     incbin "Programs/Binaries/scroll.elf"
         scroll_end: 
         scrollSize: dd scroll_end - scroll
+
+        bytebeatBase: equ $ - bytebeat
+        bytebeat:     incbin "Programs/Binaries/bytebeat.elf"
+        bytebeat_end: 
+        bbeatSize: dd bytebeat_end - bytebeat
