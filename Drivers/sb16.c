@@ -1,3 +1,8 @@
+/*
+    Coded by ArTic/JhoPro
+
+    A Sound Blaster 16 Audio Driver Implementation
+*/
 #include "../Include/stdint.h"
 #include "../Include/ports.h"
 #include "../Font/text.h"
