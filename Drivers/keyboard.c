@@ -25,52 +25,50 @@ int enableText = 0; //Enable text on screen
 //Other keys events
 int shift = 0;
 int caps = 0;
-int winPressed = 0;
-int rPressed = 0;
 
 //Command buffer for shell and others.
 char commandBuffer[50];
 int commandLength = 0;
 
-//Lower case characters in scan code order
-const char* lowercase[] = {
-    " ", " ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
-    "-", "=", "\b", " ", "q", "w", "e", "r", "t", "y", "u", "i",
-    "o", "p", "[", "]", "\n", " ", "a", "s", "d", "f", "g", "h",
-    "j", "k", "l", ";", "'", "`", " ", "\\", "z", "x", "c", "v",
-    "b", "n", "m", ",", ".", "/", " ", "*", " ", " "
-};
-
-//The same with but in Upper case
-const char* uppercase[] = {
-    " ", " ", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")",
-    "_", "+", "\b", " ", "Q", "W", "E", "R", "T", "Y", "U", "I",
-    "O", "P", "{", "}", "\n", " ", "A", "S", "D", "F", "G", "H",
-    "J", "K", "L", ":", "\"", "~", " ", "|", "Z", "X", "C", "V",
-    "B", "N", "M", "<", ">", "?", " ", " ", " ", " "
+//Lower case + Upper case, scan code
+const char* keyMap[][2] = 
+{
+    { " ", " " }, { " ", " " },
+    { "1", "!" }, { "2", "@" }, { "3", "#" }, { "4", "$" }, { "5", "%" },
+    { "6", "^" }, { "7", "&" }, { "8", "*" }, { "9", "(" }, { "0", ")" },
+    { "-", "_" }, { "=", "+" }, { "\b", "\b" }, { " ", " " },
+    { "q", "Q" }, { "w", "W" }, { "e", "E" }, { "r", "R" }, { "t", "T" },
+    { "y", "Y" }, { "u", "U" }, { "i", "I" }, { "o", "O" }, { "p", "P" },
+    { "[", "{" }, { "]", "}" }, { "\n", "\n" }, { " ", " " },
+    { "a", "A" }, { "s", "S" }, { "d", "D" }, { "f", "F" }, { "g", "G" },
+    { "h", "H" }, { "j", "J" }, { "k", "K" }, { "l", "L" }, { ";", ":" },
+    { "'", "\"" }, { "`", "~" }, { " ", " " }, { "\\", "|" },
+    { "z", "Z" }, { "x", "X" }, { "c", "C" }, { "v", "V" }, { "b", "B" },
+    { "n", "N" }, { "m", "M" }, { ",", "<" }, { ".", ">" }, { "/", "?" },
+    { " ", " " }, { " ", " " }, { "*", " " }, { " ", " " }, { " ", " " }
 };
 
 void KeyboardState(int state)
 {
-    if (state == TRUE)
+    enableText = (state == TRUE) ? 1 : (state == 2) ? 2 : (state == 0) ? 0 : 3;
+}
+
+void HandleCharacter(int scan) 
+{
+    if (commandLength < 49) 
     {
-        //For GUI
-        enableText = 1;
-    }
-    else if (state == 2)
-    {
-        //For Shell
-        enableText = 2;
-    }
-    else if (state == 0)
-    {
-        //Reserved
-        enableText = 0;
-    }
-    else
-    {
-        //For Login page
-        enableText = 3;
+        commandBuffer[commandLength] = (shift || caps) ? keyMap[scan][1][0] : keyMap[scan][0][0];
+        
+        if (enableText == 3)
+        {
+            PrintOut('*', 0x0F);
+        }
+        else
+        {
+            PrintOut(commandBuffer[commandLength], 0x0F);    
+        }
+        
+        commandLength++;
     }
 }
 
@@ -103,18 +101,19 @@ void KeyboardHandler()
 
             //Enter
             case 0x1C:
-                //If its for Shell, then process sh command
-                if (isPress && enableText == 2)
+                if (isPress) 
                 {
                     commandBuffer[commandLength] = '\0';
-                    ProcessShellCMD(commandBuffer);
-                    commandLength = 0;
-                }
-                //If its for Login, then save the password
-                if (isPress && enableText == 3)
-                {
-                    commandBuffer[commandLength] = '\0';
-                    SetPassword(commandBuffer);
+
+                    if (enableText == 2) 
+                    {
+                        ProcessShellCMD(commandBuffer);
+                    } 
+                    else if (enableText == 3) 
+                    {
+                        SetPassword(commandBuffer);
+                    }
+
                     commandLength = 0;
                 }
 
@@ -123,47 +122,16 @@ void KeyboardHandler()
             //Win
             case 0x5B:
             case 0x5C:
-                winPressed = isPress;
                 break;
 
             default:
                 //If any other non-special key is being pressed, 
                 //then we start to load characters in our buffer
-
-                //This IF is for Login
-                if (isPress && enableText == 3 && commandLength < 49)
+                if (isPress) 
                 {
-                    if (shift || caps)
-                    {
-                        commandBuffer[commandLength] = uppercase[scan][0];
-                    }
-                    else
-                    {
-                        commandBuffer[commandLength] = lowercase[scan][0];
-                    }
-
-                    //Important, we have to hide the password
-                    PrintOut('*', 0x0F);
-
-                    commandLength++;
+                    HandleCharacter(scan);
                 }
-
-                //That if is more general, except for 3
-                if (isPress && enableText != 3 && commandLength < 49)
-                {
-                    if (shift || caps)
-                    {
-                        commandBuffer[commandLength] = uppercase[scan][0];
-                        PrintOut(commandBuffer[commandLength], 0x0F);
-                        commandLength++;
-                    }
-                    else
-                    {
-                        commandBuffer[commandLength] = lowercase[scan][0];
-                        PrintOut(commandBuffer[commandLength], 0x0F);
-                        commandLength++;
-                    }
-                }
+                
                 break;
         }
     }
