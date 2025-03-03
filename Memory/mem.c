@@ -159,3 +159,20 @@ void* memmove(void* dest, const void* src, DWORD n)
 
     return dest;
 }
+
+char* strrchr(const char* str, int c)
+{
+    char* last = NULL;
+
+    while (*str)
+    {
+        if (*str == (char)c)
+        {
+            last = (char*)str;
+        }
+        
+        str++;
+    }
+
+    return last;
+}
