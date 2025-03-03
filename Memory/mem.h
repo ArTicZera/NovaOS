@@ -7,3 +7,4 @@ DWORD strlen(const char *str);
 char* strcat(char* dest, const char* src);
 char* strcpy(char* dest, const char* src);
 void* memmove(void* dest, const void* src, DWORD n);
+char* strrchr(const char* str, int c);
