@@ -57,7 +57,7 @@ i686 elf gcc and nasm
 ### 📄 Compiling
 Run the make.bat script for windows (Not included bash)
 ### 🚀 Running
-use `qemu-system-i386 -device sb16 -net nic,model=rtl8139 -net user -drive format=raw,file="NovaOS.img"`
+use `qemu-img create -f raw disk.raw 256M` and then `qemu-system-x86_64 -device sb16 -net nic,model=rtl8139 -net user -drive file=NovaOS.img,format=raw,if=ide,index=0 -drive file=disk.raw,format=raw,if=ide,index=2`
 
 # 🤝 Contribute
 NovaOS is an Open Source project, so everyone can contibute for it! You can help me starring/forking this project or help with code using pull requests (and optimize more!)
