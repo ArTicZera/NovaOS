@@ -15,6 +15,7 @@
 #include "../Drivers/keyboard.h"
 #include "../Drivers/mouse.h"
 #include "../Drivers/sb16.h"
+#include "../Drivers/ata.h"
 #include "../Hardware/cpu.h"
 #include "../Hardware/pci.h"
 #include "../Hardware/disk.h"
@@ -81,6 +82,9 @@ void main(void)
 
     SetupSoundBlaster();
     Debug("Sound Blaster 16 Initialized!\n", 0x00);
+
+    IdentifyATA(0, 0); // Primary Master
+    IdentifyATA(1, 0); // Secondary Master
 
     ShowCMOSMem();
     ListDisks();
