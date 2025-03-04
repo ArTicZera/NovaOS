@@ -24,6 +24,7 @@ i686-elf-gcc -ffreestanding -m32 -g -c Drivers/keyboard.c    -o Binaries/keyboar
 i686-elf-gcc -ffreestanding -m32 -g -c Drivers/mouse.c       -o Binaries/mouse.o
 i686-elf-gcc -ffreestanding -m32 -g -c Drivers/qemu.c        -o Binaries/qemu.o
 i686-elf-gcc -ffreestanding -m32 -g -c Drivers/sb16.c        -o Binaries/sb16.o
+i686-elf-gcc -ffreestanding -m32 -g -c Drivers/ata.c         -o Binaries/ata.o
 i686-elf-gcc -ffreestanding -m32 -g -c Network/netutils.c    -o Binaries/netutils.o
 i686-elf-gcc -ffreestanding -m32 -g -c Network/iptcp.c       -o Binaries/iptcp.o
 i686-elf-gcc -ffreestanding -m32 -g -c Network/icmp.c        -o Binaries/icmp.o
@@ -55,7 +56,7 @@ echo "Making Kernel Entry"
 nasm -felf Kernel/entry.asm -o Binaries/entry.o
 
 echo "Linking ELF Files"
-i686-elf-ld -o Binaries/fullkernel.bin -Ttext 0x7E00 Binaries/entry.o Binaries/kernel.o Binaries/panic.o Binaries/asmgdt.o Binaries/gdt.o Binaries/graphics.o Binaries/ports.o Binaries/math.o Binaries/text.o Binaries/mem.o Binaries/alloc.o Binaries/vmm.o Binaries/asmidt.o Binaries/idt.o Binaries/timer.o Binaries/keyboard.o Binaries/cpu.o Binaries/pci.o Binaries/disk.o Binaries/cmos.o Binaries/mouse.o Binaries/qemu.o Binaries/sb16.o Binaries/netutils.o Binaries/iptcp.o Binaries/net.o Binaries/arp.o Binaries/icmp.o Binaries/memfs.o Binaries/elf.o Binaries/shell.o Binaries/gui.o Binaries/userspace.o Binaries/login.o Binaries/desktop.o --oformat binary
+i686-elf-ld -o Binaries/fullkernel.bin -Ttext 0x7E00 Binaries/entry.o Binaries/kernel.o Binaries/panic.o Binaries/asmgdt.o Binaries/gdt.o Binaries/ata.o Binaries/graphics.o Binaries/ports.o Binaries/math.o Binaries/text.o Binaries/mem.o Binaries/alloc.o Binaries/vmm.o Binaries/asmidt.o Binaries/idt.o Binaries/timer.o Binaries/keyboard.o Binaries/cpu.o Binaries/pci.o Binaries/disk.o Binaries/cmos.o Binaries/mouse.o Binaries/qemu.o Binaries/sb16.o Binaries/netutils.o Binaries/iptcp.o Binaries/net.o Binaries/arp.o Binaries/icmp.o Binaries/memfs.o Binaries/elf.o Binaries/shell.o Binaries/gui.o Binaries/userspace.o Binaries/login.o Binaries/desktop.o --oformat binary
 
 echo "Mounting IMG"
 cat Binaries/boot.bin Binaries/fullkernel.bin > "NovaOS.img"
