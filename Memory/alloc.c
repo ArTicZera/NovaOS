@@ -52,7 +52,7 @@ void* AllocateMemory(DWORD size)
     return NULL;
 }
 
-void FreeMemory(void* ptr, DWORD size) 
+void FreeMemory(void* ptr) 
 {
     if (!ptr) return;
 
