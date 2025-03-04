@@ -15,4 +15,4 @@ typedef struct {
 
 void InitMemory();
 void* AllocateMemory(DWORD size);
-void FreeMemory(void* ptr, DWORD size);
+void FreeMemory(void* ptr);
