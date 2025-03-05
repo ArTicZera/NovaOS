@@ -204,3 +204,27 @@ double atan2(double y, double x)
         }
     }
 }
+
+double pow(double base, int exp) 
+{
+    if (exp == 0) 
+    {
+        return 1.0;
+    }
+    
+    if (exp < 0) 
+    {
+        return 1.0 / pow(base, -exp);
+    }
+
+    double result = 1.0;
+
+    while (exp > 0) 
+    {
+        if (exp % 2 == 1) result *= base;
+        base *= base;
+        exp /= 2;
+    }
+    
+    return result;
+}
