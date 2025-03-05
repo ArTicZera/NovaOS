@@ -27,7 +27,7 @@ BootMain:
 
         ;Setup VESA (640x480 8bpp)
         mov     ax, 0x4F02
-        mov     bx, 0x4101
+        mov     bx, 0x4103
         int     0x10
 
         call    ReadSectors
