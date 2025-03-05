@@ -45,7 +45,7 @@ _start:
 section .data
         ;Images
         bootscr: incbin "Include/bootscr.vad"
-        backgrd: incbin "Include/background.vad"
+        backgrd: incbin "Include/bg.vad"
 
         ;General Icons
         error:    incbin "Include/Icons/error.vad"
