@@ -31,7 +31,7 @@ https://github.com/user-attachments/assets/6422312e-26cf-408d-883a-c8334bc61d39
 NovaOS will only work on QEMU, so it can have more easily and readable operations and functions.
 
 # 🛠️ Current Progress
-- ✅ **VBE Support (640x480 8bpp)**
+- ✅ **VBE Support (800x600 8bpp)**
 - ✅ **Global Descriptor Table (GDT)**
 - ✅ **Entering Protected Mode**
 - ✅ **Fonts and Print Functions**
