@@ -176,3 +176,19 @@ char* strrchr(const char* str, int c)
 
     return last;
 }
+
+int memcmp(const void *s1, const void *s2, DWORD n) 
+{
+    const LPBYTE p1 = (const LPBYTE)s1;
+    const LPBYTE p2 = (const LPBYTE)s2;
+
+    for (DWORD i = 0; i < n; i++) 
+    {
+        if (p1[i] != p2[i]) 
+        {
+            return (p1[i] < p2[i]) ? -1 : 1;
+        }
+    }
+
+    return 0;
+}
