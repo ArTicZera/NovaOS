@@ -21,3 +21,4 @@ double exp2(double x);
 double fabs(double x);
 double atan(double x);
 double atan2(double y, double x);
+double pow(double base, int exp);
