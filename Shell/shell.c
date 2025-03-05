@@ -116,7 +116,7 @@ void ProcessShellCMD(char* command)
         Print("\nls - ", 0x0A);       Print("List all files/dir in current local.", 0x0F);
         Print("\nmkdir - ", 0x0A);    Print("Create a directory.", 0x0F);
         Print("\ndeldir - ", 0x0A);   Print("Delete a existing directory.", 0x0F);
-        Print("\ncd - ", 0x0A);       Print("Change the current directory.\n\n", 0x0F);
+        Print("\ncd - ", 0x0A);       Print("Change the current directory.", 0x0F);
     }
     else if (strcmp(cmd, "about") == 0x00)
     {
