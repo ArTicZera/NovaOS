@@ -8,3 +8,4 @@ char* strcat(char* dest, const char* src);
 char* strcpy(char* dest, const char* src);
 void* memmove(void* dest, const void* src, DWORD n);
 char* strrchr(const char* str, int c);
+int memcmp(const void *s1, const void *s2, DWORD n);
