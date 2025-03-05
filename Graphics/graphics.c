@@ -50,29 +50,3 @@ void DrawRect(int x, int y, int w, int h, BYTE color)
         }
     }
 }
-
-//Here it becomes interesting. This was based on GDI by Microsoft
-void StretchBlt(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2)
-{
-    LPBYTE framebuffer = (LPBYTE) VIDMEM;
-
-    //Calculate for scaling 
-    float sx = (float)w1 / w2;
-    float sy = (float)h1 / h2;
-
-    for (int dy = 0; dy < h2; dy++)
-    {
-        for (int dx = 0; dx < w2; dx++)
-        {
-            //Get the index
-            int sx_pos = (int)(x1 + dx * sx);
-            int sy_pos = (int)(y1 + dy * sy);
-
-            //Gets the pixel from a index
-            DWORD color = framebuffer[sy_pos * WSCREEN + sx_pos];
-
-            //Set it to another
-            framebuffer[(y2 + dy) * WSCREEN + (x2 + dx)] = color;
-        }
-    }
-}
