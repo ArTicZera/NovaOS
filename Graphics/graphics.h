@@ -1,8 +1,8 @@
 //VESA Video Memory
 #define VIDMEM 0xFD000000
 
-#define WSCREEN 640
-#define HSCREEN 480
+#define WSCREEN 800
+#define HSCREEN 600
 
 void SetPixel(int x, int y, BYTE color);
 BYTE GetPixel(int x, int y);
