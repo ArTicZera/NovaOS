@@ -17,8 +17,7 @@ void ScrollScreen();
 #define SCROLL_MARGIN_LINES 3
 #define SCROLL_MARGIN (SCROLL_MARGIN_LINES * HFONT)
 
-BYTE* framebuffer = (BYTE*)0xA0000;  // Beispieladresse für den VGA-Bereich (kann je nach System abweichen)
-
+BYTE* framebuffer = (BYTE*)0xA0000;
 
 void DrawChar(BYTE* bitmap, BYTE color)
 {
@@ -28,7 +27,6 @@ void DrawChar(BYTE* bitmap, BYTE color)
     {
         for (int x = WFONT - 1; x >= 0; x--)
         {
-            // Lese jedes Bit und setze den Pixel
             if (bitmap[y] & (1 << x))
             {
                 SetPixel(i + cursorX, y + cursorY, color);
@@ -39,8 +37,6 @@ void DrawChar(BYTE* bitmap, BYTE color)
 
         i = 0;
     }
-
-    // Bewege den Cursor nach rechts
     cursorX += 8;
 
     if (cursorX >= WSCREEN)
