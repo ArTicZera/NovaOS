@@ -17,7 +17,8 @@ Directory* currentDir;
 
 void InitFileSystem()
 {
-    strncpy(fs->root.name, "root", MAXFILENAME);
+    //strncpy(fs->root.name, "root", MAXFILENAME); nobody needs root!!
+    strncpy(fs->root.name, "", MAXFILENAME);
 
     fs->root.parent = NULL;
     fs->root.nextFreeBlock = FSADDRESS + sizeof(FileSystem);
@@ -90,7 +91,7 @@ int ReadFile(const char* filename, LPBYTE buffer, LPDWORD size)
         }
     }
 
-    Print("\n\nInvalid File!", 0x0C);
+    Print("\n Invalid File!", 0x0C);
 
     return -1;
 }
@@ -123,20 +124,20 @@ int FileInfo(const char* filename)
     {
         if (strncmp(currentDir->files[i].filename, filename, MAXFILENAME) == 0) 
         {
-            Print("\nFilename: ", 0x0A);
+            Print("\n Filename:    ", 0x0A);
             Print(currentDir->files[i].filename, 0x0F);
 
-            Print("\nSize: ", 0x0A);
+            Print("\n Size:        ", 0x0A);
             PrintInt(currentDir->files[i].size, 0x0F);
 
-            Print("\nData Offset: ", 0x0A);
+            Print("\n Data Offset: ", 0x0A);
             PrintInt(currentDir->files[i].dataOffset, 0x0F);
             
             return 0x00;
         }
     }
 
-    Print("\n\nInvalid File!", 0x0C);
+    Print("\n Invalid File!", 0x0C);
 
     return -1;
 }
@@ -151,7 +152,7 @@ int FindFile(const char* filename)
         }
     }
 
-    Print("\n\nInvalid File!", 0x0C);
+    Print("\n Invalid File!", 0x0C);
 
     return -1;
 }
