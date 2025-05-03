@@ -60,6 +60,7 @@ void main(void)
     CreateFile("stars.exe", stars, starsSize);
     CreateFile("scroll.exe", scroll, scrollSize);
     CreateFile("bytebeat.exe", bytebeat, bbeatSize);
+    //CreateFile("starvadegame.sj", starvade, vadeSize);
     ChangeDir("..");
     Debug("MemFS File System Loaded!\n", 0x00);
 
@@ -69,9 +70,9 @@ void main(void)
     InitKeyboard();
     Debug("Keyboard Started!\n", 0x00);
 
-    InitMouse();
-    SetCursorX(0x00);
-    Debug("Mouse Started!\n", 0x00);
+    //InitMouse();
+    //SetCursorX(0x00);
+    //Debug("Mouse init!\n", 0x00);
 
     InitMemory();
     Debug("Memory Initialized!\n", 0x00);
@@ -83,18 +84,20 @@ void main(void)
     SetupSoundBlaster();
     Debug("Sound Blaster 16 Initialized!\n", 0x00);
 
-    IdentifyATA(0, 0); // Primary Master
-    IdentifyATA(1, 0); // Secondary Master
+    IdentifyATA(0, 0); // Primary
+    IdentifyATA(1, 0); // second
 
     ShowCMOSMem();
     ListDisks();
     ShowCPUInfo();
     ShowPCIDevices();
     
-    Sleep(2);
-
+    Sleep(0);
     ClearScreen();
     DrawBootScr();
+
+    InitMouse();
+    SetCursorX(0x00);
 
     StartShellNoGUI();
     UserSpace();
