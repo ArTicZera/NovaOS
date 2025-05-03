@@ -123,14 +123,14 @@ void ProcessShellCMD(char* command)
     else if (strcmp(cmd, "about") == 0x00)
     {
         Print("\n -----------------------------------------------------------------------", 0x0B); 
-        Print("\n Developer: ", 0x0A); Print("/salsaJon\n", 0x0F);
-        Print(" First gfx Build: ", 0x0A); Print("29/05/2025\n\n", 0x0F);
+        Print("\n\nDeveloper: ", 0x0A);    Print("ArTic/JhoPro\n", 0x0F);
+        Print("First Build Date: ", 0x0A); Print("01/05/2025\n\n", 0x0F);
 
-        Print(" This OS is made for a school Project, its open source \n", 0x0F);
-        Print(" Also, emexOS is the most hardest and best project i maked.\n", 0x0F);
-        Print(" this is my first OS with a GUI (VesaGFX)\n\n", 0x0F);
+        Print("This OS is being made for education purposes, to help students to how a OS works\n", 0x0F);
+        Print("Also, NovaOS is the most hardest and challenging project I've coded before.\n", 0x0F);
+        Print("A fun fact, this is my first OS with a GUI. I call it by VesaGFX.\n\n", 0x0F);
 
-        Print(" Special Credits: ", 0x0E); Print("malwarePad(cavOS) |  OS Dev Wiki", 0x0F);
+        Print("Special Credits: ", 0x0E); Print("Mist | Leo Ono | OS Dev Wiki", 0x0F);
         Print("\n -----------------------------------------------------------------------", 0x0B); 
     }
 
@@ -257,7 +257,7 @@ void ProcessShellCMD(char* command)
     {
         Print("\n :STOP !Invalid Command! Try again or use 'help' command!", 0x0C);
     }
-    Print("\n\n", 0x00);
+    Print("\n", 0x00);
     PrintCurrentDir();
 }
 
