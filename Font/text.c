@@ -1,5 +1,6 @@
 /*
     Coded by ArTic/JhoPro
+    expanded by Jon
 
     Here we have some implementations of drawing the characters on 
     the screen, and some functions to draw strings, integers, and hex.
@@ -12,6 +13,12 @@
 
 int cursorX = 0;
 int cursorY = 0;
+void ScrollScreen();
+#define SCROLL_MARGIN_LINES 3
+#define SCROLL_MARGIN (SCROLL_MARGIN_LINES * HFONT)
+
+BYTE* framebuffer = (BYTE*)0xA0000;  // Beispieladresse für den VGA-Bereich (kann je nach System abweichen)
+
 
 void DrawChar(BYTE* bitmap, BYTE color)
 {
@@ -21,7 +28,7 @@ void DrawChar(BYTE* bitmap, BYTE color)
     {
         for (int x = WFONT - 1; x >= 0; x--)
         {
-            //Read each bit.
+            // Lese jedes Bit und setze den Pixel
             if (bitmap[y] & (1 << x))
             {
                 SetPixel(i + cursorX, y + cursorY, color);
@@ -33,24 +40,63 @@ void DrawChar(BYTE* bitmap, BYTE color)
         i = 0;
     }
 
-    //Moves 8 pixels for the left
+    // Bewege den Cursor nach rechts
     cursorX += 8;
 
-    //In case the cursorX goes higher than 640,
-    //then reset the X and go to the next row.
     if (cursorX >= WSCREEN)
     {
         cursorX = 0;
-        cursorY += 16;
+        cursorY += HFONT;
+    }
+    
+    if (cursorY + HFONT + SCROLL_MARGIN >= HSCREEN)
+    {
+        ScrollScreen(5000);
+    }    
+    
+}
+
+void Wait(int count)
+{
+    for (volatile int i = 0; i < count; i++) {
+    }
+}
+
+void ScrollScreen(int delay)
+{
+    int scrollAmount = HFONT * 2;
+
+    for (int y = scrollAmount; y < HSCREEN; y++)
+    {
+        for (int x = 0; x < WSCREEN; x++)
+        {
+            BYTE color = GetPixel(x, y);
+            SetPixel(x, y - scrollAmount, color);
+        }
+        if (delay > 0)
+            Wait(delay);
     }
 
+    for (int y = HSCREEN - scrollAmount; y < HSCREEN; y++)
+    {
+        for (int x = 0; x < WSCREEN; x++)
+        {
+            SetPixel(x, y, 0x00);
+        }
+        if (delay > 0)
+            Wait(delay);
+    }
+
+    cursorY -= scrollAmount;
+    if (cursorY < 0)
+        cursorY = 0;
 }
+
 
 void Print(const char* str, BYTE color)
 {
     for (int i = 0; str[i] != '\0'; i++)
     {
-        //If its '\n' goest to the next line.
         if (str[i] == '\n')
         {
             cursorX = 0;
@@ -68,9 +114,6 @@ void Print(const char* str, BYTE color)
             }
         }
 
-        //Look how I draw with the 'isoFont' bitmap (declared on font.h)
-        //I use it with the size of a HFONT * the ASCII character, then
-        //we get into the char bitmap to draw.
         DrawChar(isoFont + str[i] * HFONT, color);
     }
 }
@@ -81,13 +124,22 @@ void Debug(const CHAR* str, int debug)
     switch (debug)
     {
         case 0:
-            Print("[+] ", 0x0A);    
+            Print(" [+] ", 0x0A);    
             break;
         case 1:
-            Print("[-] ", 0x0C);
+            Print(" [-] ", 0x5D);
             break;
         case 2:
-            Print("[?] ", 0x0B);
+            Print(" [?] ", 0x0A);
+            break;
+        case 3:
+            Print(" [ ] ", 0x0A);
+            break;
+        case 4:
+            Print(" [sb16] ", 0x5D);
+            break;
+        case 5:
+            Print(" [x] ", 0x0A);
             break;
     }
 
