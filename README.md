@@ -46,10 +46,11 @@ NovaOS will only work on QEMU, so it can have more easily and readable operation
 - ✅ **Task State Segment (TSS)**
 - ✅ **Network Driver**
 - ✅ **Audio Driver**
+- ❌ **Notepad**
+- ❌ **C/C++ Compiler**
 - ❌ **FAT32 Support**
 - ❌ **OpenGL-like API**
 - ❌ **Integrated Development Environment (IDE)**
-- ❌ **C/C++ Compiler**
 - ❌ **Processes**
 - ❌ **Multitasking**
 - ❌ **Installation Setup**
