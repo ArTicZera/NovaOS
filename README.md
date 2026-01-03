@@ -66,3 +66,4 @@ use `qemu-img create -f raw disk.raw 256M` and then `qemu-system-x86_64 -device 
 
 # 🤝 Contribute
 NovaOS is an Open Source project, so everyone can contibute for it! You can help me starring/forking this project or help with code using pull requests (and optimize more!)
+Tho are special credits for Leo Ono and Carbrito
