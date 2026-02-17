@@ -5,7 +5,7 @@
 
 void StretchBlt(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2)
 {
-    LPBYTE framebuffer = (LPBYTE) VIDMEM;
+    LPDWORD framebuffer = (LPDWORD) GetFramebuffer();
 
     float sx = (float)w1 / w2;
     float sy = (float)h1 / h2;
