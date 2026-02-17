@@ -7,6 +7,7 @@
 
 #include "../Include/stdint.h"
 
+#include "mem.h"
 #include "alloc.h"
 
 MemoryManager mgr;
@@ -106,3 +107,4 @@ void* CAllocateMemory(int count, int size)
     
     return ptr;
 }
+
