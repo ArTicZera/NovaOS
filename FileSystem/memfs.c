@@ -17,7 +17,7 @@ Directory* currentDir;
 
 void InitFileSystem()
 {
-    strncpy(fs->root.name, "root", MAXFILENAME);
+    strncpy(fs->root.name, "", MAXFILENAME);
 
     fs->root.parent = NULL;
     fs->root.nextFreeBlock = FSADDRESS + sizeof(FileSystem);
@@ -183,7 +183,7 @@ void ListFiles()
     {
         if (currentDir->files[i].filename[0] != '\0')
         {
-            Print(currentDir->files[i].filename, 0x0B);
+            Print(currentDir->files[i].filename, 0xFF00FFFF);
             Print(" ", 0x00);
         }
     }
@@ -192,7 +192,7 @@ void ListFiles()
     {
         if (currentDir->subdirs[i] != NULL)
         {
-            Print(currentDir->subdirs[i]->name, 0x0E);
+            Print(currentDir->subdirs[i]->name, 0xFFFFFF00);
             Print(" ", 0x00);
         }
     }
@@ -223,7 +223,7 @@ int MakeDir(const char* dir)
 
             currentDir->subdirs[i] = newDir;
 
-            return 0x00; // Sucesso
+            return 0x00; //Done
         }
     }
 
@@ -296,7 +296,7 @@ void ListDirs()
     {
         if (fs->currentDir->subdirs[i] != NULL)
         {
-            Print(fs->currentDir->subdirs[i]->name, 0x0E);
+            Print(fs->currentDir->subdirs[i]->name, 0xFF00FFFF);
             Print(" ", 0x00);
         }
     }
@@ -309,23 +309,29 @@ Directory* GetRootDir()
 
 void PrintCurrentDir() 
 {
-    char path[256] = ""; // Inicializa a string com vazio
+    Print("[", 0xFFFFFFFF);
+    Print("root", 0x0000FF00);
+    Print("@", 0xFFFFFFFF);
+    Print("novaos", 0xFF00FFFF);
+    Print(":", 0xFFFFFFFF);
+
+    char path[256] = ""; // Start empty string
     Directory* temp = currentDir;
 
     while (temp != NULL)
     {
-        char buffer[MAXFILENAME + 2]; // +2 para incluir "/" e o terminador nulo
-        buffer[0] = '/'; // Adiciona "/" no início
-        strncpy(buffer + 1, temp->name, MAXFILENAME); // Copia o nome do diretório após "/"
-        buffer[MAXFILENAME + 1] = '\0'; // Garante o terminador nulo
+        char buffer[MAXFILENAME + 2]; // +2 to include "/" e and null terminator
+        buffer[0] = '/'; // Adds "/" in the start
+        strncpy(buffer + 1, temp->name, MAXFILENAME); // Copy dirs name after "/"
+        buffer[MAXFILENAME + 1] = '\0'; // Make it finishes with null
 
-        // Adiciona o diretório atual ao caminho
+        //Adds actuall dir to its address
         char tempPath[256];
-        strcpy(tempPath, path); // Salva o caminho atual
-        strcpy(path, buffer);  // Começa com o novo diretório
-        strcat(path, tempPath); // Concatena o caminho anterior
+        strcpy(tempPath, path); //Save path
+        strcpy(path, buffer);   //Start new Dir
+        strcat(path, tempPath);
 
-        temp = temp->parent; // Vai para o diretório pai
+        temp = temp->parent; //Fathers dir
     }
 
     for (int i = 0; i < 256; i++)
@@ -333,6 +339,6 @@ void PrintCurrentDir()
         path[i] = path[i + 1];
     }
     
-    Print(path, 0x0F);
-    Print("> ", 0x0F);
+    Print(path,  0xFFFFFFFF);
+    Print("]# ", 0xFFFFFFFF);
 }
