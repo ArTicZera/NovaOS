@@ -11,6 +11,7 @@
 #include "../Interrupts/idt.h"
 #include "../Font/text.h"
 #include "../Shell/shell.h"
+#include "../Shell/npad.h"
 #include "../Graphics/graphics.h"
 
 #include "../Userspace/GUI/gui.h"
@@ -29,6 +30,9 @@ int caps = 0;
 //Command buffer for shell and others.
 char commandBuffer[50];
 int commandLength = 0;
+
+char notepadBuffer[1024];
+int notepadLength = 0;
 
 //Lower case + Upper case, scan code
 const char* keyMap[][2] = 
@@ -50,25 +54,39 @@ const char* keyMap[][2] =
 
 void KeyboardState(int state)
 {
-    enableText = (state == TRUE) ? 1 : (state == 2) ? 2 : (state == 0) ? 0 : 3;
+    enableText = state;
 }
+
+static BYTE keyDown[128] = {0};
 
 void HandleCharacter(int scan) 
 {
-    if (commandLength < 49) 
+    if (commandLength >= 49 || notepadLength >= 1024) return;
+
+    char c = (shift || caps) ? keyMap[scan][1][0] : keyMap[scan][0][0];
+
+    // Armazena no buffer
+    commandBuffer[commandLength] = c;
+    notepadBuffer[notepadLength] = c;
+
+    // Imprime e incrementa **apenas uma vez**
+    if (enableText == 3) // Senha
     {
-        commandBuffer[commandLength] = (shift || caps) ? keyMap[scan][1][0] : keyMap[scan][0][0];
-        
-        if (enableText == 3)
-        {
-            PrintOut('*', 0x0F);
-        }
-        else
-        {
-            PrintOut(commandBuffer[commandLength], 0x0F);    
-        }
-        
+        PrintOut('*', 0xFFFFFFFF);
         commandLength++;
+        notepadLength++;
+    }
+    else if (enableText == 4) // Notepad
+    {
+        PrintOut(c, 0xFFFFFFFF);
+        commandLength++;
+        notepadLength++;
+    }
+    else if (enableText == 2) // Shell
+    {
+        PrintOut(c, 0xFFFFFFFF);
+        commandLength++;
+        notepadLength++;
     }
 }
 
@@ -81,10 +99,29 @@ void KeyboardHandler()
     uint8_t isPress = !(scan & 0x80);
     scan &= 0x7F;
 
+    if (isPress)
+    {
+        if (keyDown[scan])
+            return;
+        keyDown[scan] = 1;
+    }
+    else
+    {
+        keyDown[scan] = 0;
+        return;
+    }
+
     if (allowInput)
     {
         switch (scan)
         {
+            case 0x01:
+                if (isPress)
+                {
+                    EscapeNotepad();
+                }
+                break;
+
             //Shift
             case 42:
             case 54:
@@ -113,6 +150,10 @@ void KeyboardHandler()
                     {
                         SetPassword(commandBuffer);
                     }
+                    else if (enableText == 4)
+                    {
+                        Print("\n", 0x00);
+                    }
 
                     commandLength = 0;
                 }
@@ -130,6 +171,7 @@ void KeyboardHandler()
                 if (isPress) 
                 {
                     HandleCharacter(scan);
+                    break;
                 }
                 
                 break;
