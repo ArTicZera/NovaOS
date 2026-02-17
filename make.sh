@@ -39,7 +39,6 @@ i686-elf-gcc -ffreestanding -m32 -g -c FileSystem/memfs.c    -o Binaries/memfs.o
 i686-elf-gcc -ffreestanding -m32 -g -c Shell/shell.c         -o Binaries/shell.o
 i686-elf-gcc -ffreestanding -m32 -g -c Shell/npad.c          -o Binaries/npad.o
 i686-elf-gcc -ffreestanding -m32 -g -c ELF/elf.c             -o Binaries/elf.o
-i686-elf-gcc -ffreestanding -m32 -g -c ELF/dyn.c             -o Binaries/dyn.o
 
 echo "Compiling tinyGL Files"
 i686-elf-gcc -ffreestanding -m32 -g -c tinygl/src/zbuffer.c      -o Binaries/tinygl/zbuffer.o
