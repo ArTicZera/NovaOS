@@ -45,15 +45,16 @@ void ShowPCIDevices()
             if (VendorID != 0xFFFF) 
             {
                 Debug("PCI Device Found at ", 2);
-                PrintInt(device, 0x0F);
-                Print(", ", 0x0F);
-                PrintInt(func, 0x0F);
-                Print(": Vendor ID = ", 0x0F);
-                PrintHex(VendorID, 0x0F);
-                Print(", Device ID = ", 0x0F);
-                PrintHex(DeviceID, 0x0F);
+                PrintInt(device, 0xFFFFFFFF);
+                Print(", ", 0xFFFFFFFF);
+                PrintInt(func, 0xFFFFFFFF);
+                Print(": Vendor ID = ", 0xFFFFFFFF);
+                PrintHex(VendorID, 0xFFFFFFFF);
+                Print(", Device ID = ", 0xFFFFFFFF);
+                PrintHex(DeviceID, 0xFFFFFFFF);
                 Print("\n", 0x0F);
             }
         }
     }
 }
+
