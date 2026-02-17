@@ -79,7 +79,7 @@ int LoadELF(void* elfData)
     DWORD relocatedEntry = elfHeader->e_entry + relocationOffs;
 
     Debug("ELF Entry Point: ", 0x02);
-    PrintHex(relocatedEntry, 0x0F);
+    PrintHex(relocatedEntry, 0xFFFFFFFF);
     Print("\n", 0x00);
 
     void (*entryPoint)(void) = (void (*)(void))(relocatedEntry);
@@ -96,3 +96,4 @@ void ExecuteELF(void* elf)
         return;
     }
 }
+
