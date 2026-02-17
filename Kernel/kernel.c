@@ -38,9 +38,20 @@ extern DWORD starsSize;
 extern DWORD scrollSize;
 extern DWORD bbeatSize;
 
-void main(void)
+static float angle = 0.0f;
+
+void main(LPDWORD magic)
 {
-    Debug("VESA 640x480 8BPP Started!\n", 0x00);
+    InitGraphics(magic);
+    Debug("VESA 640x480 32BPP Started!\n", 0x00);
+
+    Debug("VESA Framebuffer: ", 0x00);
+    PrintHex(GetFramebuffer(), 0xFFFFFFFF);
+    Print("\n", 0x00);
+
+    Debug("VESA Pitch: ", 0x00);
+    PrintHex(GetPitch(), 0xFFFFFFFF);
+    Print("\n", 0x00);
 
     Debug("Kernel loaded!\n", 0x00);
 
@@ -76,12 +87,12 @@ void main(void)
     InitMemory();
     Debug("Memory Initialized!\n", 0x00);
 
-    InitEthernet();
-    InitARP();
-    Debug("Ethernet Started!\n", 0x00);
+    //InitEthernet();
+    //InitARP();
+    //Debug("Ethernet Started!\n", 0x00);
 
-    SetupSoundBlaster();
-    Debug("Sound Blaster 16 Initialized!\n", 0x00);
+    //SetupSoundBlaster();
+    //Debug("Sound Blaster 16 Initialized!\n", 0x00);
 
     IdentifyATA(0, 0); // Primary Master
     IdentifyATA(1, 0); // Secondary Master
@@ -90,7 +101,7 @@ void main(void)
     ListDisks();
     ShowCPUInfo();
     ShowPCIDevices();
-    
+
     Sleep(2);
 
     ClearScreen();
