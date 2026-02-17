@@ -50,18 +50,19 @@ void GetCMOSDate()
     month = ((month / 16) * 10) + (month & 0x0F);
     year  = ((year  / 16) * 10) + (year  & 0x0F);
 
-    PrintInt(month, 0x0F);
-    Print("/", 0x0F);
+    PrintInt(month, 0xFFFFFFFF);
+    Print("/", 0xFFFFFFFF);
 
-    PrintInt(day, 0x0F);
-    Print("/", 0x0F);
+    PrintInt(day, 0xFFFFFFFF);
+    Print("/", 0xFFFFFFFF);
 
-    PrintInt(year, 0x0F);
+    PrintInt(year, 0xFFFFFFFF);
 }
 
 void ShowCMOSMem()
 {
     Debug("Total CMOS Memory Size: ", 0x02);
-    PrintHex(GetCMOSMem(), 0x0F);
+    PrintHex(GetCMOSMem(), 0xFFFFFFFF);
     Print("\n", 0x00);
 }
+
