@@ -63,9 +63,9 @@ void ListDisks(void)
     if (DiskCapacity > 0)
     {
         Debug("Disk 0: ", 0x02);
-        Print("Capacity: ", 0x0F);
-        PrintHex(DiskCapacity, 0x0F);
-        Print(" Sectors\n", 0x0F);
+        Print("Capacity: ", 0xFFFFFFFF);
+        PrintHex(DiskCapacity, 0xFFFFFFFF);
+        Print(" Sectors\n", 0xFFFFFFFF);
     }
     else
     {
@@ -77,12 +77,13 @@ void ListDisks(void)
     if (FloppyCapacity > 0)
     {
         Debug("Floppy Disk: ", 0x02);
-        Print("Capacity: ", 0x0F);
-        PrintInt(FloppyCapacity, 0x0F);
-        Print(" Bytes\n", 0x0F);
+        Print("Capacity: ", 0xFFFFFFFF);
+        PrintInt(FloppyCapacity, 0xFFFFFFFF);
+        Print(" Bytes\n", 0xFFFFFFFF);
     }
     else
     {
         Debug("No Floppy Disk found!\n", 0x01);
     }
 }
+
