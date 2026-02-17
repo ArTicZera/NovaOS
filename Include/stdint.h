@@ -9,7 +9,7 @@ typedef unsigned short uint16_t, WORD, UWORD;
 typedef unsigned int   uint32_t, DWORD, UINT;
 typedef unsigned long  ULONG;
 typedef unsigned short USHORT;
-
+typedef unsigned int size_t;
 typedef unsigned long long uint64_t, QWORD, ULLONG;
 
 typedef char   CHAR;
@@ -32,3 +32,4 @@ typedef const char* STRING;
 
 #define FALSE 0
 #define false 0
+
