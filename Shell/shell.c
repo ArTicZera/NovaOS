@@ -22,9 +22,14 @@
 #include "../Userspace/userspace.h"
 #include "../Include/math.h"
 
+#include "../tinygl/include/GL/gl.h"
+#include "../tinygl/include/zbuffer.h"
+#include "../Kernel/gfx/gears.h"
+
 #include "../ELF/elf.h"
 
 #include "shell.h"
+#include "npad.h"
 
 //ELF32 Executable
 extern char stars[];
@@ -37,10 +42,10 @@ void PrintWelcomeMSG()
     SetCursorX(0x00);
     SetCursorY(0x00);
 
-    Print("Welcome to NovaOS Shell! ", 0x0F);
-    Print("(NO GUI)\n\n", 0x0C);
-    Print("Type 'help' to start using the shell.\n", 0x0F);
-    Print("Type 'gfx' to start using the GUI.\n\n", 0x0F);
+    Print("Welcome to NovaOS Shell! ", 0xFFFFFFFF);
+    Print("(NO GUI)\n\n", 0xFFFF0000);
+    Print("Type 'help' to start using the shell.\n", 0xFFFFFFFF);
+    Print("Type 'gfx' to start using the GUI.\n\n", 0xFFFFFFFF);
 }
 
 //Print the first shell screen and
@@ -50,6 +55,7 @@ void StartShellNoGUI()
     PrintWelcomeMSG();
 
     PrintCurrentDir();
+
     KeyboardState(0x02);
 }
 
@@ -101,33 +107,35 @@ void ProcessShellCMD(char* command)
     //Here starts the parser
     if (strcmp(cmd, "help") == 0x00)
     {
-        Print("\n\nclear - ", 0x0A);  Print("Clear the screen.", 0x0F);
-        Print("\nabout - ", 0x0A);    Print("More about NovaOS.", 0x0F);
-        Print("\necho - ", 0x0A);     Print("Show a message on terminal.", 0x0F);
-        Print("\nshutdown - ", 0x0A); Print("Shutdown the system.", 0x0F);
-        Print("\nrestart - ", 0x0A);  Print("Reboot the system.", 0x0F);
-        Print("\nneofetch - ", 0x0A); Print("Show system specs.", 0x0F);
-        Print("\ngfx - ", 0x0A);      Print("Starts NovaOS GUI.", 0x0F);
-        Print("\nmkfile - ", 0x0A);   Print("Create a file.", 0x0F);
-        Print("\ncat - ", 0x0A);      Print("Read file content.", 0x0F);
-        Print("\ninfo - ", 0x0A);     Print("Show a file info.", 0x0F);
-        Print("\nrename - ", 0x0A);   Print("Rename a existing file.", 0x0F);
-        Print("\ndel - ", 0x0A);      Print("Delete a existing file.", 0x0F);
-        Print("\nls - ", 0x0A);       Print("List all files/dir in current local.", 0x0F);
-        Print("\nmkdir - ", 0x0A);    Print("Create a directory.", 0x0F);
-        Print("\ndeldir - ", 0x0A);   Print("Delete a existing directory.", 0x0F);
-        Print("\ncd - ", 0x0A);       Print("Change the current directory.", 0x0F);
+        Print("\n\nclear - ", 0xFF00FF00);  Print("Clear the screen.", 0xFFFFFFFF);
+        Print("\nabout - ", 0xFF00FF00);    Print("More about NovaOS.", 0xFFFFFFFF);
+        Print("\necho - ", 0xFF00FF00);     Print("Show a message on terminal.", 0xFFFFFFFF);
+        Print("\nshutdown - ", 0xFF00FF00); Print("Shutdown the system.", 0xFFFFFFFF);
+        Print("\nrestart - ", 0xFF00FF00);  Print("Reboot the system.", 0xFFFFFFFF);
+        Print("\nneofetch - ", 0xFF00FF00); Print("Show system specs.", 0xFFFFFFFF);
+        Print("\ngfx - ", 0xFF00FF00);      Print("Starts NovaOS GUI.", 0xFFFFFFFF);
+        Print("\nmkfile - ", 0xFF00FF00);   Print("Create a file.", 0xFFFFFFFF);
+        Print("\ncat - ", 0xFF00FF00);      Print("Read file content.", 0xFFFFFFFF);
+        Print("\ninfo - ", 0xFF00FF00);     Print("Show a file info.", 0xFFFFFFFF);
+        Print("\nrename - ", 0xFF00FF00);   Print("Rename a existing file.", 0xFFFFFFFF);
+        Print("\ndel - ", 0xFF00FF00);      Print("Delete a existing file.", 0xFFFFFFFF);
+        Print("\nls - ", 0xFF00FF00);       Print("List all files/dir in current local.", 0xFFFFFFFF);
+        Print("\nmkdir - ", 0xFF00FF00);    Print("Create a directory.", 0xFFFFFFFF);
+        Print("\ndeldir - ", 0xFF00FF00);   Print("Delete a existing directory.", 0xFFFFFFFF);
+        Print("\ncd - ", 0xFF00FF00);       Print("Change the current directory.", 0xFFFFFFFF);
+        Print("\nnpad - ", 0xFF00FF00);     Print("Terminal Notepad.", 0xFFFFFFFF);
+        Print("\ngears - ", 0xFF00FF00);    Print("TinyGL Demonstration.", 0xFFFFFFFF);
     }
     else if (strcmp(cmd, "about") == 0x00)
     {
-        Print("\n\nDeveloper: ", 0x0A);    Print("ArTic/JhoPro\n", 0x0F);
-        Print("First Build Date: ", 0x0A); Print("01/05/2025\n\n", 0x0F);
+        Print("\n\nDeveloper: ", 0xFF00FF00);    Print("ArTic/JhoPro\n", 0xFFFFFFFF);
+        Print("First Build Date: ", 0xFF00FF00); Print("01/05/2025\n\n", 0xFFFFFFFF);
 
-        Print("This OS is being made for education purposes, to help students to how a OS works\n", 0x0F);
-        Print("Also, NovaOS is the most hardest and challenging project I've coded before.\n", 0x0F);
-        Print("A fun fact, this is my first OS with a GUI. I call it by VesaGFX.\n\n", 0x0F);
+        Print("This OS is being made for education purposes, to help students to how a OS works\n", 0xFFFFFFFF);
+        Print("Also, NovaOS is the most hardest and challenging project I've coded before.\n", 0xFFFFFFFF);
+        Print("A fun fact, this is my first OS with a GUI. I call it by VesaGFX.\n\n", 0xFFFFFFFF);
 
-        Print("Special Credits: ", 0x0E); Print("Mist | Leo Ono | OS Dev Wiki", 0x0F);
+        Print("Special Credits: ", 0xFFFFFF00); Print("Mist | Leo Ono | Carbrito | OS Dev Wiki", 0xFFFFFFFF);
     }
 
     else if (strcmp(cmd, "clear") == 0x00)
@@ -152,20 +160,20 @@ void ProcessShellCMD(char* command)
     else if (strcmp(cmd, "neofetch") == 0x00)
     {
         Print("\n\n", 0x0F);
-        Print("                #             \n", 0x4C);
-        Print(" #              ##            \n", 0x4C);
-        Print(" ###           ###            \n", 0x4C);
-        Print(" #####         ####           user@novaos-vm\n", 0x4C);
-        Print(" #######      #####           --------------\n", 0x4C);
-        Print(" ##########   ###### #######  OS: ", 0x4C); Print("NovaOS x86\n", 0x0F);
-        Print(" ###  #######  ############   Kernel: ", 0x4C); Print("Alpha 1.8.2\n", 0x0F);
-        Print(" ###     ###### #########     Resolution: ", 0x4C); Print("800x600\n", 0x0F);
-        Print(" ###       ############       Video Mode: ", 0x4C); Print("VESA BIOS Extensions\n", 0x0F);
-        Print(" ###        ##########        CPU: ", 0x4C); ShowCPUName();
-        Print(" ###       ###########        Date: ", 0x4C); GetCMOSDate(); Print("\n", 0x00);
-        Print(" ###      #####   #####       \n", 0x4C);
-        Print("   #      ####      ###       \n", 0x4C);
-        Print("         ##           ##        ", 0x4C);
+        Print("                #             \n", 0xFF00FFFF);
+        Print(" #              ##            \n", 0xFF00FFFF);
+        Print(" ###           ###            \n", 0xFF00FFFF);
+        Print(" #####         ####           root@novaos-vm\n", 0xFF00FFFF);
+        Print(" #######      #####           --------------\n", 0xFF00FFFF);
+        Print(" ##########   ###### #######  OS: ", 0xFF00FFFF); Print("NovaOS x86\n", 0xFFFFFFFF);
+        Print(" ###  #######  ############   Kernel: ", 0xFF00FFFF); Print("Alpha 1.8.3\n", 0xFFFFFFFF);
+        Print(" ###     ###### #########     Resolution: ", 0xFF00FFFF); Print("800x600\n", 0xFFFFFFFF);
+        Print(" ###       ############       Video Mode: ", 0xFF00FFFF); Print("VESA BIOS Extensions\n", 0xFFFFFFFF);
+        Print(" ###        ##########        CPU: ", 0xFF00FFFF); ShowCPUName();
+        Print(" ###       ###########        Date: ", 0xFF00FFFF); GetCMOSDate(); Print("\n", 0x00);
+        Print(" ###      #####   #####       \n", 0xFF00FFFF);
+        Print("   #      ####      ###       \n", 0xFF00FFFF);
+        Print("         ##           ##        ", 0xFF00FFFF);
     }
     else if (strcmp(cmd, "gfx") == 0x00)
     {
@@ -189,7 +197,7 @@ void ProcessShellCMD(char* command)
         if (result != -1)
         {
             Print("\n\n", 0x00);
-            Print(buffer, 0x0F);
+            Print(buffer, 0xFFFFFFFF);
         }
     }
     else if (strcmp(cmd, "info") == 0x00)
@@ -225,9 +233,34 @@ void ProcessShellCMD(char* command)
     {
         SendPing(args[0]);
     }
+    else if (strcmp(cmd, "npad") == 0x00)
+    {
+        StartNotepad(args[0]);
+    }
+    else if (strcmp(cmd, "gears") == 0x00)
+    {
+        ZBuffer *zb = ZB_open(WSCREEN, HSCREEN, ZB_MODE_RGBA, (void*)GetFramebuffer());
+
+        glInit(zb);
+
+        init();
+        reshape(WSCREEN, HSCREEN);
+
+        INT i = 0;
+        
+        while (i < 100)
+        {
+            idle();
+
+            i++;
+        }
+
+        ZB_close(zb);
+        glEnd();
+    }
     else
     {
-        Print("\n\nInvalid Command! Try again or use 'help' command.", 0x0C);
+        Print("\n\nInvalid Command! Try again or use 'help' command.", 0xFFFF0000);
     }
 
     Print("\n\n", 0x00);
@@ -251,6 +284,6 @@ void ProcessShellRun(char* process)
     }
     else
     {
-        Print("\n\nInvalid software!", 0x0C);
+        Print("\n\nInvalid software!", 0xFFFF0000);
     }
 }
