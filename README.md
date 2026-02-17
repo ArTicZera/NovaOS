@@ -31,6 +31,7 @@ https://github.com/user-attachments/assets/6422312e-26cf-408d-883a-c8334bc61d39
 NovaOS will only work on QEMU, so it can have more easily and readable operations and functions.
 
 # 🛠️ Current Progress
+- ✅ **GRUB Multiboot**
 - ✅ **VBE Support (800x600 8bpp)**
 - ✅ **Global Descriptor Table (GDT)**
 - ✅ **Entering Protected Mode**
@@ -46,10 +47,10 @@ NovaOS will only work on QEMU, so it can have more easily and readable operation
 - ✅ **Task State Segment (TSS)**
 - ✅ **Network Driver**
 - ✅ **Audio Driver**
-- ❌ **Integrated Development Environment (IDE)**
+- ✅ **OpenGL-like API**
+- 🚧 **Integrated Development Environment (IDE)**
 - ❌ **C/C++ Compiler**
 - ❌ **FAT32 Support**
-- ❌ **OpenGL-like API**
 - ❌ **POSIX-like**
 - ❌ **Processes**
 - ❌ **Multitasking**
@@ -61,9 +62,9 @@ NovaOS will only work on QEMU, so it can have more easily and readable operation
 ### 🧰 Necessary Components
 i686 elf gcc and nasm
 ### 📄 Compiling
-Run the make.bat script for windows (Not included bash)
+Run the make.sh using linux or WSL
 ### 🚀 Running
-use `qemu-img create -f raw disk.raw 256M` and then `qemu-system-x86_64 -device sb16 -net nic,model=rtl8139 -net user -drive file=NovaOS.img,format=raw,if=ide,index=0 -drive file=disk.raw,format=raw,if=ide,index=2`
+use run.bat for Windows. for Linux, enable last 2 comments in make.sh then run it again.
 
 # 🤝 Contribute
 NovaOS is an Open Source project, so everyone can contibute for it! You can help me starring/forking this project or help with code using pull requests (and optimize more!)
