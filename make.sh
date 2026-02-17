@@ -67,10 +67,10 @@ i686-elf-gcc -ffreestanding -m32 -g -c tinygl/src/arrays.c       -o Binaries/tin
 i686-elf-gcc -ffreestanding -m32 -g -c tinygl/src/api.c          -o Binaries/tinygl/api.o
 i686-elf-gcc -ffreestanding -m32 -g -c tinygl/src/accum.c        -o Binaries/tinygl/accum.o
 
-echo "Generating Lib"
-gcc -fPIC -m32 -g -c Graphics/graphics.c -o ELF/lib/graphics.o
-gcc -fPIC -m32 -g -c Font/text.c -o ELF/lib/text.o
-gcc -m32 -shared -o ELF/lib/novalib.so ELF/lib/graphics.o ELF/lib/text.o
+#echo "Generating Lib"
+#gcc -fPIC -m32 -g -c Graphics/graphics.c -o ELF/lib/graphics.o
+#gcc -fPIC -m32 -g -c Font/text.c -o ELF/lib/text.o
+#gcc -m32 -shared -o ELF/lib/novalib.so ELF/lib/graphics.o ELF/lib/text.o
 
 echo "Compiling tinyGL examples"
 i686-elf-gcc -ffreestanding -m32 -g -c Kernel/gfx/gears.c -o Kernel/gfx/gears.o
