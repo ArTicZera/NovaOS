@@ -50,7 +50,7 @@ void DrawLoadBar()
         {
             for (int x = 0; x < wbar; x++)
             {
-                SetPixel(x + (WSCREEN / 2 - 38), y + (HSCREEN / 2 + 70), 0x30);
+                SetPixel(x + (WSCREEN / 2 - 38), y + (HSCREEN / 2 + 70), 0xFF00FF00);
             }
         }
     }
@@ -66,3 +66,4 @@ void InitTimer(void)
     outb(0x40, (BYTE)(divisor & 0xFFFF));
     outb(0x40, (BYTE)((divisor & 0xFFFF) & 0xFF));
 }
+
