@@ -90,3 +90,19 @@ void FreeMemory(void* ptr)
     block->next = mgr.freeBlocks;
     mgr.freeBlocks = block;
 }
+
+void* CAllocateMemory(int count, int size)
+{
+    int total = count * size;
+
+    void* ptr = AllocateMemory(total);
+    
+    if (!ptr)
+    {
+        return NULL;
+    }
+
+    memset(ptr, 0x00, total);
+    
+    return ptr;
+}
