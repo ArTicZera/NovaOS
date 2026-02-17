@@ -18,9 +18,9 @@
 #include "mouse.h"
 
 //Drawing Buffers
-BYTE MouseArea[WCURSOR * HCURSOR];
-BYTE MouseCursorAfter[WCURSOR * HCURSOR];
-BYTE MousePrevious[WCURSOR * HCURSOR];
+DWORD MouseArea[WCURSOR * HCURSOR];
+DWORD MouseCursorAfter[WCURSOR * HCURSOR];
+DWORD MousePrevious[WCURSOR * HCURSOR];
 
 //Mouse States
 BYTE mouseData;
@@ -44,7 +44,7 @@ void GetMouseState(int* x, int* y, int* pressed)
 }
 
 //Draw the cursor
-void DrawMouse(BYTE color)
+void DrawMouse(DWORD color)
 {
     for (int y = 0; y < HCURSOR; y++)
     {
@@ -76,7 +76,7 @@ void SaveMouseArea()
     {
         for (int x = 0; x < WCURSOR; x++)
         {
-            BYTE color = GetPixel(mouseX + x, mouseY + y);
+            DWORD color = GetPixel(mouseX + x, mouseY + y);
 
             MouseArea[y * WCURSOR + x] = color;
         }
@@ -151,7 +151,7 @@ void MouseHandler()
         ClearTrails(prevMouseX, prevMouseY);
         SaveMouseArea();
         RestorePreviousCursor(prevMouseX, prevMouseY);
-        DrawMouse(0x1E);
+        DrawMouse(0xFFFFFFFF);
     }
 }
 
