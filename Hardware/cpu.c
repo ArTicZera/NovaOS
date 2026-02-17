@@ -60,7 +60,7 @@ void GetCPUName(char* name)
 
 void ShowCPUName()
 {
-    Print(cpuname, 0x0F);
+    Print(cpuname, 0xFFFFFFFF);
     Print("\n", 0x00);
 }
 
@@ -70,10 +70,11 @@ void ShowCPUInfo()
     GetVendor(vendor);
    
     Debug("CPU Vendor: ", 2);
-    Print(vendor, 0x0F);
+    Print(vendor, 0xFFFFFFFF);
     Print("\n", 0x00);
 
     Debug("CPU Name: ", 2);
-    Print(cpuname, 0x0F);
+    Print(cpuname, 0xFFFFFFFF);
     Print("\n", 0x00);
 }
+
