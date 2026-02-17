@@ -32,7 +32,7 @@ NovaOS will only work on QEMU, so it can have more easily and readable operation
 
 # 🛠️ Current Progress
 - ✅ **GRUB Multiboot**
-- ✅ **VBE Support (800x600 8bpp)**
+- ✅ **VBE Support (800x600 32bpp)**
 - ✅ **Global Descriptor Table (GDT)**
 - ✅ **Entering Protected Mode**
 - ✅ **Fonts and Print Functions**
