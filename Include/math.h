@@ -1,3 +1,6 @@
+#ifndef MATH_H
+#define MATH_H
+
 typedef struct
 {
     float x;
@@ -22,3 +25,5 @@ double fabs(double x);
 double atan(double x);
 double atan2(double y, double x);
 double pow(double base, int exp);
+
+#endif
