@@ -13,7 +13,7 @@
 int cursorX = 0;
 int cursorY = 0;
 
-void DrawChar(BYTE* bitmap, BYTE color)
+void DrawChar(BYTE* bitmap, DWORD color)
 {
     int i = 0;
 
@@ -46,7 +46,7 @@ void DrawChar(BYTE* bitmap, BYTE color)
 
 }
 
-void Print(const char* str, BYTE color)
+void Print(const char* str, DWORD color)
 {
     for (int i = 0; str[i] != '\0'; i++)
     {
@@ -81,17 +81,17 @@ void Debug(const CHAR* str, int debug)
     switch (debug)
     {
         case 0:
-            Print("[+] ", 0x0A);    
+            Print("[  OK  ] ", 0xFF00FF00);    
             break;
         case 1:
-            Print("[-] ", 0x0C);
+            Print("[FAILED] ", 0xFFFF0000);
             break;
         case 2:
-            Print("[?] ", 0x0B);
+            Print("[ INFO ] ", 0xFF00FFFF);
             break;
     }
 
-    Print(str, 0x0F);
+    Print(str, 0xFFFFFFFF);
 }
 
 //An implementation of 'itoa' from scratch
@@ -131,7 +131,7 @@ void IntToString(int value, char* buffer)
 }
 
 //We just convert using IntToString and print the string
-void PrintInt(int value, BYTE color) 
+void PrintInt(int value, DWORD color) 
 {
     char buffer[11];
     IntToString(value, buffer);
@@ -139,7 +139,7 @@ void PrintInt(int value, BYTE color)
 }
 
 //Simple way to convert a value to HEX
-void PrintHex(int value, BYTE color)
+void PrintHex(int value, DWORD color)
 {
     char buffer[9];
 
@@ -157,7 +157,7 @@ void PrintHex(int value, BYTE color)
 }
 
 //Thats our custom DrawChar, but with ASCII data
-void PrintOut(char letter, BYTE color)
+void PrintOut(char letter, DWORD color)
 {
     DrawChar(isoFont + letter * HFONT, color);
 }
