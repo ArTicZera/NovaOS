@@ -3,6 +3,10 @@
 #define MAXSUBDIR   0x05
 #define FSADDRESS   0xC00000
 
+#define PERM_R 0x04
+#define PERM_W 0x02
+#define PERM_X 0x01
+
 typedef struct Directory Directory;
 
 typedef struct
@@ -10,6 +14,7 @@ typedef struct
     char filename[MAXFILENAME];
     DWORD size;
     DWORD dataOffset;
+    BYTE permissions;
 } FileHeader;
 
 struct Directory
@@ -30,7 +35,7 @@ typedef struct
 } FileSystem;
 
 void InitFileSystem();
-int CreateFile(const char* filename, const LPBYTE data, DWORD size);
+int CreateFile(const char* filename, const LPBYTE data, DWORD size, BYTE permissions);
 int ReadFile(const char* filename, LPBYTE buffer, LPDWORD size);
 int DeleteFile(const char* filename);
 int FindFile(const char* filename);
