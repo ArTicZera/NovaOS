@@ -27,6 +27,7 @@ void InitFileSystem()
         memset(fs->root.files[i].filename, 0x00, MAXFILENAME);
         fs->root.files[i].size = 0x00000000;
         fs->root.files[i].dataOffset = 0x00000000;
+        fs->root.files[i].permissions = 0x00;
     }
 
     for (int i = 0; i < MAXSUBDIR; i++)
@@ -37,7 +38,7 @@ void InitFileSystem()
     currentDir = &fs->root;
 }
 
-int CreateFile(const char* filename, const LPBYTE data, DWORD size)
+int CreateFile(const char* filename, const LPBYTE data, DWORD size, BYTE permissions)
 {
     //Checks for invalid file name
     if (size == 0 || strlen(filename) >= MAXFILENAME)
@@ -68,6 +69,7 @@ int CreateFile(const char* filename, const LPBYTE data, DWORD size)
     strncpy(currentDir->files[fileIndex].filename, filename, MAXFILENAME);
     currentDir->files[fileIndex].size = size;
     currentDir->files[fileIndex].dataOffset = dataOffset;
+    currentDir->files[fileIndex].permissions = permissions;
 
     LPBYTE fileData = (LPBYTE) dataOffset;
     memcpy(fileData, data, size);
@@ -81,6 +83,12 @@ int ReadFile(const char* filename, LPBYTE buffer, LPDWORD size)
     {
         if (strncmp(currentDir->files[i].filename, filename, MAXFILENAME) == 0) 
         {
+            if (!(currentDir->files[i].permissions & PERM_R))
+            {
+                Debug("Permission Denied!\n", 0x01); 
+                return -1;
+            }
+
             *size = currentDir->files[i].size;
 
             LPBYTE fileData = (LPBYTE) currentDir->files[i].dataOffset;
@@ -90,7 +98,7 @@ int ReadFile(const char* filename, LPBYTE buffer, LPDWORD size)
         }
     }
 
-    Print("\n\nInvalid File!", 0x0C);
+    Print("\n\nInvalid File!", 0xFFFF0000);
 
     return -1;
 }
@@ -105,12 +113,13 @@ int DeleteFile(const char* filename)
 
             currentDir->files[i].size = 0x00000000;
             currentDir->files[i].dataOffset = 0x00000000;
+            currentDir->files[i].permissions = 0x00;
 
             return 0x00;
         }
     }
 
-    Print("\n\nInvalid File!", 0x0C);
+    Print("\n\nInvalid File!", 0xFFFF0000);
 
     return -1; 
 }
@@ -119,24 +128,39 @@ int FileInfo(const char* filename)
 {
     Print("\n", 0x00);
 
+    int index = FindFile(filename);
+
+    if (index == -1)
+    {
+        return -1;
+    }
+
+    FileHeader* file = &currentDir->files[index];
+
     for (int i = 0; i < MAXFILES; i++) 
     {
         if (strncmp(currentDir->files[i].filename, filename, MAXFILENAME) == 0) 
         {
-            Print("\nFilename: ", 0x0A);
-            Print(currentDir->files[i].filename, 0x0F);
+            Print("\nFilename: ", 0xFF00FF00);
+            Print(currentDir->files[i].filename, 0xFFFFFFFF);
 
-            Print("\nSize: ", 0x0A);
-            PrintInt(currentDir->files[i].size, 0x0F);
+            Print("\nSize: ", 0xFF00FF00);
+            PrintInt(currentDir->files[i].size, 0xFFFFFFFF);
 
-            Print("\nData Offset: ", 0x0A);
-            PrintInt(currentDir->files[i].dataOffset, 0x0F);
+            Print("\nData Offset: ", 0xFF00FF00);
+            PrintInt(currentDir->files[i].dataOffset, 0xFFFFFFFF);
+
+            Print("\nPermissions: ", 0xFF00FF00);
+
+            Print((file->permissions & PERM_R)  ? "R" : "-", 0xFFFFFFFF);
+            Print((file->permissions & PERM_W) ? "W" : "-", 0xFFFFFFFF);
+            Print((file->permissions & PERM_X)  ? "X" : "-", 0xFFFFFFFF);
             
             return 0x00;
         }
     }
 
-    Print("\n\nInvalid File!", 0x0C);
+    Print("\n\nInvalid File!", 0xFFFF0000);
 
     return -1;
 }
@@ -151,7 +175,7 @@ int FindFile(const char* filename)
         }
     }
 
-    Print("\n\nInvalid File!", 0x0C);
+    Print("\n\nInvalid File!", 0xFFFF0000);
 
     return -1;
 }
@@ -196,6 +220,23 @@ void ListFiles()
             Print(" ", 0x00);
         }
     }
+}
+
+int CanExecute(const char* filename)
+{
+    int index = FindFile(filename);
+
+    if (index == -1)
+    {
+        return -1;
+    }
+
+    if (currentDir->files[index].permissions & PERM_X)
+    {
+        return 1;
+    }
+
+    return 0;
 }
 
 //-------------------------------------------------------
