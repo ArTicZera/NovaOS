@@ -1,6 +1,6 @@
 #define MAXFILENAME 0x0F
-#define MAXFILES    0x0A
-#define MAXSUBDIR   0x05
+#define MAXFILES    0x0F
+#define MAXSUBDIR   0x0F
 #define FSADDRESS   0xC00000
 
 #define PERM_R 0x04
