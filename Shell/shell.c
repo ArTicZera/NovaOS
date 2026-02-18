@@ -181,7 +181,7 @@ void ProcessShellCMD(char* command)
     }
     else if (strcmp(cmd, "mkfile") == 0x00)
     {
-        CreateFile(args[0], args[1], sizeof(args[1]));
+        CreateFile(args[0], args[1], sizeof(args[1]), PERM_R | PERM_W);
     }
     else if (strcmp(cmd, "mkdir") == 0x00)
     {
