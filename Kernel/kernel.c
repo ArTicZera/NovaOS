@@ -66,12 +66,16 @@ void main(LPDWORD magic)
     Debug("Virtual Memory Manager Started!\n", 0x00);
 
     InitFileSystem();
-    MakeDir("shell");
-    ChangeDir("shell");
-    CreateFile("stars.exe", stars, starsSize);
-    CreateFile("scroll.exe", scroll, scrollSize);
-    CreateFile("bytebeat.exe", bytebeat, bbeatSize);
+    MakeDir("bin");
+    ChangeDir("bin");
+    CreateFile("stars.exe", stars, starsSize, PERM_X);
+    CreateFile("scroll.exe", scroll, scrollSize, PERM_X);
+    CreateFile("bytebeat.exe", bytebeat, bbeatSize, PERM_X);
     ChangeDir("..");
+    MakeDir("etc");
+    MakeDir("home");
+    MakeDir("dev");
+    MakeDir("tmp");
     Debug("MemFS File System Loaded!\n", 0x00);
 
     InitTimer();
@@ -110,3 +114,4 @@ void main(LPDWORD magic)
     StartShellNoGUI();
     UserSpace();
 }
+
