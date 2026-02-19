@@ -26,9 +26,6 @@ https://github.com/user-attachments/assets/1fa12820-75fa-4ab0-99ac-81005ac1fe0d
 
 <img width="802" height="657" alt="TinyGLGears" src="https://github.com/user-attachments/assets/9d3bd59f-9a58-42e1-9b2f-8326f111f27c" />
 
-# ⚠️ Important
-NovaOS will only work on QEMU, so it can have more easily and readable operations and functions.
-
 # 🛠️ Current Progress
 - ✅ **GRUB Multiboot**
 - ✅ **VBE Support (800x600 32bpp)**
