@@ -121,7 +121,20 @@ void KeyboardHandler()
                     EscapeNotepad();
                 }
                 break;
+            
+            case 0x0E:
+                if (isPress)
+                {
+                    SetCursorX(GetCursorX() - 8);
 
+                    Print("\f", 0x00000000);
+
+                    SetCursorX(GetCursorX() - 8);
+
+                    commandLength--;
+                }
+                break;
+            
             //Shift
             case 42:
             case 54:
@@ -185,3 +198,4 @@ void InitKeyboard()
     //Needed for the interrupt request
     IRQInstallHandler(0x01, &KeyboardHandler);
 }
+
