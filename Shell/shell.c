@@ -172,7 +172,15 @@ void ProcessShellCMD(char* command)
         Print(" ###        ##########        CPU: ", 0xFF00FFFF); ShowCPUName();
         Print(" ###       ###########        Date: ", 0xFF00FFFF); GetCMOSDate(); Print("\n", 0x00);
         Print(" ###      #####   #####       \n", 0xFF00FFFF);
-        Print("   #      ####      ###       \n", 0xFF00FFFF);
+        Print("   #      ####      ###       ", 0xFF00FFFF);
+        Print("\f\f", 0xFF0E1A14);
+        Print("\f\f", 0xFF1B2A21);
+        Print("\f\f", 0xFF23382C);
+        Print("\f\f", 0xFF2F4A38);
+        Print("\f\f", 0xFF3F5F49);
+        Print("\f\f", 0xFF5F7566);
+        Print("\f\f", 0xFF8A9A90);
+        Print("\f\f\n", 0xFFB7C0B9);
         Print("         ##           ##        ", 0xFF00FFFF);
     }
     else if (strcmp(cmd, "gfx") == 0x00)
@@ -287,3 +295,4 @@ void ProcessShellRun(char* process)
         Print("\n\nInvalid software!", 0xFFFF0000);
     }
 }
+
