@@ -68,6 +68,13 @@ void Print(const char* str, DWORD color)
             }
         }
 
+        if (str[i] == '\f')
+        {
+            DrawChar(isoFont + 128 * HFONT, color);
+
+            continue;
+        }
+
         //Look how I draw with the 'isoFont' bitmap (declared on font.h)
         //I use it with the size of a HFONT * the ASCII character, then
         //we get into the char bitmap to draw.
@@ -216,3 +223,4 @@ void SetCursorY(int y)
 {
     cursorY = y;
 }
+
