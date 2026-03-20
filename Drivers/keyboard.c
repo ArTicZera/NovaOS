@@ -1,5 +1,5 @@
 /*
-    Coded by ArTic/JhoPro and Daedalus
+    Coded by ArTic/JhoPro, Daedalus and Carbrito
 
     A simple keyboard driver. It gets the scan code in 0x80 and
     it interprets as normal characters. It also set this to its
@@ -13,6 +13,7 @@
 #include "../Shell/shell.h"
 #include "../Shell/npad.h"
 #include "../Graphics/graphics.h"
+#include "../FileSystem/memfs.h"
 
 #include "../Userspace/GUI/gui.h"
 #include "../Userspace/userspace.h"
@@ -20,11 +21,14 @@
 
 #include "keyboard.h"
 
+extern char* file;
+
 int allowInput = 1; //Allows you to type something
 int enableText = 0; //Enable text on screen
 
 //Other keys events
 int shift = 0;
+int ctrl = 0;
 int caps = 0;
 
 //Command buffer for shell and others.
@@ -108,7 +112,6 @@ void KeyboardHandler()
     else
     {
         keyDown[scan] = 0;
-        return;
     }
 
     if (allowInput)
@@ -121,7 +124,7 @@ void KeyboardHandler()
                     EscapeNotepad();
                 }
                 break;
-            
+
             case 0x0E:
                 if (isPress)
                 {
@@ -134,7 +137,24 @@ void KeyboardHandler()
                     commandLength--;
                 }
                 break;
-            
+
+            case 0x1D:
+                ctrl = isPress;
+                break;
+            case 0x1F:
+                if (isPress & ctrl)
+                {
+                    CreateNotepadFile(file, (LPBYTE)notepadBuffer, notepadLength);
+                    EscapeNotepad();
+                    break;
+                }
+                if (isPress) 
+                {
+                    HandleCharacter(scan);
+                    break;
+                }
+                break;
+
             //Shift
             case 42:
             case 54:
@@ -198,4 +218,3 @@ void InitKeyboard()
     //Needed for the interrupt request
     IRQInstallHandler(0x01, &KeyboardHandler);
 }
-
