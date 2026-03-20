@@ -4,10 +4,17 @@
 #include "../Drivers/keyboard.h"
 #include "../Timer/timer.h"
 #include "../Memory/mem.h"
+#include "../FileSystem/memfs.h"
 
 #include "npad.h"
 
+char* file;
 int exitNotepad = 0;
+
+void CreateNotepadFile(LPBYTE filename, LPBYTE buffer, int length)
+{
+    CreateFile(filename, buffer, length, PERM_R | PERM_W);
+}
 
 void ShowInfo(const char* filename)
 {
@@ -22,14 +29,22 @@ void ShowInfo(const char* filename)
         }
     }
 
+    file = (char*)filename;
+
     Print("Editing file: ", 0xFFFFFFFF);
 
     if (strcmp(filename, "") == 0x00)
     {
         Print("Untitled", 0xFFFFFFFF);
+        file = "Untitled";
     }
 
     Print(filename, 0xFFFFFFFF);
+
+    SetCursorX(0);
+    SetCursorY(72 * 8);
+
+    Print("ESC - Exit    ^S - Save", 0xFFFFFF00);
 
     SetCursorX(0);
     SetCursorY(0);
