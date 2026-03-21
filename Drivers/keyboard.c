@@ -78,7 +78,6 @@ void HandleCharacter(int scan)
     {
         PrintOut('*', 0xFFFFFFFF);
         commandLength++;
-        notepadLength++;
     }
     else if (enableText == 4) // Notepad
     {
@@ -90,7 +89,6 @@ void HandleCharacter(int scan)
     {
         PrintOut(c, 0xFFFFFFFF);
         commandLength++;
-        notepadLength++;
     }
 }
 
