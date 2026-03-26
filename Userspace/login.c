@@ -4,6 +4,7 @@
 #include "../Font/text.h" 
 #include "../Memory/mem.h"
 
+#include "GUI/win.h"
 #include "GUI/gui.h"
 #include "login.h"
 
