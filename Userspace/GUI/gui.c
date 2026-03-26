@@ -1,6 +1,5 @@
 #include "../../Include/stdint.h"
 #include "../../Graphics/graphics.h"
-#include "../../Include/bmp.h"
 #include "../../Font/text.h"
 #include "../../Timer/timer.h"
 
