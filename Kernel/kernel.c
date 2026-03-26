@@ -12,6 +12,7 @@
 #include "../Timer/timer.h"
 #include "../Memory/vmm.h"
 #include "../Memory/alloc.h"
+#include "../Userspace/GUI/win.h"
 #include "../Drivers/keyboard.h"
 #include "../Drivers/mouse.h"
 #include "../Drivers/sb16.h"
