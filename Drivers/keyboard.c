@@ -15,6 +15,7 @@
 #include "../Graphics/graphics.h"
 #include "../FileSystem/memfs.h"
 
+#include "../Userspace/GUI/win.h"
 #include "../Userspace/GUI/gui.h"
 #include "../Userspace/userspace.h"
 #include "../Userspace/login.h"
