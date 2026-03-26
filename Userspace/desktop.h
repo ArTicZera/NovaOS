@@ -9,4 +9,3 @@ typedef struct
 
 DesktopItem* GetClickedItem(int x, int y);
 void SetDesktopIndex(char* name, int type, int x, int y);
-void DesktopEvents(int x, int y, int pressed);
