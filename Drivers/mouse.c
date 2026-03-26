@@ -12,6 +12,7 @@
 #include "../Interrupts/idt.h"
 #include "../Font/text.h"
 #include "../Timer/timer.h"
+#include "../Userspace/GUI/win.h"
 #include "../Userspace/GUI/gui.h"
 
 #include "cursor.h"
