@@ -18,20 +18,6 @@ typedef enum
     ICON_USER2
 } EXTICON;
 
-typedef struct GUIEvent
-{
-    int type;
-    int mouseX, mouseY;
-    int keyCode;
-    int windowID; 
-} GUIEvent;
-
-typedef struct GraphicsBuffer
-{
-    int width, heights;
-    BYTE* data;
-} GraphicsBuffer;
-
 void DrawStartMenu(WINDOW window);
 void DrawDesktopIcon(EXTICON exticon, char* name, int x, int y);
 void BlurRegion(DWORD* src, DWORD* dst, int x0, int y0, int w, int h, int radius);
