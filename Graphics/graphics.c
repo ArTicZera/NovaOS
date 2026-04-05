@@ -13,10 +13,10 @@
 DWORD vidmem;
 DWORD pitch;
 
-void InitGraphics(LPDWORD mbinfo)
+void InitGraphics(DWORD fb, DWORD p)
 {
-    vidmem = ((QWORD)mbinfo[23] << 32) | mbinfo[22];
-    pitch = mbinfo[24];
+    vidmem = fb;
+    pitch = p;
 }
 
 DWORD GetFramebuffer()
