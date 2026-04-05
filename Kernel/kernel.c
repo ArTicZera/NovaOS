@@ -66,8 +66,6 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
     InitFileSystem();
     MakeDir("bin");
     ChangeDir("bin");
-    CreateFile("stars.exe", stars, starsSize, PERM_X);
-    CreateFile("scroll.exe", scroll, scrollSize, PERM_X);
     CreateFile("bytebeat.exe", bytebeat, bbeatSize, PERM_X);
     ChangeDir("..");
     MakeDir("etc");
