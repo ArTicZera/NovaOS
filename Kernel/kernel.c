@@ -51,6 +51,25 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
     PrintHex(GetPitch(), 0xFFFFFFFF);
     Print("\n", 0x00);
 
+    for (int i = 0; i < mbinfo->mmap_length; i += sizeof(struct multiboot_mmap_entry))
+    {
+        struct multiboot_mmap_entry* entry = (struct multiboot_mmap_entry*)(mbinfo->mmap_addr + i);
+
+        Debug("Low Addr: ", 2);
+        PrintHex(entry->addr_low, 0xFFFFFFFF);
+        Print(" High Addr: ", 0xFFFFFFFF);
+        PrintHex(entry->addr_high, 0xFFFFFFF);
+        Print(" Low length: ", 0xFFFFFFFF);
+        PrintHex(entry->len_low, 0xFFFFFFFF);
+        Print(" High length: ", 0xFFFFFFFF);
+        PrintHex(entry->len_high, 0xFFFFFFFF);
+        Print("  Size: ", 0xFFFFFFFF);
+        PrintInt(entry->size, 0xFFFFFFFF);
+        Print(" Type: ", 0xFFFFFFFF);
+        PrintInt(entry->type, 0xFFFFFFFF);
+        Print("\n", 0x00);
+    }
+
     Debug("Kernel loaded!\n", 0x00);
 
     InitGDT();
