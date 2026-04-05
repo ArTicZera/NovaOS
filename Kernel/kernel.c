@@ -6,6 +6,7 @@
 */
 
 #include "../Include/stdint.h"
+#include "multiboot.h"
 #include "../Graphics/graphics.h"
 #include "../Font/text.h"
 #include "../Interrupts/idt.h"
@@ -30,20 +31,16 @@
 #include "../GDT/gdt.h"
 
 //ELF32 Programs
-extern char stars[];
-extern char scroll[];
 extern char bytebeat[];
 
 //Size of Programs
-extern DWORD starsSize;
-extern DWORD scrollSize;
 extern DWORD bbeatSize;
 
-static float angle = 0.0f;
-
-void main(LPDWORD magic)
+void main(struct multiboot_info* mbinfo, DWORD addr)
 {
-    InitGraphics(magic);
+    struct vbe_mode_info_t* vbe = (struct vbe_mode_info_t*)mbinfo->vbe_mode_info;
+
+    InitGraphics(vbe->framebuffer, vbe->pitch);
     Debug("VESA 640x480 32BPP Started!\n", 0x00);
 
     Debug("VESA Framebuffer: ", 0x00);
