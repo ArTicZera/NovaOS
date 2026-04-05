@@ -51,6 +51,14 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
     PrintHex(GetPitch(), 0xFFFFFFFF);
     Print("\n", 0x00);
 
+    if (addr != 0x2BADB002)
+    {
+        Debug("Invalid Magic Number!\n", 0x01);
+        return;
+    }
+
+    Debug("Valid Magic Number!: 0x2BADB002\n", 0x00);
+
     for (int i = 0; i < mbinfo->mmap_length; i += sizeof(struct multiboot_mmap_entry))
     {
         struct multiboot_mmap_entry* entry = (struct multiboot_mmap_entry*)(mbinfo->mmap_addr + i);
