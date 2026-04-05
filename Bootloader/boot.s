@@ -59,10 +59,6 @@ HaltKernel:
 [GLOBAL       exe]
 
 ;ELF Programs
-[GLOBAL  starsSize]
-[GLOBAL      stars]
-[GLOBAL scrollSize]
-[GLOBAL     scroll]
 [GLOBAL  bbeatSize]
 [GLOBAL   bytebeat]
 
@@ -85,17 +81,6 @@ section .data
         dir: incbin "Include/Icons/dir.vad"
         exe: incbin "Include/Icons/exe.vad"
         non: incbin "Include/Icons/default.vad"
-
-        ;Programs
-        starsBase: equ $ - stars
-        stars:     incbin "Programs/Binaries/stars.elf"
-        stars_end: 
-        starsSize: dd stars_end - stars
-
-        scrollBase: equ $ - scroll
-        scroll:     incbin "Programs/Binaries/scroll.elf"
-        scroll_end: 
-        scrollSize: dd scroll_end - scroll
 
         bytebeatBase: equ $ - bytebeat
         bytebeat:     incbin "Programs/Binaries/bytebeat.elf"
