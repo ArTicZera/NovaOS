@@ -33,8 +33,6 @@
 #include "npad.h"
 
 //ELF32 Executable
-extern char stars[];
-extern char scroll[];
 extern char bytebeat[];
 
 //Shows a welcome message
