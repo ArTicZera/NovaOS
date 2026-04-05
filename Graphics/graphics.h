@@ -1,7 +1,7 @@
 #define WSCREEN 800
 #define HSCREEN 600
 
-void InitGraphics(LPDWORD mbinfo);
+void InitGraphics(DWORD fb, DWORD p);
 DWORD GetFramebuffer();
 DWORD GetPitch();
 void SetPixel(int x, int y, DWORD color);
