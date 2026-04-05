@@ -277,15 +277,7 @@ void ProcessShellCMD(char* command)
 //Runs some ELF32 files
 void ProcessShellRun(char* process)
 {
-    if (strcmp(process, "stars.exe") == 0x00)
-    {
-        ExecuteELF(stars);
-    }
-    else if (strcmp(process, "scroll.exe") == 0x00)
-    {
-        ExecuteELF(scroll);
-    }
-    else if (strcmp(process, "bytebeat.exe") == 0x00)
+    if (strcmp(process, "bytebeat.exe") == 0x00)
     {
         ExecuteELF(bytebeat);
     }
