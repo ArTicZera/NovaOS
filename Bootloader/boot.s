@@ -19,16 +19,26 @@ align 4
         DD 720
         DD 32
 
-section .bss
-
 align 16
-
-stackTop:
 
 section .text
 
 global _start
 
+_start:
+        push    eax
+        push    ebx
+
+        xor     ebp, ebp
+
+        extern  main
+        call    main
+
+HaltKernel:
+        hlt
+
+        jmp     HaltKernel
+        
 ;Images
 [GLOBAL bootscr]
 [GLOBAL backgrd]
@@ -55,19 +65,6 @@ global _start
 [GLOBAL     scroll]
 [GLOBAL  bbeatSize]
 [GLOBAL   bytebeat]
-
-_start:
-        push    ebx
-
-        xor     ebp, ebp
-
-        extern  main
-        call    main
-
-HaltKernel:
-        hlt
-
-        jmp     HaltKernel
 
 section .data
         ;Images
@@ -104,3 +101,7 @@ section .data
         bytebeat:     incbin "Programs/Binaries/bytebeat.elf"
         bytebeat_end: 
         bbeatSize: dd bytebeat_end - bytebeat
+
+section .bss
+
+align 16
