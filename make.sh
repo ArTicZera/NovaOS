@@ -83,13 +83,9 @@ i686-elf-gcc -ffreestanding -m32 -g -c Userspace/GUI/gui.c   -o Binaries/gui.o
 i686-elf-gcc -ffreestanding -m32 -g -c Userspace/login.c     -o Binaries/login.o
 
 echo "Compiling Programs"
-i686-elf-gcc -ffreestanding -m32 -g -c Programs/starfield.c  -o Programs/Binaries/starfield.o
 i686-elf-gcc -ffreestanding -m32 -g -c Programs/bytebeat.c   -o Programs/Binaries/bytebeat.o
-i686-elf-gcc -ffreestanding -m32 -g -c Programs/scroll.c     -o Programs/Binaries/scroll.o
 
 echo "Linking Programs"
-i686-elf-ld -Ttext 0xC90000 Programs/Binaries/starfield.o Binaries/graphics.o Binaries/math.o -o Programs/Binaries/stars.elf
-i686-elf-ld -Ttext 0xC90000 Programs/Binaries/scroll.o Binaries/graphics.o Binaries/text.o Binaries/math.o -o Programs/Binaries/scroll.elf
 i686-elf-ld -Ttext 0xC90000 Programs/Binaries/bytebeat.o Binaries/ports.o Binaries/sb16.o -o Programs/Binaries/bytebeat.elf
 
 echo "Linking Kernel"
