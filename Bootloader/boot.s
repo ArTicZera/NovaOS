@@ -38,7 +38,8 @@ HaltKernel:
         hlt
 
         jmp     HaltKernel
-        
+
+section .data
 ;Images
 [GLOBAL bootscr]
 [GLOBAL backgrd]
@@ -58,11 +59,12 @@ HaltKernel:
 [GLOBAL       dir]
 [GLOBAL       exe]
 
+;Animations
 ;ELF Programs
-[GLOBAL  bbeatSize]
-[GLOBAL   bytebeat]
-
-section .data
+;[GLOBAL    bbeatSize]
+;[GLOBAL     bytebeat]
+;[GLOBAL badappleSize]
+;[GLOBAL     badapple]
         ;Images
         bootscr: incbin "Include/logo.bmp"
         backgrd: incbin "Include/bg.bmp"
@@ -77,15 +79,10 @@ section .data
         terminal: incbin "Include/Icons/terminal.vad"
 
         ;File Extensions
-        txt: incbin "Include/Icons/txt.vad"
-        dir: incbin "Include/Icons/dir.vad"
-        exe: incbin "Include/Icons/exe.vad"
+        txt: incbin "Include/Icons/txt.bmp"
+        dir: incbin "Include/Icons/dir.bmp"
+        exe: incbin "Include/Icons/exe.bmp"
         non: incbin "Include/Icons/default.vad"
-
-        bytebeatBase: equ $ - bytebeat
-        bytebeat:     incbin "Programs/Binaries/bytebeat.elf"
-        bytebeat_end: 
-        bbeatSize: dd bytebeat_end - bytebeat
 
 section .bss
 
