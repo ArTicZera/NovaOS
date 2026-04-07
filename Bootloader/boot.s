@@ -79,9 +79,7 @@ section .data
         terminal: incbin "Include/Icons/terminal.vad"
 
         ;File Extensions
-        txt: incbin "Include/Icons/txt.bmp"
         dir: incbin "Include/Icons/dir.bmp"
-        exe: incbin "Include/Icons/exe.bmp"
         non: incbin "Include/Icons/default.vad"
 
 section .bss
