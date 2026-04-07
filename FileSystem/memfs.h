@@ -1,7 +1,7 @@
 #define MAXFILENAME 0x0F
 #define MAXFILES    0x0F
 #define MAXSUBDIR   0x0F
-#define FSADDRESS   0xC00000
+#define FSADDRESS   0x01000000 
 
 #define PERM_R 0x04
 #define PERM_W 0x02
@@ -42,12 +42,16 @@ int FindFile(const char* filename);
 int FileInfo(const char* filename);
 int RenameFile(const char* oldFilename, const char* newFilename);
 void ListFiles();
+void RunProgram(char* filename);
 
 int MakeDir(const char* dir);
 int DeleteDir(const char* dirname);
 int ChangeDir(const char* dirname);
 void ListDirs();
 
+char* get_filename(char* path);
 void PrintCurrentDir();
+FileHeader* GetFileHeader(const char* filename);
+int ReadFileChunk(const char* filename, BYTE* buffer, DWORD offset, DWORD bytesToRead);
 
 Directory* GetRootDir();
