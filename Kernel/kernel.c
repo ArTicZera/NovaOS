@@ -35,7 +35,7 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
     struct vbe_mode_info_t* vbe = (struct vbe_mode_info_t*)mbinfo->vbe_mode_info;
 
     InitGraphics(vbe->framebuffer, vbe->pitch);
-    Debug("VESA 640x480 32BPP Started!\n", 0x00);
+    Debug("VESA 800x600 32BPP Started!\n", 0x00);
 
     Debug("VESA Framebuffer: ", 0x00);
     PrintHex(GetFramebuffer(), 0xFFFFFFFF);
@@ -85,7 +85,32 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
     Debug("Virtual Memory Manager Started!\n", 0x00);
 
     DWORD aligned = (mbinfo->mods_addr + 3) & ~3;
+    //struct multiboot_module_t* mods = (struct multiboot_module_t*) mbinfo->mods_addr;
     struct multiboot_module_t* mods = (struct multiboot_module_t*)(DWORD)aligned;
+
+    Print("mods_addr: ", 0xFFFFFFFF);
+    PrintHex(mbinfo->mods_addr, 0xFFFFFFFF);
+    Print("\n", 0x00);
+
+    Print("Start: ", 0xFFFFFFFF);
+    PrintHex(mods[0].mod_start, 0xFFFFFFFF);
+    Print("\n", 0x00);
+
+    Print("End: ", 0xFFFFFFFF);
+    PrintHex(mods[0].mod_end, 0xFFFFFFFF);
+    Print("\n", 0x00);
+
+    Print("String: ", 0xFFFFFFFF);
+    PrintHex(mods[0].string, 0xFFFFFFFF);
+    Print("\n", 0x00);
+
+    Print("Start: ", 0xFFFFFFFF);
+    PrintHex(mods[0].mod_start, 0xFFFFFFFF);
+    Print("\n", 0x00);
+
+    Print("Magic: ", 0xFFFFFFFF);
+    PrintHex(*(DWORD*)mods[0].mod_start, 0xFFFFFFFF);
+    Print("\n", 0x00);
 
     InitFileSystem();
     MakeDir("bin");
@@ -121,27 +146,27 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
     InitMemory();
     Debug("Memory Initialized!\n", 0x00);
 
-    //InitEthernet();
-    //InitARP();
-    //Debug("Ethernet Started!\n", 0x00);
+    //PlayBadApple(badapple, badappleSize);
 
-    //SetupSoundBlaster();
-    //Debug("Sound Blaster 16 Initialized!\n", 0x00);
-
-    IdentifyATA(0, 0); // Primary Master
-    IdentifyATA(1, 0); // Secondary Master
+    SetupSoundBlaster();
+    Debug("Sound Blaster 16 Initialized!\n", 0x00);
 
     ShowCMOSMem();
     ListDisks();
     ShowCPUInfo();
     ShowPCIDevices();
 
-    Sleep(2);
+    //while (1)
+    //{
+
+    //}
+
+    Sleep(10);
 
     ClearScreen();
     DrawBootScr();
 
+    ClearScreen();
     StartShellNoGUI();
     UserSpace();
 }
-
