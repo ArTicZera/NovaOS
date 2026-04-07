@@ -84,6 +84,9 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
     InitVirtualMemory();
     Debug("Virtual Memory Manager Started!\n", 0x00);
 
+    DWORD aligned = (mbinfo->mods_addr + 3) & ~3;
+    struct multiboot_module_t* mods = (struct multiboot_module_t*)(DWORD)aligned;
+
     InitFileSystem();
     MakeDir("bin");
     ChangeDir("bin");
