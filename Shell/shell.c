@@ -274,9 +274,9 @@ void ProcessShellCMD(char* command)
 //Runs some ELF32 files
 void ProcessShellRun(char* process)
 {
-    if (strcmp(process, "bytebeat.exe") == 0x00)
+    if (strcmp(process, "bytebeat.elf") == 0x00)
     {
-        ExecuteELF(bytebeat);
+        RunProgram("bytebeat.elf");
     }
     else
     {
