@@ -30,12 +30,6 @@
 #include "../Userspace/userspace.h"
 #include "../GDT/gdt.h"
 
-//ELF32 Programs
-extern char bytebeat[];
-
-//Size of Programs
-extern DWORD bbeatSize;
-
 void main(struct multiboot_info* mbinfo, DWORD addr)
 {
     struct vbe_mode_info_t* vbe = (struct vbe_mode_info_t*)mbinfo->vbe_mode_info;
