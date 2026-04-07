@@ -32,9 +32,6 @@
 #include "shell.h"
 #include "npad.h"
 
-//ELF32 Executable
-extern char bytebeat[];
-
 //Shows a welcome message
 void PrintWelcomeMSG()
 {
