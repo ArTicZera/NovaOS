@@ -87,9 +87,19 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
     InitFileSystem();
     MakeDir("bin");
     ChangeDir("bin");
-    CreateFile("bytebeat.exe", bytebeat, bbeatSize, PERM_X);
+
+    for (int i = 0; i < mbinfo->mods_count; i++)
+    {
+        void* start = (void*) mods[i].mod_start;
+        void* end   = (void*) mods[i].mod_end;
+        DWORD size = (DWORD)((BYTE*)end - (BYTE*)start);
+
+        char* filename = get_filename((char*)mods[i].string);
+        
+        CreateFile(filename, (LPBYTE)start, size, PERM_R | PERM_W | PERM_X);
+    }
+
     ChangeDir("..");
-    MakeDir("etc");
     MakeDir("home");
     MakeDir("dev");
     MakeDir("tmp");
