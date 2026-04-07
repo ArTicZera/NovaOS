@@ -6,8 +6,10 @@
 */
 
 #include "../Include/stdint.h"
+#include "../Memory/alloc.h"
 #include "../Memory/mem.h"
 #include "../Font/text.h"
+#include "../ELF/elf.h"
 
 #include "memfs.h"
 
@@ -17,38 +19,27 @@ Directory* currentDir;
 
 void InitFileSystem()
 {
+    fs = (FileSystem*) FSADDRESS;
+
+    memset(fs, 0, sizeof(FileSystem));
+
     strncpy(fs->root.name, "", MAXFILENAME);
 
     fs->root.parent = NULL;
-    fs->root.nextFreeBlock = FSADDRESS + sizeof(FileSystem);
 
-    for (int i = 0; i < MAXFILES; i++)
-    {
-        memset(fs->root.files[i].filename, 0x00, MAXFILENAME);
-        fs->root.files[i].size = 0x00000000;
-        fs->root.files[i].dataOffset = 0x00000000;
-        fs->root.files[i].permissions = 0x00;
-    }
-
-    for (int i = 0; i < MAXSUBDIR; i++)
-    {
-        fs->root.subdirs[i] = 0x00;
-    }
+    // 🔥 alinhado
+    fs->root.nextFreeBlock = (FSADDRESS + sizeof(FileSystem) + 3) & ~3;
 
     currentDir = &fs->root;
 }
 
 int CreateFile(const char* filename, const LPBYTE data, DWORD size, BYTE permissions)
 {
-    //Checks for invalid file name
     if (size == 0 || strlen(filename) >= MAXFILENAME)
-    {
         return -1;
-    }
 
     int fileIndex = -1;
 
-    //Checks for enough space
     for (int i = 0; i < MAXFILES; i++)
     {
         if (currentDir->files[i].filename[0] == '\0')
@@ -59,22 +50,21 @@ int CreateFile(const char* filename, const LPBYTE data, DWORD size, BYTE permiss
     }
 
     if (fileIndex == -1)
-    {
         return -2;
-    }
 
-    DWORD dataOffset = currentDir->nextFreeBlock;
-    currentDir->nextFreeBlock += size;
+    // 🔥 ALIGN (ESSENCIAL)
+    DWORD dataOffset = (currentDir->nextFreeBlock + 3) & ~3;
+
+    currentDir->nextFreeBlock = dataOffset + size;
 
     strncpy(currentDir->files[fileIndex].filename, filename, MAXFILENAME);
     currentDir->files[fileIndex].size = size;
     currentDir->files[fileIndex].dataOffset = dataOffset;
     currentDir->files[fileIndex].permissions = permissions;
 
-    LPBYTE fileData = (LPBYTE) dataOffset;
-    memcpy(fileData, data, size);
+    memcpy((void*)dataOffset, data, size);
 
-    return 0x00;
+    return 0;
 }
 
 int ReadFile(const char* filename, LPBYTE buffer, LPDWORD size)
@@ -245,26 +235,30 @@ int CanExecute(const char* filename)
 
 int MakeDir(const char* dir)
 {
-    if (strlen(dir) >= MAXFILENAME || dir[0] == '\0') 
-    {
+    if (strlen(dir) >= MAXFILENAME || dir[0] == '\0')
         return -1;
-    }
 
     for (int i = 0; i < MAXSUBDIR; i++)
     {
         if (currentDir->subdirs[i] == NULL)
         {
-            Directory* newDir = (Directory*) currentDir->nextFreeBlock;
-            currentDir->nextFreeBlock += sizeof(Directory);
+            // 🔥 ALIGN
+            DWORD addr = (currentDir->nextFreeBlock + 3) & ~3;
 
-            memset(newDir, 0x00, sizeof(Directory));
+            Directory* newDir = (Directory*) addr;
+
+            currentDir->nextFreeBlock = addr + sizeof(Directory);
+
+            memset(newDir, 0, sizeof(Directory));
+
             strncpy(newDir->name, dir, MAXFILENAME - 1);
+
             newDir->parent = currentDir;
             newDir->nextFreeBlock = (DWORD)newDir + sizeof(Directory);
 
             currentDir->subdirs[i] = newDir;
 
-            return 0x00; //Done
+            return 0;
         }
     }
 
@@ -382,4 +376,110 @@ void PrintCurrentDir()
     
     Print(path,  0xFFFFFFFF);
     Print("]# ", 0xFFFFFFFF);
+}
+
+void RunProgram(char* filename)
+{
+    for (int i = 0; filename[i]; i++)
+    {
+        if (filename[i] == '\n' || filename[i] == '\r')
+        {
+            Print("Comparing with: [", 0xFF00FFFF);
+            Print(currentDir->files[i].filename, 0xFF00FFFF);
+            Print("]\n", 0xFF00FFFF);
+            
+            filename[i] = '\0';
+            break;
+        }
+    }
+
+    DWORD size;
+    LPBYTE buffer = AllocateMemory(1024 * 1024);
+
+    Print("Trying to open: [", 0xFFFFFFFF);
+    Print(filename, 0xFFFFFFFF);
+    Print("]\n", 0xFFFFFFFF);
+
+    if (ReadFile(filename, buffer, &size) != 0)
+    {
+        Print("Searching for: [", 0xFFFFFF00);
+        Print(filename, 0xFFFFFF00);
+        Print("]\n", 0xFFFFFF00);
+        
+    }
+
+    Print("Magic: ", 0xFFFFFFFF);
+    PrintHex(*(DWORD*)buffer, 0xFFFFFFFF);
+    Print("\n", 0x00);
+
+    Debug("File loaded!\n", 0x02);
+
+    void (*entry)() = (void (*)()) LoadELF(buffer);
+
+    if (!entry)
+    {
+        Debug("Invalid ELF!\n", 0x01);
+        return;
+    }
+
+    Print("Entry: ", 0xFFFFFFFF);
+    PrintHex((DWORD)entry, 0xFFFFFFFF);
+    Print("\n", 0x00);
+
+    Debug("Executing...\n", 0x02);
+
+    entry();
+}
+
+char* get_filename(char* path)
+{
+    char* last = path;
+
+    for (int i = 0; path[i] != '\0'; i++)
+    {
+        if (path[i] == '/')
+        {
+            last = &path[i + 1];
+        }
+    }
+
+    return last;
+}
+
+FileHeader* GetFileHeader(const char* filename)
+{
+    Directory* dir = currentDir;
+
+    for (int i = 0; i < MAXFILES; i++)
+    {
+        if (dir->files[i].filename[0] == 0)
+            continue;
+
+        if (strcmp(dir->files[i].filename, filename) == 0)
+        {
+            return &dir->files[i];
+        }
+    }
+
+    return NULL;
+}
+
+int ReadFileChunk(const char* filename, BYTE* buffer, DWORD offset, DWORD bytesToRead)
+{
+    FileHeader* file = GetFileHeader(filename);
+
+    if (file == NULL)
+        return -1;
+
+    if (offset >= file->size)
+        return -2;
+
+    if (offset + bytesToRead > file->size)
+        bytesToRead = file->size - offset;
+
+    BYTE* src = (BYTE*)(FSADDRESS + file->dataOffset + offset);
+
+    memcpy(buffer, src, bytesToRead);
+
+    return bytesToRead;
 }
