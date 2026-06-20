@@ -180,8 +180,8 @@ void DesktopIcons()
         {
             int x = 10;
             int y = 10 + (index * 76);
-            DrawDesktopIcon(0, x, y);
-            //DrawDesktopIcon(ICON_DIR, fs->root.subdirs[i]->name, x, y);
+            //DrawDesktopIcon(0, x, y);
+            DrawDesktopIcon(ICON_DIR, fs->root.subdirs[i]->name, x, y);
             SetDesktopIndex(fs->root.subdirs[i]->name, 0x00, x, y);
 
             index++;
