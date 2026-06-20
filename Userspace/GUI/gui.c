@@ -29,46 +29,6 @@ void DrawStartMenu(WINDOW window)
     Print("Admin", 0xFF00FFFF);
 }
 
-void BlurRegion(DWORD* src, DWORD* dst, int x0, int y0, int w, int h, int radius)
-{
-    for (int y = y0; y < y0 + h; y++)
-    {
-        for (int x = x0; x < x0 + w; x++)
-        {
-            int r = 0, g = 0, b = 0, count = 0;
-
-            for (int ky = -radius; ky <= radius; ky++)
-            {
-                for (int kx = -radius; kx <= radius; kx++)
-                {
-                    int px = x + kx;
-                    int py = y + ky;
-
-                    if (px < 0 || py < 0 || px >= WSCREEN || py >= HSCREEN)
-                        continue;
-
-                    DWORD c = src[py * WSCREEN + px];
-
-                    r += (c >> 16) & 0xFF;
-                    g += (c >> 8) & 0xFF;
-                    b += c & 0xFF;
-                    count++;
-                }
-            }
-
-            r /= count;
-            g /= count;
-            b /= count;
-
-            dst[y * WSCREEN + x] =
-                0xFF000000 |
-                (r << 16) |
-                (g << 8) |
-                b;
-        }
-    }
-}
-
 void DrawDesktopIcon(EXTICON exticon, char* name, int posX, int posY)
 {
     const DWORD* iconBitmap = NULL;
