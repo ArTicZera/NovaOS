@@ -1,0 +1,2 @@
+void Shutdown();
+void Restart();
