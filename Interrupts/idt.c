@@ -111,7 +111,7 @@ void SetupIDT(void)
     SetupIDTGate(47, (DWORD)irq15, 0x08, 0x8E);
 
     //Syscall
-    SetupIDTGate(128, (DWORD)isr128, 0x08, 0x8E);
+    SetupIDTGate(0x80, (DWORD)isr128, 0x08, 0xEE);
     SetupIDTGate(177, (DWORD)isr177, 0x08, 0x8E);
 
     LoadIDT((DWORD)&idtr);
@@ -159,29 +159,29 @@ void ISRHandler(struct InterruptRegisters* regs)
     {
         DeathScreen(exception_messages[regs->int_no]);
 
-        Print("\nEAX: ", 0x0F);
-        PrintHex(regs->eax, 0x0F);
+        Print("\nEAX: ", 0xFFFFFFFF);
+        PrintHex(regs->eax, 0xFFFFFFFF);
 
-        Print("\nEBX: ", 0x0F);
-        PrintHex(regs->ebx, 0x0F);
+        Print("\nEBX: ", 0xFFFFFFFF);
+        PrintHex(regs->ebx, 0xFFFFFFFF);
 
-        Print("\nECX: ", 0x0F);
-        PrintHex(regs->ecx, 0x0F);
+        Print("\nECX: ", 0xFFFFFFFF);
+        PrintHex(regs->ecx, 0xFFFFFFFF);
 
-        Print("\nEDX: ", 0x0F);
-        PrintHex(regs->edx, 0x0F);
+        Print("\nEDX: ", 0xFFFFFFFF);
+        PrintHex(regs->edx, 0xFFFFFFFF);
 
-        Print("\nESP: ", 0x0F);
-        PrintHex(regs->esp, 0x0F);
+        Print("\nESP: ", 0xFFFFFFFF);
+        PrintHex(regs->esp, 0xFFFFFFFF);
 
-        Print("\nEBP: ", 0x0F);
-        PrintHex(regs->ebp, 0x0F);
+        Print("\nEBP: ", 0xFFFFFFFF);
+        PrintHex(regs->ebp, 0xFFFFFFFF);
 
-        Print("\nESI: ", 0x0F);
-        PrintHex(regs->esi, 0x0F);
+        Print("\nESI: ", 0xFFFFFFFF);
+        PrintHex(regs->esi, 0xFFFFFFFF);
 
-        Print("\nEDI: ", 0x0F);
-        PrintHex(regs->edi, 0x0F);
+        Print("\nEDI: ", 0xFFFFFFFF);
+        PrintHex(regs->edi, 0xFFFFFFFF);
 
         for (;;);
     }
