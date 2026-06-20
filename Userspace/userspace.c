@@ -36,20 +36,30 @@ int totalWindows = 0;
 
 DWORD startBuffer[150 * 200];
 
-DWORD* backbuffer;
 
 void DrawBackground()
 {
     int bytes_per_pixel = 3;
-    int bytes_per_row = WSCREEN * bytes_per_pixel;
-    int padding = (4 - (bytes_per_row % 4)) % 4;
+
+    int src_w = 800;
+    int src_h = 600;
+
+    int src_row = src_w * bytes_per_pixel;
+    int padding = (4 - (src_row % 4)) % 4;
+
+    int src_stride = src_row + padding;
 
     for (int y = 0; y < HSCREEN - 35; y++)
     {
+        int src_y = (y * src_h) / HSCREEN;
+
+        int img_y = src_h - 1 - src_y;
+
         for (int x = 0; x < WSCREEN; x++)
         {
-            int img_y = (HSCREEN - 1 - y);
-            int index = (img_y * bytes_per_row) + (x * bytes_per_pixel) + (img_y * padding);
+            int src_x = (x * src_w) / WSCREEN;
+
+            int index = (img_y * src_stride) + (src_x * bytes_per_pixel);
 
             BYTE b = backgrd[index];
             BYTE g = backgrd[index + 1];
@@ -57,7 +67,7 @@ void DrawBackground()
 
             DWORD color = (0xFF << 24) | (r << 16) | (g << 8) | b;
 
-            SetPixel(x - 18, y, color);
+            SetPixel(x - 28, y, color);
         }
     }
 }
@@ -67,11 +77,11 @@ void DrawTaskbar()
     DWORD* blurbuffer = AllocateMemory(WSCREEN * HSCREEN * 4);
 
     // 1️⃣ aplica blur NO BACKBUFFER
-    BlurRegion(backbuffer, blurbuffer, 0, HSCREEN - 35, WSCREEN, 35, 1);
+    //BlurRegion(backbuffer, blurbuffer, 0, HSCREEN - 35, WSCREEN, 35, 1);
 
     for (int y = HSCREEN - 35; y < HSCREEN; y++)
     {
-        memcpy(&backbuffer[y * WSCREEN], &blurbuffer[y * WSCREEN], WSCREEN * 4);
+        //memcpy(&backbuffer[y * WSCREEN], &blurbuffer[y * WSCREEN], WSCREEN * 4);
     }
 }
 
@@ -133,7 +143,7 @@ void UpdateExplorer()
     {
         for (int x = 0; x < WSCREEN; x++)
         {
-            SetPixel(x, y, backbuffer[y * WSCREEN + x]);
+            SetPixel(x, y, 0xFF1A1A1A);
         }
     }
 
@@ -170,7 +180,8 @@ void DesktopIcons()
         {
             int x = 10;
             int y = 10 + (index * 76);
-            DrawDesktopIcon(ICON_DIR, fs->root.subdirs[i]->name, x, y);
+            DrawDesktopIcon(0, x, y);
+            //DrawDesktopIcon(ICON_DIR, fs->root.subdirs[i]->name, x, y);
             SetDesktopIndex(fs->root.subdirs[i]->name, 0x00, x, y);
 
             index++;
@@ -216,7 +227,7 @@ void DesktopIcons()
 
             int x = 64;
             int y = 20 + (index * 76);
-            DrawDesktopIcon(icon, filename, x, y);
+            //DrawDesktopIcon(icon, filename, x, y);
             SetDesktopIndex(filename, 0x01, x, y);
 
             index++;
@@ -253,7 +264,6 @@ void DrawBootScr(void)
     }
 
     DrawLoadBar();
-    ClearScreen();
 }
 
 void UserSpace()
