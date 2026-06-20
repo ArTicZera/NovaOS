@@ -7,6 +7,15 @@
     Fortunately it's working perfectly now! :D
 */
 
+/*
+    Coded by ArTic/JhoPro
+
+    This was a pain in the ass to do. But as the functions says
+    it loads and run an ELF32 file. (ONLY STATIC ELFs).
+
+    Fortunately it's working perfectly now! :D
+*/
+
 #include "../Include/stdint.h"
 #include "../Font/text.h"
 #include "../Memory/mem.h"
@@ -19,7 +28,6 @@ int LoadELF(void* elfData)
 {
     DWORD relocationOffs = 0;
 
-    Print("\n", 0x00);
     Debug("Loading ELF...\n", 0x02);
 
     ELF32_Header* elfHeader = (ELF32_Header*)elfData;
@@ -31,7 +39,7 @@ int LoadELF(void* elfData)
         return -1;
     }
 
-    Debug("Valid ELF File!\n", 0x00);
+    Debug("Valid ELF File!\n", 0x02);
 
     //Checks x86 architecture 
     if (elfHeader->e_machine != ELFARCH) 
@@ -40,7 +48,7 @@ int LoadELF(void* elfData)
         return -1;
     }
 
-    Debug("Valid ELF Architecture!\n", 0x00);
+    Debug("Valid ELF Architecture!\n", 0x02);
 
     ELF32_ProgramHeader* programHeader = (ELF32_ProgramHeader*)((BYTE*)elfData + elfHeader->e_phoff);
 
@@ -65,12 +73,20 @@ int LoadELF(void* elfData)
         //.text, .data`
         if (filesz > 0) 
         {
+            Debug("Loading segment\n", 0x02);
+            Debug("Segment: ", 0x02);
+            PrintHex(programHeader[i].p_vaddr, 0xFFFFFFFF);
+            Print(" - ", 0xFFFFFFFF);
+            PrintHex(programHeader[i].p_vaddr + programHeader[i].p_memsz, 0xFFFFFFFF);
+            Print("\n", 0x00);
+
             memmove(dest, src, filesz);
         }
 
         //.bss
         if (memsz > filesz) 
         {
+            Debug("Zeroing BSS\n", 0x02);
             memset(dest + filesz, 0, memsz - filesz);
         }
     }
@@ -96,4 +112,3 @@ void ExecuteELF(void* elf)
         return;
     }
 }
-
