@@ -1,3 +1,6 @@
+#ifndef GUI_H
+#define GUI_H
+
 typedef enum
 {
     ICON_NONE,
@@ -18,6 +21,10 @@ typedef enum
     ICON_USER2
 } EXTICON;
 
+
 void DrawStartMenu(WINDOW window);
-void DrawDesktopIcon(EXTICON exticon, char* name, int x, int y);
+void DrawDesktopIcon(int index, int dstX, int dstY);
 void BlurRegion(DWORD* src, DWORD* dst, int x0, int y0, int w, int h, int radius);
+void DrawIcon(int index, int dstX, int dstY);
+
+#endif
