@@ -23,7 +23,7 @@ typedef enum
 
 
 void DrawStartMenu(WINDOW window);
-void DrawDesktopIcon(int index, int dstX, int dstY);
+void DrawDesktopIcon(EXTICON exticon, char* name, int posX, int posY);
 void BlurRegion(DWORD* src, DWORD* dst, int x0, int y0, int w, int h, int radius);
 void DrawIcon(int index, int dstX, int dstY);
 
