@@ -5,7 +5,6 @@
 #include "../../Memory/mem.h"
 #include "../userspace.h"
 
-#include "clock.h"
 #include "win.h"
 
 int StartWindowXY = 80;
