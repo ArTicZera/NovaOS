@@ -241,7 +241,7 @@ void ProcessShellCMD(char* command)
     }
     else if (strcmp(cmd, "ping") == 0x00)
     {
-        ICMPSendEcho((DWORD)args[0]);
+        //ICMPSendEcho((DWORD)args[0]);
     }
     else if (strcmp(cmd, "npad") == 0x00)
     {
@@ -282,10 +282,10 @@ void ProcessShellCMD(char* command)
 
         
 
-        // agora lê de verdade
+        //Read
         ReadFile("badapple.bin", buffer, (LPDWORD)&size);
 
-        // chama certos
+        //Call it
         //PlayBadApple(buffer, size);
     }
     else if (strcmp(cmd, "run") == 0x00)
