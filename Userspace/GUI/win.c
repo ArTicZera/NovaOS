@@ -2,8 +2,10 @@
 #include "../../Graphics/graphics.h"
 #include "../../Font/text.h"
 #include "../../Memory/alloc.h"
+#include "../../Memory/mem.h"
 #include "../userspace.h"
 
+#include "clock.h"
 #include "win.h"
 
 int StartWindowXY = 80;
@@ -11,22 +13,33 @@ int StartWindowXY = 80;
 WINDOW* windowsList  = 0;
 WINDOW* activeWindow = 0;
 
-WINDOW* CreateWindow(int w, int h, DWORD color, char* title)
+LPDWORD winArea;
+
+WINDOW* CreateWindow(int x, int y, int w, int h, DWORD color, char* title)
 {
     WINDOW* win = (WINDOW*)AllocateMemory(sizeof(WINDOW));
 
     if (!win) return NULL;
 
-    win->x = StartWindowXY;
-    win->y = StartWindowXY;
+    win->x = x;
+    win->y = y;
 
     win->w = w;
     win->h = h;
+
     win->color = color;
     win->title = title;
 
     win->next = NULL;
     win->prev = NULL;
+
+    for (int y = 0; y < win->y; y++)
+    {
+        for (int x = 0; x < win->x; x++)
+        {
+            win->buffer[y * win->w + x] = GetPixel(x + win->x, y + win->y);
+        }
+    }
 
     AddWindow(win);
 
@@ -46,7 +59,8 @@ WINDOW* CreateWindow(int w, int h, DWORD color, char* title)
 
 void DrawWindow(WINDOW window, int nextWindow)
 {
-    DrawRoundedRect(window.x, window.y, window.w, window.h, 5, window.color);
+    DrawRect(window.x, window.y, window.w, window.h, window.color);
+    //DrawRoundedRect(window.x, window.y, window.w, window.h, 5, window.color);
 
     if (window.title)
     {
@@ -71,15 +85,15 @@ void DrawAllWindows()
 {
     WINDOW* current = windowsList;
 
-    while (current && current->next)
-    {
-        current = current->next;
-    }
+    //while (current && current->next)
+    //{
+    //    current = current->next;
+    //}
 
     while (current)
     {
         DrawWindow(*current, 0);
-        current = current->prev;
+        current = current->next;
     }
 }
 
@@ -179,6 +193,9 @@ void HandleWindowDragging(int mouseX, int mouseY, int pressed)
     static int offsetY = 0;
     static WINDOW* dragWindow = NULL;
     static int lastPressed = 0;
+    static int savedX = 0;
+    static int savedY = 0;
+    static int drawnBG = 0;
 
     if (pressed && !lastPressed)
     {
@@ -188,11 +205,23 @@ void HandleWindowDragging(int mouseX, int mouseY, int pressed)
         {
             if (mouseY >= win->y && mouseY <= win->y + 20)
             {
+                if (!drawnBG)
+                {
+                    //SaveBackgroundArea(win);
+                    drawnBG = 1;
+                }
+
                 dragWindow = win;
                 isDragging = 1;
 
                 offsetX = mouseX - win->x;
                 offsetY = mouseY - win->y;
+
+                savedX = win->x;
+                savedY = win->y;
+                //SaveWindowArea(win);
+                //;
+                UpdateExplorer();
 
                 BringToFront(win);
                 activeWindow = win;
@@ -202,6 +231,12 @@ void HandleWindowDragging(int mouseX, int mouseY, int pressed)
 
     if (pressed && isDragging && dragWindow)
     {
+        // Restaurar o fundo na posição anterior antes de mover
+        dragWindow->x = savedX;
+        dragWindow->y = savedY;
+        RestoreWindowArea(dragWindow);
+
+        // Mover para a nova posição
         dragWindow->x = mouseX - offsetX;
         dragWindow->y = mouseY - offsetY;
 
@@ -212,13 +247,22 @@ void HandleWindowDragging(int mouseX, int mouseY, int pressed)
         if (dragWindow->y + dragWindow->h > HSCREEN)
             dragWindow->y = HSCREEN - dragWindow->h;
 
-        DrawAllWindows();
+        // Salvar o fundo da nova posição
+        savedX = dragWindow->x;
+        savedY = dragWindow->y;
+        SaveWindowArea(dragWindow);
+
+        DrawWindow(*dragWindow, 0);
     }
 
-    if (!pressed)
+    if (!pressed && lastPressed)
     {
-        isDragging = 0;
-        dragWindow = NULL;
+        if (isDragging && dragWindow)
+        {
+            DrawAllWindows();
+            isDragging = 0;
+            dragWindow = NULL;
+        }
     }
 
     lastPressed = pressed;
@@ -260,7 +304,13 @@ void HandleMouseClick(int x, int y, int pressed)
 
             if (x > WSCREEN - 100 && y > HSCREEN - 100)
             {
-                CreateWindow(200, 150, 0xFF1A1A1A, "Nova Window");
+                CreateWindow(1080, 440, 200, 250, 0xFF1A1A1A, "Clock");
+                //DrawClock(1080, 440, 40, 0, 0, 0);
+            }
+
+            if (x < 100)
+            {
+                CreateWindow(100, 100, 300, 200, 0xFFFFFFFF, "Test");
             }
         }
 
@@ -268,4 +318,51 @@ void HandleMouseClick(int x, int y, int pressed)
     }
 
     lastPressed = pressed;
+}
+
+void SaveBackgroundArea(WINDOW* win)
+{
+    if (!win->buffer)
+    {    
+        win->buffer = AllocateMemory(win->w * win->h * 4);
+    }
+
+    for (int y = 0; y < win->h; y++)
+    {
+        for (int x = 0; x < win->w; x++)
+        {
+            int zx = win->x + x;
+            int zy = win->y + y;
+
+            win->buffer[y * win->w + x] = GetPixel(zx, zy);
+        }
+    }
+}
+
+void SaveWindowArea(WINDOW* win)
+{
+    for (int y = 0; y < win->h; y++)
+    {
+        for (int x = 0; x < win->w; x++)
+        {
+            int screenX = win->x + x;
+            int screenY = win->y + y;
+
+            win->buffer[y * win->w + x] = GetPixel(screenX, screenY);
+        }
+    }
+}
+
+void RestoreWindowArea(WINDOW* win)
+{
+    for (int y = 0; y < win->h; y++)
+    {
+        for (int x = 0; x < win->w; x++)
+        {
+            int screenX = win->x + x;
+            int screenY = win->y + y;
+
+            SetPixel(screenX, screenY, win->buffer[y * win->w + x]);
+        }
+    }
 }
