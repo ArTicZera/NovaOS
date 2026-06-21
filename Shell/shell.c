@@ -169,7 +169,7 @@ void ProcessShellCMD(char* command)
         Print(" #######      #####           --------------\n", 0xFF00FFFF);
         Print(" ##########   ###### #######  OS: ", 0xFF00FFFF); Print("NovaOS x86\n", 0xFFFFFFFF);
         Print(" ###  #######  ############   Kernel: ", 0xFF00FFFF); Print("Alpha 1.8.3\n", 0xFFFFFFFF);
-        Print(" ###     ###### #########     Resolution: ", 0xFF00FFFF); Print("800x600\n", 0xFFFFFFFF);
+        Print(" ###     ###### #########     Resolution: ", 0xFF00FFFF); Print("1280x720\n", 0xFFFFFFFF);
         Print(" ###       ############       Video Mode: ", 0xFF00FFFF); Print("VESA BIOS Extensions\n", 0xFFFFFFFF);
         Print(" ###        ##########        CPU: ", 0xFF00FFFF); ShowCPUName();
         Print(" ###       ###########        Date: ", 0xFF00FFFF); GetCMOSDate(); Print("\n", 0x00);
