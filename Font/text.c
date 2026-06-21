@@ -36,7 +36,7 @@ void DrawChar(BYTE* bitmap, DWORD color)
     //Moves 8 pixels for the left
     cursorX += 8;
 
-    //In case the cursorX goes higher than 640,
+    //In case the cursorX goes higher than 1280,
     //then reset the X and go to the next row.
     if (cursorX >= WSCREEN)
     {
