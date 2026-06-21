@@ -28,7 +28,7 @@ https://github.com/user-attachments/assets/1fa12820-75fa-4ab0-99ac-81005ac1fe0d
 
 # 🛠️ Current Progress
 - ✅ **GRUB Multiboot**
-- ✅ **VBE Support (800x600 32bpp)**
+- ✅ **VBE Support (1280x720 32bpp)**
 - ✅ **Global Descriptor Table (GDT)**
 - ✅ **Entering Protected Mode**
 - ✅ **Fonts and Print Functions**
