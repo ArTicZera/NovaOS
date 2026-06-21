@@ -36,7 +36,7 @@ https://github.com/user-attachments/assets/1fa12820-75fa-4ab0-99ac-81005ac1fe0d
 - ✅ **Keyboard Driver**
 - ✅ **Mouse Driver**
 - ✅ **Memory Management**
-- ✅ **File System**
+- ✅ **RAM File System**
 - ✅ **Shell**
 - ✅ **Graphical Interface (GUI)**
 - ✅ **ELF Loader**
@@ -46,7 +46,6 @@ https://github.com/user-attachments/assets/1fa12820-75fa-4ab0-99ac-81005ac1fe0d
 - ✅ **OpenGL-like API**
 - 🚧 **Integrated Development Environment (IDE)**
 - ❌ **C/C++ Compiler**
-- ❌ **FAT32 Support**
 - ❌ **POSIX-like**
 - ❌ **Processes**
 - ❌ **Multitasking**
