@@ -7,6 +7,8 @@
 #include "gui.h"
 #include "../userspace.h"
 
+#include "../../Include/Icons/DIR.h"
+
 extern DWORD error[];
 extern DWORD warning[];
 extern DWORD info[];
@@ -16,7 +18,6 @@ extern DWORD user2[];
 //extern DWORD terminal[];
 extern DWORD non[];
 extern DWORD txt[32 * 32];
-extern DWORD dir[32 * 32];
 //extern DWORD exe[32 * 32];
 //extern BYTE sprite[128 * 64];
 
@@ -29,28 +30,6 @@ void DrawStartMenu(WINDOW window)
 
     Print("Admin", 0xFF00FFFF);
 }
-
-/*
-void DrawDesktopIcon(EXTICON exticon, char* name, int posX, int posY)
-{
-    int iconSize = 64;
-
-    int srcX = index * iconSize;
-    int srcY = 0;
-
-    for (int y = 0; y < iconSize; y++)
-    {
-        for (int x = 0; x < iconSize; x++)
-        {
-            DWORD color = sprite[(y) * (128) + (x)];
-
-            if (!(color == 0x00000000)) 
-            {
-                SetPixel(x, y, color);
-            }
-        }
-    }
-}*/
 
 void DrawDesktopIcon(EXTICON exticon, char* name, int posX, int posY)
 {
@@ -66,6 +45,7 @@ void DrawDesktopIcon(EXTICON exticon, char* name, int posX, int posY)
         default: return;
     }
 
+    /*
     for (int y = 0; y < 32; y++)
     {
         int srcY = 31 - y;
@@ -80,40 +60,18 @@ void DrawDesktopIcon(EXTICON exticon, char* name, int posX, int posY)
             DWORD color = iconBitmap[srcY * 32 + x];
             SetPixel(posX + x + 16, posY + y, color);
         }
-    }
-
-    SetCursorX(posX + 20);
-    SetCursorY(posY + 36);
-    Print(name, 0xFFFFFFFF);
-}
-
-/*
-void DrawDesktopIcon(EXTICON exticon, char* name, int posX, int posY)
-{
-    LPDWORD iconBitmap = NULL;
-
-    switch (exticon)
-    {
-        case ICON_DIR:
-            iconBitmap = dir;
-            break;
-        default:
-            return;
-    }
+    }*/
 
     for (int y = 0; y < 32; y++)
     {
-        int srcY = 64 - y;
-
         for (int x = 0; x < 32; x++)
         {
-            if (iconBitmap[srcY * 32 + x] == 0x00)
+            if (iconBitmap[y * 32 + x] == 0xFF000000)
             {
                 continue;
             }
 
-            DWORD color = iconBitmap[srcY * 32 + x];
-            SetPixel(posX + x + 16, posY + y, color);
+            SetPixel(posX + x + 16, posY + y, iconBitmap[y * 32 + x]);
         }
     }
 
@@ -121,4 +79,3 @@ void DrawDesktopIcon(EXTICON exticon, char* name, int posX, int posY)
     SetCursorY(posY + 36);
     Print(name, 0xFFFFFFFF);
 }
-*/
