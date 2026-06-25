@@ -3,15 +3,7 @@
 
     This was a pain in the ass to do. But as the functions says
     it loads and run an ELF32 file. (ONLY STATIC ELFs).
-
-    Fortunately it's working perfectly now! :D
-*/
-
-/*
-    Coded by ArTic/JhoPro
-
-    This was a pain in the ass to do. But as the functions says
-    it loads and run an ELF32 file. (ONLY STATIC ELFs).
+    Also it has DOOM support using -iwad doom1.wad
 
     Fortunately it's working perfectly now! :D
 */
@@ -24,10 +16,14 @@
 
 #include "elf.h"
 
+extern char doom[];
+extern DWORD doomSize;
+
 int LoadELF(void* elfData) 
 {
     DWORD relocationOffs = 0;
 
+    Print("\n", 0x00);
     Debug("Loading ELF...\n", 0x02);
 
     ELF32_Header* elfHeader = (ELF32_Header*)elfData;
@@ -98,8 +94,18 @@ int LoadELF(void* elfData)
     PrintHex(relocatedEntry, 0xFFFFFFFF);
     Print("\n", 0x00);
 
-    void (*entryPoint)(void) = (void (*)(void))(relocatedEntry);
-    entryPoint();
+    int argc = 3;
+    char* argv[] = { "doomgeneric", "-iwad", "doom1.wad", 0x00 };
+
+    //DOOM Support
+    void (*entryPoint)(int, char**);
+    entryPoint = (void(*)(int, char**))(relocatedEntry);
+
+    entryPoint(argc, argv);
+
+    //Other any file
+    //void (*entryPoint)(void) = (void (*)(void))(relocatedEntry);
+    //entryPoint();
 
     return 0;
 }
