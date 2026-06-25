@@ -1,3 +1,9 @@
+/*
+	Coded by MellOS and ArTic
+
+	Interfaces used to connect storage devices
+*/
+
 #include "../Include/stdint.h"
 #include "../Include/ports.h"
 #include "../Memory/alloc.h"
