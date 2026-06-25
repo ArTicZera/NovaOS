@@ -16,9 +16,6 @@
 
 #include "elf.h"
 
-extern char doom[];
-extern DWORD doomSize;
-
 int LoadELF(void* elfData) 
 {
     DWORD relocationOffs = 0;
