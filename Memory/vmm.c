@@ -115,5 +115,5 @@ int SetMemoryProtection(DWORD virtualAddress, DWORD size, BYTE protectionFlags)
         vmm.pageTable[currentPage].user = (protectionFlags & PROT_USER) ? 1 : 0;
     }
 
-    return 0; // Sucesso
+    return 0;
 }
