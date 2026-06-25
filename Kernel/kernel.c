@@ -109,29 +109,6 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
     //struct multiboot_module_t* mods = (struct multiboot_module_t*) mbinfo->mods_addr;
     struct multiboot_module_t* mods = (struct multiboot_module_t*)(DWORD)aligned;
 
-    Print("mods_addr: ", 0xFFFFFFFF);
-    PrintHex(mbinfo->mods_addr, 0xFFFFFFFF);
-    Print("\n", 0x00);
-
-    Print("Start: ", 0xFFFFFFFF);
-    PrintHex(mods[0].mod_start, 0xFFFFFFFF);
-    Print("\n", 0x00);
-
-    Print("End: ", 0xFFFFFFFF);
-    PrintHex(mods[0].mod_end, 0xFFFFFFFF);
-    Print("\n", 0x00);
-
-    Print("String: ", 0xFFFFFFFF);
-    PrintHex(mods[0].string, 0xFFFFFFFF);
-    Print("\n", 0x00);
-
-    Print("Start: ", 0xFFFFFFFF);
-    PrintHex(mods[0].mod_start, 0xFFFFFFFF);
-    Print("\n", 0x00);
-
-    Print("Magic: ", 0xFFFFFFFF);
-    PrintHex(*(DWORD*)mods[0].mod_start, 0xFFFFFFFF);
-    Print("\n", 0x00);
 
     InitFileSystem();
     MakeDir("bin");
@@ -227,6 +204,8 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
     ShowCPUInfo();
     ShowPCIDevices();
 
+    InitEthernet();
+ 
     Sleep(2);
 
     ClearScreen();
