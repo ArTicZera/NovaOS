@@ -205,7 +205,6 @@ int strncasecmp(const char *s1, const char *s2, unsigned int n)
         c1 = *s1;
         c2 = *s2;
 
-        // converte para minúsculo (A–Z)
         if (c1 >= 'A' && c1 <= 'Z')
             c1 = c1 - 'A' + 'a';
 
@@ -262,7 +261,6 @@ char *strchr(const char *s, int c)
         s++;
     }
 
-    // permite buscar '\0'
     if (ch == '\0')
         return (char *)s;
 
@@ -278,16 +276,13 @@ char *strdup(const char *s)
     if (!s)
         return 0;
 
-    // calcula tamanho
     while (s[len])
         len++;
 
-    // aloca memória (+1 para '\0')
     dup = (char *)AllocateMemory(len + 1);
     if (!dup)
         return 0;
 
-    // copia string
     for (i = 0; i <= len; i++)
         dup[i] = s[i];
 
