@@ -91,6 +91,11 @@ void HandleCharacter(int scan)
         PrintOut(c, 0xFFFFFFFF);
         commandLength++;
     }
+    else if (enableText == 5) // Shell
+    {
+        PrintOut(c, 0xFFFFFFFF);
+        commandLength++;
+    }
 }
 
 void KeyboardHandler()
@@ -176,7 +181,7 @@ void KeyboardHandler()
 
                     if (enableText == 2) 
                     {
-                        ProcessShellCMD(commandBuffer);
+                        ProcessShellCMD(commandBuffer, 0x00, 0x00);
                     } 
                     else if (enableText == 3) 
                     {
@@ -185,6 +190,10 @@ void KeyboardHandler()
                     else if (enableText == 4)
                     {
                         Print("\n", 0x00);
+                    }
+                    else if (enableText == 5)
+                    {
+                        ProcessShellCMD(commandBuffer, 5, 5);
                     }
 
                     commandLength = 0;
@@ -195,9 +204,10 @@ void KeyboardHandler()
             //Win
             case 0x5B:
             case 0x5C:
-                if (isPress)
+                if (isPress && enableText == 1)
                 {
-                    CreateWindow(80, 80, 350, 400, 0xFF1A1A1A, "Terminal");
+                    WINDOW* win = CreateWindow(80, 80, 650, 400, 0xFF1A1A1A, "Terminal");
+                    StartShellGUI(win);
                 }
 
                 break;
