@@ -65,8 +65,4 @@ int ReadFileChunk(const char* filename, BYTE* buffer, DWORD offset, DWORD bytesT
 
 Directory* GetRootDir();
 
-//DOOM FUNCTIONS-----------------------
-
-
-
 #endif
