@@ -7,6 +7,8 @@
 
 #include "../Include/stdint.h"
 #include "../Graphics/graphics.h"
+#include "../Userspace/GUI/win.h"
+#include "../Shell/shell.h"
 
 #include "font.h"
 
@@ -53,8 +55,17 @@ void Print(const char* str, DWORD color)
         //If its '\n' goest to the next line.
         if (str[i] == '\n')
         {
-            cursorX = 0;
-            cursorY += HFONT;
+            if (shellNOGUI)
+            {
+                cursorX = 0;
+                cursorY += HFONT;
+            }
+            if (!shellNOGUI)
+            {
+                cursorX = winshellX;
+                cursorY += HFONT;
+                //shellNOGUI = 1;
+            }
 
             continue;
         }
