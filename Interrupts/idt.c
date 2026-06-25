@@ -3,6 +3,8 @@
 
     I was getting triple fault with my IDT, so I just copied from 
     his repo. My bad, but that was too much harder for me.
+
+    Syscalls made by me
 */
 
 
@@ -13,6 +15,7 @@
 #include "../Kernel/panic.h"
 
 #include "idt.h"
+#include "syscall.h"
 
 extern void LoadIDT(DWORD);
 
@@ -184,6 +187,12 @@ void ISRHandler(struct InterruptRegisters* regs)
         PrintHex(regs->edi, 0xFFFFFFFF);
 
         for (;;);
+    }
+
+    if (regs->int_no == 128)
+    {
+        SyscallHandler(regs);
+        return;
     }
 }
 
