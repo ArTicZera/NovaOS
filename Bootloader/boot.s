@@ -57,15 +57,11 @@ section .data
 ;Extension Icons
 [GLOBAL       non]
 [GLOBAL       txt]
-[GLOBAL       dir]
-;[GLOBAL       exe]
 
 [GLOBAL        doom]
 [GLOBAL    doomSize]
 ;Animations
 ;ELF Programs
-;[GLOBAL    bbeatSize]
-;[GLOBAL     bytebeat]
 ;[GLOBAL badappleSize]
 ;[GLOBAL     badapple]
         ;Images
@@ -86,7 +82,6 @@ section .data
 
         ;File Extensions
         txt: incbin "Include/Icons/txt.bmp"
-        dir: incbin "Include/Icons/dir.bmp"
         ;exe: incbin "Include/Icons/exe.bmp"
         non: incbin "Include/Icons/default.vad"
 
