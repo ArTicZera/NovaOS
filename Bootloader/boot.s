@@ -51,14 +51,17 @@ section .data
 [GLOBAL      info]
 [GLOBAL      user]
 [GLOBAL     user2]
-[GLOBAL  terminal]
+;[GLOBAL    sprite]
+;[GLOBAL  terminal]
 
 ;Extension Icons
 [GLOBAL       non]
 [GLOBAL       txt]
 [GLOBAL       dir]
-[GLOBAL       exe]
+;[GLOBAL       exe]
 
+[GLOBAL        doom]
+[GLOBAL    doomSize]
 ;Animations
 ;ELF Programs
 ;[GLOBAL    bbeatSize]
@@ -68,20 +71,32 @@ section .data
         ;Images
         bootscr: incbin "Include/logo.bmp"
         backgrd: incbin "Include/bg.bmp"
+        
+        ;sprite: incbin "Include/Icons/gridicons.bmp"
+        
 
         ;General Icons
-        error:    incbin "Include/Icons/error.vad"
-        warning:  incbin "Include/Icons/warning.vad"
-        question: incbin "Include/Icons/question.vad"
-        info:     incbin "Include/Icons/info.vad"
-        user:     incbin "Include/Icons/user1.vad"
+        ;error:    incbin "Include/Icons/error.vad"
+        ;warning:  incbin "Include/Icons/warning.vad"
+        ;question: incbin "Include/Icons/question.vad"
+        ;info:     incbin "Include/Icons/info.vad"
+        ;user:     incbin "Include/Icons/user1.vad"
         user2:    incbin "Include/Icons/user2.vad"
-        terminal: incbin "Include/Icons/terminal.vad"
+        ;terminal: incbin "Include/Icons/terminal.vad"
 
         ;File Extensions
+        txt: incbin "Include/Icons/txt.bmp"
         dir: incbin "Include/Icons/dir.bmp"
+        ;exe: incbin "Include/Icons/exe.bmp"
         non: incbin "Include/Icons/default.vad"
+
+        doomBase: equ $ - doom
+        doom:     incbin "Bootloader/doomgeneric"
+        doom_end: 
+        doomSize: dd doom_end - doom
 
 section .bss
 
 align 16
+
+section .note.GNU-stack noalloc noexec nowrite progbits
