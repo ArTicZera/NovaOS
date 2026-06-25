@@ -27,6 +27,7 @@
 #include "../tinygl/include/GL/gl.h"
 #include "../tinygl/include/zbuffer.h"
 #include "../Kernel/gfx/gears.h"
+#include "../Userspace/GUI/win.h"
 
 #include "../ELF/elf.h"
 
@@ -38,14 +39,24 @@
 extern char doom[];
 extern DWORD doomSize;
 
+int shellNOGUI = 1;
+
+int winshellX = 0;
+int winshellY = 16;
+int winshellW = 0;
+int winshellH = 0;
+int maxY = 720;
+
 //Shows a welcome message
-void PrintWelcomeMSG()
+void PrintWelcomeMSG(int x, int y)
 {
     SetCursorX(0x00);
     SetCursorY(0x00);
 
     Print("Welcome to NovaOS Shell! ", 0xFFFFFFFF);
+    
     Print("(NO GUI)\n\n", 0xFFFF0000);
+
     Print("Type 'help' to start using the shell.\n", 0xFFFFFFFF);
     Print("Type 'gfx' to start using the GUI.\n\n", 0xFFFFFFFF);
 }
@@ -54,14 +65,38 @@ void PrintWelcomeMSG()
 //Set keyboard state to 0x02.
 void StartShellNoGUI()
 {
-    PrintWelcomeMSG();
+    PrintWelcomeMSG(0, 0);
 
     PrintCurrentDir();
 
     KeyboardState(0x02);
 }
 
-void ProcessShellCMD(char* command)
+void StartShellGUI(WINDOW* win)
+{
+    shellNOGUI = 0;
+
+    winshellX = win->x;
+    winshellY = win->y + 20;
+    winshellW = win->w;
+    winshellH = win->h;
+    maxY = win->h;
+
+    DrawRect(win->x, win->y + 20, win->w, win->h, 0xFF000000);
+
+    SetCursorX(winshellX);
+    SetCursorY(winshellY);
+
+    Print("Welcome to NovaOS Shell! ", 0xFFFFFFFF);
+    Print("(GUI)\n\n", 0xFF00FF00);
+    Print("Type 'help' to start using the shell.\n\n", 0xFFFFFFFF);
+
+    PrintCurrentDir();
+
+    KeyboardState(0x05);
+}
+
+void ProcessShellCMD(char* command, int x, int y)
 {
     char cmd[16] = {0};
     char args[2][16] = {{0}};
@@ -99,11 +134,13 @@ void ProcessShellCMD(char* command)
         argCount++;
     }
 
-    if (GetCursorY() >= 448)
+    if (GetCursorY() >= maxY)
     {
-        SetCursorX(0x00);
-        SetCursorY(0x00);
-        ClearScreen();
+        SetCursorX(winshellX);
+        SetCursorY(winshellY);
+
+        DrawRect(winshellX, winshellY, winshellW, winshellH, 0x00000000);
+        //ClearScreen();
     }
 
     //Here starts the parser
@@ -142,9 +179,9 @@ void ProcessShellCMD(char* command)
 
     else if (strcmp(cmd, "clear") == 0x00)
     {
-        SetCursorX(0x00);
-        SetCursorY(0x00);
-        ClearScreen();
+        SetCursorX(winshellX);
+        SetCursorY(winshellY);
+        DrawRect(winshellX, winshellY, winshellW, winshellH, 0x00000000);
     }
     else if (strcmp(cmd, "echo") == 0x00)
     {
@@ -241,7 +278,7 @@ void ProcessShellCMD(char* command)
     }
     else if (strcmp(cmd, "ping") == 0x00)
     {
-        //ICMPSendEcho((DWORD)args[0]);
+        ICMPSendEcho((DWORD)args[0]);
     }
     else if (strcmp(cmd, "npad") == 0x00)
     {
@@ -280,12 +317,8 @@ void ProcessShellCMD(char* command)
 
         LPBYTE buffer = (LPBYTE) AllocateMemory(size);
 
-        
-
-        //Read
         ReadFile("badapple.bin", buffer, (LPDWORD)&size);
 
-        //Call it
         //PlayBadApple(buffer, size);
     }
     else if (strcmp(cmd, "run") == 0x00)
@@ -310,7 +343,7 @@ void ProcessShellRun(char* process)
     }
     if (strcmp(process, "doom.exe") == 0x00)
     {
-        //LoadELF(doom);
+        LoadELF(doom);
     }
     else
     {
