@@ -6,6 +6,9 @@
 #include "m_argv.h"
 #include "doomgeneric.h"
 
+#include "../Graphics/graphics.h"
+#include "../Userspace/GUI/win.h"
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -24,12 +27,15 @@ void DG_Init()
 void DG_DrawFrame()
 {
     for (int y = 0; y < DOOMGENERIC_RESY; y++)
-	{
-		for (int x = 0; x < DOOMGENERIC_RESX; x++)
-		{
-			temp_bitmap[y * 1280 + x] = DG_ScreenBuffer[y * DOOMGENERIC_RESX + x];
-		}
-	}
+    {
+        for (int x = 0; x < DOOMGENERIC_RESX; x++)
+        {
+            int scrX = x + 320;
+            int scrY = y + 180;
+
+            temp_bitmap[scrY * 1280 + scrX] = DG_ScreenBuffer[y * DOOMGENERIC_RESX + x];
+        }
+    }
 }
 
 
@@ -60,7 +66,7 @@ int DG_GetKey(int *pressed, unsigned char *doomKey)
 
 void DG_SetWindowTitle(const char *title)
 {
-	printf("DOOM");
+	
 }
 
 
