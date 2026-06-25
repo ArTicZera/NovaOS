@@ -9,7 +9,6 @@ void PrintInt(int value, DWORD color);
 void PrintHex(int value, DWORD color);
 void PrintOut(char letter, DWORD color);
 
-//int atoi(const char* str);
 int GetCursorX();
 int GetCursorY();
 void SetCursorX(int x);
