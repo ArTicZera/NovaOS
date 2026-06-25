@@ -1,3 +1,6 @@
+#ifndef IDT_H
+#define IDT_H
+
 #define TOTALGATES 256
 #define CODESEG 0x08
 
@@ -84,3 +87,5 @@ extern void irq12();
 extern void irq13();
 extern void irq14();
 extern void irq15();
+
+#endif
