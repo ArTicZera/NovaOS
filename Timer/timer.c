@@ -15,7 +15,7 @@
 int ticks = 0;
 int seconds = 0; 
 int minutes = 0;
-int drawBar = false;
+int drawBar = FALSE;
 
 void PITIRQ0()
 {
@@ -25,6 +25,11 @@ void PITIRQ0()
     {
         seconds++;
     }
+}
+
+unsigned int GetTicks()
+{
+    return ticks;
 }
 
 void Sleep(int seconds)
@@ -66,4 +71,3 @@ void InitTimer(void)
     outb(0x40, (BYTE)(divisor & 0xFFFF));
     outb(0x40, (BYTE)((divisor & 0xFFFF) & 0xFF));
 }
-
