@@ -10,6 +10,8 @@ void SyscallHandler(struct InterruptRegisters* regs)
         /* write */
         case 4:
         {
+            //Good for DOOM Debug
+            /*
             const char* buf = (const char*)regs->ecx;
             size_t count = regs->edx;
 
@@ -17,6 +19,7 @@ void SyscallHandler(struct InterruptRegisters* regs)
                 PrintOut(buf[i], 0xFFFFFF00);
 
             regs->eax = count;
+            */
             break;
         }
 
