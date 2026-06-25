@@ -408,7 +408,6 @@ void RunProgram(char* filename)
         Debug("Searching for: [", 0x02);
         Print(filename, 0xFFFFFF00);
         Print("]\n", 0xFFFFFF00);
-        
     }
 
     Debug("Magic: ", 0x02);
