@@ -278,7 +278,7 @@ void ProcessShellCMD(char* command, int x, int y)
     }
     else if (strcmp(cmd, "ping") == 0x00)
     {
-        ICMPSendEcho((DWORD)args[0]);
+        //ICMPSendEcho((DWORD)args[0]);
     }
     else if (strcmp(cmd, "npad") == 0x00)
     {
