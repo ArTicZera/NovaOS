@@ -3,7 +3,15 @@
 
     This was a pain in the ass to do. But as the functions says
     it loads and run an ELF32 file. (ONLY STATIC ELFs).
-    Also it has DOOM support using -iwad doom1.wad
+
+    Fortunately it's working perfectly now! :D
+*/
+
+/*
+    Coded by ArTic/JhoPro
+
+    This was a pain in the ass to do. But as the functions says
+    it loads and run an ELF32 file. (ONLY STATIC ELFs).
 
     Fortunately it's working perfectly now! :D
 */
@@ -13,15 +21,21 @@
 #include "../Memory/mem.h"
 #include "../Memory/vmm.h"
 #include "../FileSystem/memfs.h"
+#include "../Graphics/graphics.h"
+#include "../Userspace/GUI/win.h"
+#include "../Userspace/userspace.h"
 
 #include "elf.h"
 
-int LoadELF(void* elfData) 
+int LoadELF(void* elfData, int debug) 
 {
     DWORD relocationOffs = 0;
 
-    Print("\n", 0x00);
-    Debug("Loading ELF...\n", 0x02);
+    if (debug)
+    {
+        Print("\n", 0x00);
+        Debug("Loading ELF...\n", 0x02);
+    }
 
     ELF32_Header* elfHeader = (ELF32_Header*)elfData;
 
@@ -32,7 +46,8 @@ int LoadELF(void* elfData)
         return -1;
     }
 
-    Debug("Valid ELF File!\n", 0x02);
+    if (debug)
+        Debug("Valid ELF File!\n", 0x02);
 
     //Checks x86 architecture 
     if (elfHeader->e_machine != ELFARCH) 
@@ -41,7 +56,8 @@ int LoadELF(void* elfData)
         return -1;
     }
 
-    Debug("Valid ELF Architecture!\n", 0x02);
+    if (debug)
+        Debug("Valid ELF Architecture!\n", 0x02);
 
     ELF32_ProgramHeader* programHeader = (ELF32_ProgramHeader*)((BYTE*)elfData + elfHeader->e_phoff);
 
@@ -66,12 +82,15 @@ int LoadELF(void* elfData)
         //.text, .data`
         if (filesz > 0) 
         {
-            Debug("Loading segment\n", 0x02);
-            Debug("Segment: ", 0x02);
-            PrintHex(programHeader[i].p_vaddr, 0xFFFFFFFF);
-            Print(" - ", 0xFFFFFFFF);
-            PrintHex(programHeader[i].p_vaddr + programHeader[i].p_memsz, 0xFFFFFFFF);
-            Print("\n", 0x00);
+            if (debug)
+            {
+                Debug("Loading segment\n", 0x02);
+                Debug("Segment: ", 0x02);
+                PrintHex(programHeader[i].p_vaddr, 0xFFFFFFFF);
+                Print(" - ", 0xFFFFFFFF);
+                PrintHex(programHeader[i].p_vaddr + programHeader[i].p_memsz, 0xFFFFFFFF);
+                Print("\n", 0x00);
+            }
 
             memmove(dest, src, filesz);
         }
@@ -79,7 +98,9 @@ int LoadELF(void* elfData)
         //.bss
         if (memsz > filesz) 
         {
-            Debug("Zeroing BSS\n", 0x02);
+            if (debug)
+                Debug("Zeroing BSS\n", 0x02);
+            
             memset(dest + filesz, 0, memsz - filesz);
         }
     }
@@ -87,20 +108,21 @@ int LoadELF(void* elfData)
     //Offset entry
     DWORD relocatedEntry = elfHeader->e_entry + relocationOffs;
 
-    Debug("ELF Entry Point: ", 0x02);
-    PrintHex(relocatedEntry, 0xFFFFFFFF);
-    Print("\n", 0x00);
+    if (debug)
+    {
+        Debug("ELF Entry Point: ", 0x02);
+        PrintHex(relocatedEntry, 0xFFFFFFFF);
+        Print("\n", 0x00);
+    }
 
     int argc = 3;
     char* argv[] = { "doomgeneric", "-iwad", "doom1.wad", 0x00 };
 
-    //DOOM Support
     void (*entryPoint)(int, char**);
     entryPoint = (void(*)(int, char**))(relocatedEntry);
 
     entryPoint(argc, argv);
 
-    //Other any file
     //void (*entryPoint)(void) = (void (*)(void))(relocatedEntry);
     //entryPoint();
 
@@ -109,7 +131,7 @@ int LoadELF(void* elfData)
 
 void ExecuteELF(void* elf)
 {
-    if (LoadELF(elf))
+    if (LoadELF(elf, 1))
     {
         Debug("Failed to Load ELF File!\n", 0x01);
         return;
