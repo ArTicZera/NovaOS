@@ -20,7 +20,8 @@
 extern BYTE bootscr[];
 extern BYTE backgrd[];
 
-extern BYTE bootAudio[];
+extern BYTE bootup[];
+extern WORD bootSize;
 
 WINDOW startMenu = { "", 0xFF1A1A1A, 0, HSCREEN - 285, 150, 250, 0 };
 WINDOW* winmgr;
@@ -278,6 +279,8 @@ void UserSpace()
     LoginScreen();
 
     KeyboardState(1);
+
+    PlayBytebeat(bootup, 16000);
 
     UpdateExplorer();
 
