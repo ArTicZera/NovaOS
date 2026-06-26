@@ -1,6 +1,6 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/ArTicZera/NovaOS?style=flat-square)
 ![GitHub forks](https://img.shields.io/github/forks/ArTicZera/NovaOS?style=flat-square)
-![GitHub Contributors](https://img.shields.io/github/contributors/ArTicZera/NovaOS
+![GitHub Contributors](https://img.shields.io/github/contributors/ArTicZera/NovaOS)
 
 ![License](https://img.shields.io/github/license/ArTicZera/NovaOS?style=flat-square)
 ![Issues](https://img.shields.io/github/issues/ArTicZera/NovaOS?style=flat-square)
