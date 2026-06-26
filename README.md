@@ -1,6 +1,7 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/ArTicZera/NovaOS?style=flat-square)
 ![GitHub forks](https://img.shields.io/github/forks/ArTicZera/NovaOS?style=flat-square)
-![GitHub Contributors](https://img.shields.io/github/contributors/ArTicZera/NovaOS?style=flat-square)
+![GitHub Contributors](https://img.shields.io/github/contributors/ArTicZera/NovaOS
+
 ![License](https://img.shields.io/github/license/ArTicZera/NovaOS?style=flat-square)
 ![Issues](https://img.shields.io/github/issues/ArTicZera/NovaOS?style=flat-square)
 ![Pull Requests](https://img.shields.io/github/issues-pr/ArTicZera/NovaOS?style=flat-square)
@@ -22,6 +23,11 @@ NovaOS is a x86 protected mode operating system made in C and x86 Assembly by Ar
 
 
 # ✨ Showcase Video<img width="1279" height="773" alt="Screenshot_1" src="https://github.com/user-attachments/assets/5a2623b7-5bc5-426a-8f2d-7371f3735a69" />
+
+
+https://github.com/user-attachments/assets/696a708d-3408-4850-8edd-a12c05431517
+
+
 
 # 🛠️ Current Progress
 - ✅ **GRUB Multiboot**
