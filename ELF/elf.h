@@ -35,5 +35,5 @@ typedef struct
 #define PTNULL 0x00
 #define PTLOAD 0x01
 
-int LoadELF(void* elfData);
-void ExecuteELF(void* elf, int debug);
+int LoadELF(void* elfData, int debug);
+void ExecuteELF(void* elf);
