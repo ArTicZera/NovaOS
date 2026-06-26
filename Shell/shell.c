@@ -47,6 +47,9 @@ int winshellW = 0;
 int winshellH = 0;
 int maxY = 720;
 
+
+WINDOW* terminal;
+
 //Shows a welcome message
 void PrintWelcomeMSG(int x, int y)
 {
@@ -74,6 +77,8 @@ void StartShellNoGUI()
 
 void StartShellGUI(WINDOW* win)
 {
+    terminal = win;
+
     shellNOGUI = 0;
 
     winshellX = win->x;
@@ -205,7 +210,7 @@ void ProcessShellCMD(char* command, int x, int y)
         Print(" #####         ####           root@novaos-vm\n", 0xFF00FFFF);
         Print(" #######      #####           --------------\n", 0xFF00FFFF);
         Print(" ##########   ###### #######  OS: ", 0xFF00FFFF); Print("NovaOS x86\n", 0xFFFFFFFF);
-        Print(" ###  #######  ############   Kernel: ", 0xFF00FFFF); Print("Alpha 1.8.3\n", 0xFFFFFFFF);
+        Print(" ###  #######  ############   Kernel: ", 0xFF00FFFF); Print("Alpha 1.8.4\n", 0xFFFFFFFF);
         Print(" ###     ###### #########     Resolution: ", 0xFF00FFFF); Print("1280x720\n", 0xFFFFFFFF);
         Print(" ###       ############       Video Mode: ", 0xFF00FFFF); Print("VESA BIOS Extensions\n", 0xFFFFFFFF);
         Print(" ###        ##########        CPU: ", 0xFF00FFFF); ShowCPUName();
@@ -284,10 +289,6 @@ void ProcessShellCMD(char* command, int x, int y)
     {
         StartNotepad(args[0]);
     }
-    else if (strcmp(cmd, "doom") == 0x00)
-    {
-        
-    }
     else if (strcmp(cmd, "gears") == 0x00)
     {
         ZBuffer *zb = ZB_open(WSCREEN, HSCREEN, ZB_MODE_RGBA, (void*)GetFramebuffer());
@@ -337,13 +338,11 @@ void ProcessShellCMD(char* command, int x, int y)
 //Runs some ELF32 files
 void ProcessShellRun(char* process)
 {
-    if (strcmp(process, "bytebeat.elf") == 0x00)
+    if (strcmp(process, "doom") == 0x00)
     {
-        RunProgram("bytebeat.elf");
-    }
-    if (strcmp(process, "doom.exe") == 0x00)
-    {
-        LoadELF(doom);
+        ForceCloseWindow(terminal);
+        CreateWindow(320, 160, 640, 400, 0xFF1A1A1A, "DOOM");
+        LoadELF(doom, 1);
     }
     else
     {
