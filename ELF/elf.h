@@ -36,4 +36,4 @@ typedef struct
 #define PTLOAD 0x01
 
 int LoadELF(void* elfData);
-void ExecuteELF(void* elf);
+void ExecuteELF(void* elf, int debug);
