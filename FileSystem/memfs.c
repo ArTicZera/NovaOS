@@ -27,6 +27,7 @@ void InitFileSystem()
 
     fs->root.parent = NULL;
 
+    // 🔥 alinhado
     fs->root.nextFreeBlock = (FSADDRESS + sizeof(FileSystem) + 3) & ~3;
 
     currentDir = &fs->root;
@@ -51,6 +52,7 @@ int CreateFile(const char* filename, const LPBYTE data, DWORD size, BYTE permiss
     if (fileIndex == -1)
         return -2;
 
+    // 🔥 ALIGN (ESSENCIAL)
     DWORD dataOffset = (currentDir->nextFreeBlock + 3) & ~3;
 
     currentDir->nextFreeBlock = dataOffset + size;
@@ -79,9 +81,11 @@ int ReadFile(const char* filename, LPBYTE buffer, LPDWORD size)
 
             *size = currentDir->files[i].size;
 
-            LPBYTE fileData = (LPBYTE) currentDir->files[i].dataOffset;
-            memcpy(buffer, fileData, *size);
-            
+            if (buffer != NULL)
+            {
+                LPBYTE fileData = (LPBYTE) currentDir->files[i].dataOffset;
+                memcpy(buffer, fileData, *size);
+            }
             return 0x00;
         }
     }
@@ -240,6 +244,7 @@ int MakeDir(const char* dir)
     {
         if (currentDir->subdirs[i] == NULL)
         {
+            // 🔥 ALIGN
             DWORD addr = (currentDir->nextFreeBlock + 3) & ~3;
 
             Directory* newDir = (Directory*) addr;
@@ -413,7 +418,7 @@ void RunProgram(char* filename)
 
     Debug("File loaded!\n", 0x02);
 
-    void (*entry)() = (void (*)()) LoadELF(buffer);
+    void (*entry)() = (void (*)()) LoadELF(buffer, 1);
 
     if (!entry)
     {
@@ -478,7 +483,7 @@ int ReadFileChunk(const char* filename, BYTE* buffer, DWORD offset, DWORD bytesT
     if (offset + bytesToRead > file->size)
         bytesToRead = file->size - offset;
 
-    BYTE* src = (BYTE*)(FSADDRESS + file->dataOffset + offset);
+    BYTE* src = (BYTE*)(file->dataOffset + offset);
 
     memcpy(buffer, src, bytesToRead);
 
