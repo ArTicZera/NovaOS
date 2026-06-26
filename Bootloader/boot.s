@@ -57,11 +57,16 @@ section .data
 ;Extension Icons
 [GLOBAL       non]
 [GLOBAL       txt]
+;[GLOBAL       exe]
 
 [GLOBAL        doom]
 [GLOBAL    doomSize]
+[GLOBAL      bootup]
+
 ;Animations
 ;ELF Programs
+;[GLOBAL    bbeatSize]
+;[GLOBAL     bytebeat]
 ;[GLOBAL badappleSize]
 ;[GLOBAL     badapple]
         ;Images
@@ -89,6 +94,11 @@ section .data
         doom:     incbin "Bootloader/doomgeneric"
         doom_end: 
         doomSize: dd doom_end - doom
+
+        bootBase: equ $ - bootup
+        bootup:   incbin "Include/bootup.pcm"
+        boot_end:
+        bootSize: dd boot_end - bootup
 
 section .bss
 
