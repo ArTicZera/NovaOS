@@ -112,7 +112,6 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
 
     InitFileSystem();
     MakeDir("bin");
-    ChangeDir("bin");
 
     /*
     BYTE* ptr = (BYTE*)mods[0].mod_start;
@@ -174,8 +173,6 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
         CreateFile(filename, (LPBYTE)start, size, PERM_R | PERM_W | PERM_X);
     }
     
-    
-    ChangeDir("..");
     MakeDir("home");
     MakeDir("dev");
     MakeDir("tmp");
