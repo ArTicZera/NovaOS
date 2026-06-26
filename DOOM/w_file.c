@@ -92,7 +92,10 @@ size_t W_Read(wad_file_t *wad, unsigned int offset,
 {
     //return wad->file_class->Read(wad, offset, buffer, buffer_len);
 
-    if (offset + buffer_len > wad->length)
+    if (offset >= wad->length)
+        return 0;
+
+    if (buffer_len > wad->length - offset)
         buffer_len = wad->length - offset;
 
     memcpy(buffer, wad->mapped + offset, buffer_len);
