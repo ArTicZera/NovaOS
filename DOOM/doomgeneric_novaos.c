@@ -6,9 +6,6 @@
 #include "m_argv.h"
 #include "doomgeneric.h"
 
-#include "../Graphics/graphics.h"
-#include "../Userspace/GUI/win.h"
-
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
