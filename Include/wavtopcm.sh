@@ -1,0 +1,1 @@
+ffmpeg -i boot.wav -ar 8000 -ac 1 -c:a pcm_u8 bootup.wav
