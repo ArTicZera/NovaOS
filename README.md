@@ -57,6 +57,9 @@ https://github.com/user-attachments/assets/696a708d-3408-4850-8edd-a12c05431517
 - ❌ **Web Browser**
 - ❌ **User Documentation**
 
+# TODO
+- DOOM Keybinds
+
 # ⚙️ Building
 ### 🧰 Necessary Components
 i686 elf gcc and nasm
