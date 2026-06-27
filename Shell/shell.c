@@ -37,7 +37,6 @@
 //ELF32 Executable
 
 extern char doom[];
-extern DWORD doomSize;
 
 int shellNOGUI = 1;
 
