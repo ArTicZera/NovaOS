@@ -60,7 +60,7 @@ section .data
 ;[GLOBAL       exe]
 
 [GLOBAL        doom]
-[GLOBAL    doomSize]
+
 [GLOBAL      bootup]
 
 ;Animations
@@ -90,10 +90,7 @@ section .data
         ;exe: incbin "Include/Icons/exe.bmp"
         non: incbin "Include/Icons/default.vad"
 
-        doomBase: equ $ - doom
         doom:     incbin "Bootloader/doomgeneric"
-        doom_end: 
-        doomSize: dd doom_end - doom
 
         bootBase: equ $ - bootup
         bootup:   incbin "Include/bootup.pcm"
