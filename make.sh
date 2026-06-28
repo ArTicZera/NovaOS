@@ -28,11 +28,6 @@ gcc -ffreestanding -m32 -g -c Drivers/mouse.c       -o Binaries/mouse.o
 gcc -ffreestanding -m32 -g -c Drivers/qemu.c        -o Binaries/qemu.o
 gcc -ffreestanding -m32 -g -c Drivers/sb16.c        -o Binaries/sb16.o
 gcc -ffreestanding -m32 -g -c Drivers/ata.c         -o Binaries/ata.o
-gcc -ffreestanding -m32 -g -c Network/netutils.c    -o Binaries/netutils.o
-gcc -ffreestanding -m32 -g -c Network/iptcp.c       -o Binaries/iptcp.o
-gcc -ffreestanding -m32 -g -c Network/icmp.c        -o Binaries/icmp.o
-gcc -ffreestanding -m32 -g -c Network/net.c         -o Binaries/net.o
-gcc -ffreestanding -m32 -g -c Network/arp.c         -o Binaries/arp.o
 gcc -ffreestanding -m32 -g -c Hardware/cpu.c        -o Binaries/cpu.o
 gcc -ffreestanding -m32 -g -c Hardware/pci.c        -o Binaries/pci.o
 gcc -ffreestanding -m32 -g -c Hardware/disk.c       -o Binaries/disk.o
@@ -86,7 +81,7 @@ gcc -ffreestanding -m32 -g -c Programs/bytebeat.c   -o Programs/Binaries/bytebea
 #i686-elf-ld -Ttext 0xC90000 Programs/Binaries/bytebeat.o Binaries/ports.o Binaries/sb16.o -o Programs/Binaries/bytebeat.elf
 
 echo "Linking Kernel"
-ld -m elf_i386 -T Kernel/linker.ld -o fullkernel Bootloader/boot.o Binaries/kernel.o Binaries/panic.o Binaries/asmgdt.o Binaries/gdt.o Binaries/graphics.o Binaries/ports.o Binaries/math.o Binaries/text.o Binaries/mem.o Binaries/alloc.o Binaries/vmm.o Binaries/asmidt.o Binaries/idt.o Binaries/syscall.o Binaries/timer.o Binaries/keyboard.o Binaries/cpu.o Binaries/pci.o Binaries/disk.o Binaries/cmos.o Binaries/mouse.o Binaries/qemu.o Binaries/sb16.o Binaries/ata.o Binaries/netutils.o Binaries/iptcp.o Binaries/net.o Binaries/arp.o Binaries/icmp.o Binaries/memfs.o Binaries/elf.o Binaries/win.o Binaries/shell.o Binaries/npad.o Binaries/gui.o Binaries/userspace.o Binaries/login.o Binaries/desktop.o \
+ld -m elf_i386 -T Kernel/linker.ld -o fullkernel Bootloader/boot.o Binaries/kernel.o Binaries/panic.o Binaries/asmgdt.o Binaries/gdt.o Binaries/graphics.o Binaries/ports.o Binaries/math.o Binaries/text.o Binaries/mem.o Binaries/alloc.o Binaries/vmm.o Binaries/asmidt.o Binaries/idt.o Binaries/syscall.o Binaries/timer.o Binaries/keyboard.o Binaries/cpu.o Binaries/pci.o Binaries/disk.o Binaries/cmos.o Binaries/mouse.o Binaries/qemu.o Binaries/sb16.o Binaries/ata.o Binaries/memfs.o Binaries/elf.o Binaries/win.o Binaries/shell.o Binaries/npad.o Binaries/gui.o Binaries/userspace.o Binaries/login.o Binaries/desktop.o \
 Binaries/tinygl/zbuffer.o Binaries/tinygl/init.o Binaries/tinygl/zline.o Binaries/tinygl/zmath.o Binaries/tinygl/ztriangle.o Binaries/tinygl/msghandling.o Binaries/tinygl/ztext.o Binaries/tinygl/zraster.o Binaries/tinygl/zpostprocess.o Binaries/tinygl/vertex.o Binaries/tinygl/texture.o Binaries/tinygl/specbuf.o Binaries/tinygl/select.o Binaries/tinygl/misc.o Binaries/tinygl/memory.o Binaries/tinygl/matrix.o Binaries/tinygl/list.o Binaries/tinygl/light.o Binaries/tinygl/image_util.o Binaries/tinygl/get.o Binaries/tinygl/clip.o Binaries/tinygl/clear.o Binaries/tinygl/arrays.o Binaries/tinygl/api.o Binaries/tinygl/accum.o Kernel/gfx/gears.o 
 mv fullkernel NovaOS/boot/kernel
 
