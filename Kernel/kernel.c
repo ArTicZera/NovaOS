@@ -22,8 +22,6 @@
 #include "../Hardware/pci.h"
 #include "../Hardware/disk.h"
 #include "../Hardware/cmos.h"
-#include "../Network/net.h"
-#include "../Network/arp.h"
 #include "../FileSystem/memfs.h"
 //#include "../FileSystem/tarhdr.h"
 #include "../Shell/shell.h"
@@ -113,6 +111,7 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
     InitFileSystem();
     MakeDir("bin");
 
+
     /*
     BYTE* ptr = (BYTE*)mods[0].mod_start;
 
@@ -172,7 +171,7 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
         
         CreateFile(filename, (LPBYTE)start, size, PERM_R | PERM_W | PERM_X);
     }
-    
+
     MakeDir("home");
     MakeDir("dev");
     MakeDir("tmp");
@@ -201,8 +200,6 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
     ShowCPUInfo();
     ShowPCIDevices();
 
-    InitEthernet();
- 
     Sleep(2);
 
     ClearScreen();
