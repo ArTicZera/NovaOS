@@ -10,6 +10,7 @@
 #include "../Userspace/GUI/win.h"
 #include "../Shell/shell.h"
 
+#include "text.h"
 #include "font.h"
 
 int cursorX = 0;
