@@ -40,9 +40,9 @@ extern char doom[];
 int shellNOGUI = 1;
 
 int winshellX = 0;
-int winshellY = 16;
-int winshellW = 0;
-int winshellH = 0;
+int winshellY = 0;
+int winshellW = 1280;
+int winshellH = 720;
 int maxY = 720;
 
 
