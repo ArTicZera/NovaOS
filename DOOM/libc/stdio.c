@@ -1,3 +1,5 @@
+//DISABLED DEBUG
+
 #include "stdio.h"
 #include "stdlib.h"
 #include "stdarg.h"
@@ -14,12 +16,17 @@ FILE *stderr = &_stderr;
 
 static void fputc_internal(FILE *f, char c) 
 {
-    write(f->fd, &c, 1);
+    //write(f->fd, &c, 1);
+}
+
+static void fputs_internal(FILE *f, const char *s) 
+{
+    //write(f->fd, s, strlen(s));
 }
 
 void putchar(char c) 
 { 
-    write(stdout->fd, &c, 1); 
+    //write(stdout->fd, &c, 1); 
 }
 
 int printf(const char *fmt, ...)
@@ -33,14 +40,9 @@ int printf(const char *fmt, ...)
 
     va_end(args);
 
-    write(1, buffer, len);
+    //write(1, buffer, len);
 
     return len;
-}
-
-static void fputs_internal(FILE *f, const char *s) 
-{
-    write(f->fd, s, strlen(s));
 }
 
 static void print_int(FILE *f, int n) 
