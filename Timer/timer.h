@@ -5,6 +5,5 @@ void PITIRQ0();
 void Sleep(int seconds);
 void InitTimer();
 unsigned int GetTicks();
-void DrawLoadBar();
 
 #endif
