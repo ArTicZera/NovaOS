@@ -10,6 +10,7 @@
 #include "../FileSystem/memfs.h"
 #include "../Timer/timer.h"
 #include "../Drivers/sb16.h"
+#include "../Include/BOOTSPRITE.h"
 
 #include "GUI/win.h"
 #include "GUI/gui.h"
@@ -77,7 +78,6 @@ void DrawTaskbar()
 {
     DWORD* blurbuffer = AllocateMemory(WSCREEN * HSCREEN * 4);
 
-    // 1️⃣ aplica blur NO BACKBUFFER
     //BlurRegion(backbuffer, blurbuffer, 0, HSCREEN - 35, WSCREEN, 35, 1);
 
     for (int y = HSCREEN - 35; y < HSCREEN; y++)
@@ -244,15 +244,15 @@ void DrawBootScr(void)
     int bytes_per_row = 128 * bytes_per_pixel;
     int padding = (4 - (bytes_per_row % 4)) % 4;
 
+    int dx = WSCREEN / 2 - 64;
+    int dy = HSCREEN / 2 - 128;
+
     for (int y = 0; y < 128; y++)
     {
         for (int x = 0; x < 128; x++)
         {
             int img_y = (129 - 1 - y);
             int index = (img_y * bytes_per_row) + ((x - 110) * bytes_per_pixel) + (img_y * padding);
-            
-            int dx = WSCREEN / 2 - 64;
-            int dy = HSCREEN / 2 - 128;
 
             BYTE b = bootscr[index];
             BYTE g = bootscr[index + 1];
@@ -264,7 +264,24 @@ void DrawBootScr(void)
         }
     }
 
-    DrawLoadBar();
+    for (int timer = 0; timer < 4; timer++)
+    {
+        for (int i = 0; i < 7; i++)
+        {
+            int srcX = i * (BOOTSPRITE_WIDTH / 8);
+
+            for (int y = 0; y < BOOTSPRITE_HEIGHT; y++)
+            {
+                for (int x = 0; x < (BOOTSPRITE_WIDTH / 8); x++)
+                {
+                    DWORD color = bootsprite[y * BOOTSPRITE_WIDTH + (srcX + x)];
+                    SetPixel(x + dx + 32, y + dy + 155, color);
+                
+                    for (volatile int i = 0; i < 10000; i++) {}
+                }
+            }
+        }
+    }
 }
 
 void UserSpace()
