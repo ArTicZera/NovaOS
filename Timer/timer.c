@@ -42,25 +42,6 @@ void Sleep(int seconds)
     }
 }
 
-void DrawLoadBar()
-{
-    while (seconds % 10 != 0)
-    {
-        int totaltime = 10;
-        int timeleft = totaltime - seconds;
-
-        int wbar = (seconds * 100) / totaltime;
-
-        for (int y = 0; y < 16; y++)
-        {
-            for (int x = 0; x < wbar; x++)
-            {
-                SetPixel(x + (WSCREEN / 2 - 38), y + (HSCREEN / 2 + 70), 0xFF00FF00);
-            }
-        }
-    }
-}
-
 void InitTimer(void)
 {
     IRQInstallHandler(0x00, &PITIRQ0);
