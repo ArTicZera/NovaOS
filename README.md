@@ -68,9 +68,9 @@ https://github.com/user-attachments/assets/696a708d-3408-4850-8edd-a12c05431517
 ### 🧰 Necessary Components
 gcc and nasm
 ### 📄 Compiling
-Run the make.sh using linux or WSL
+Run the Makefile using make 
 ### 🚀 Running
-use run.bat for Windows. for Linux, enable last 2 comments in make.sh then run it again.
+use run.bat for Windows.
 
 # 🤝 Contribute
 NovaOS is an Open Source project, so everyone can contibute for it! You can help me starring/forking this project or help with code using pull requests (and optimize more!)
