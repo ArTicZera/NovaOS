@@ -1,0 +1,1 @@
+void HexDump(LPBYTE data, int size);
