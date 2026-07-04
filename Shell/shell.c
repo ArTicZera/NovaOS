@@ -30,6 +30,7 @@
 
 #include "../ELF/elf.h"
 
+#include "hexdump.h"
 #include "shell.h"
 #include "npad.h"
 
