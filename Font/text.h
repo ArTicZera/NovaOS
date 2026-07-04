@@ -8,7 +8,8 @@ void IntToString(int value, char* buffer);
 void PrintInt(int value, DWORD color);
 void PrintHex(int value, DWORD color);
 void PrintOut(char letter, DWORD color);
-
+void PrintHex32(DWORD value);
+void PrintByteHex(BYTE b);
 int GetCursorX();
 int GetCursorY();
 void SetCursorX(int x);
