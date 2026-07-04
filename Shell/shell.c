@@ -279,6 +279,21 @@ void ProcessShellCMD(char* command, int x, int y)
     {
         ProcessShellRun(args[0]);
     }
+    else if (strcmp(cmd, "hexdump") == 0x00)
+    {
+        BYTE buffer[512];
+        DWORD bufsize;
+
+        int size = ReadFile(args[0], buffer, &bufsize);
+
+        if (size < 0)
+        {
+            Print("\nFile Not Found!\n", 0xFFFF0000);
+            return;
+        }
+
+        HexDump(buffer, bufsize);
+    }
     else if (strcmp(cmd, "ping") == 0x00)
     {
         //ICMPSendEcho((DWORD)args[0]);
