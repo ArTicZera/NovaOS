@@ -227,6 +227,24 @@ static int atoi(const char* str)
     return sign * result;
 }
 
+void PrintHex32(DWORD value)
+{
+    char hex[] = "0123456789ABCDEF";
+
+    for(int i = 28; i >= 0; i -= 4)
+    {
+        PrintOut(hex[(value >> i) & 0xF], 0xFFFFFFFF);
+    }
+}
+
+void PrintByteHex(BYTE b)
+{
+    char hex[] = "0123456789ABCDEF";
+
+    PrintOut(hex[b >> 4], 0xFFFFFFFF);
+    PrintOut(hex[b & 0xF], 0xFFFFFFFF);
+}
+
 //Here till the end consists of getting cursorX and cursorY
 //for manipulation and set it to his own X and Y. Good for
 //other .c files
