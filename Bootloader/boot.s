@@ -51,30 +51,13 @@ section .data
 [GLOBAL      info]
 [GLOBAL      user]
 [GLOBAL     user2]
-;[GLOBAL    sprite]
-;[GLOBAL  terminal]
-
-;Extension Icons
-[GLOBAL       non]
-[GLOBAL       txt]
-;[GLOBAL       exe]
 
 [GLOBAL        doom]
-
 [GLOBAL      bootup]
 
-;Animations
-;ELF Programs
-;[GLOBAL    bbeatSize]
-;[GLOBAL     bytebeat]
-;[GLOBAL badappleSize]
-;[GLOBAL     badapple]
         ;Images
         bootscr: incbin "Include/logo.bmp"
         backgrd: incbin "Include/bg.bmp"
-        
-        ;sprite: incbin "Include/Icons/gridicons.bmp"
-        
 
         ;General Icons
         ;error:    incbin "Include/Icons/error.vad"
@@ -84,11 +67,6 @@ section .data
         ;user:     incbin "Include/Icons/user1.vad"
         user2:    incbin "Include/Icons/user2.vad"
         ;terminal: incbin "Include/Icons/terminal.vad"
-
-        ;File Extensions
-        txt: incbin "Include/Icons/txt.bmp"
-        ;exe: incbin "Include/Icons/exe.bmp"
-        non: incbin "Include/Icons/default.vad"
 
         doom:     incbin "Bootloader/doomgeneric"
 
