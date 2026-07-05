@@ -28,13 +28,16 @@ struct InterruptRegisters
     DWORD eip, csm, eflags, useresp, ss;
 };
 
+typedef void (*IRQHandler_t)(struct InterruptRegisters*);
+
 void SetupIDTGate(BYTE entry, DWORD isr, WORD selector, BYTE flags);
 void SetupIDT(void);
 
 void ISRHandler(struct InterruptRegisters* regs);
 
-void IRQInstallHandler(int irq, void (*handler)(struct InterruptRegisters *r));
-void IRQUninstallHandler(int irq);
+void IRQInstallHandler(int irq, IRQHandler_t handler);
+void IRQUninstallHandler(int irq, IRQHandler_t handler);
+void IRQHandler(struct InterruptRegisters* regs);
 
 extern void isr0();
 extern void isr1();
