@@ -19,6 +19,9 @@
 
 extern void LoadIDT(DWORD);
 
+static IRQHandler_t IRQRoutines[IRQ_COUNT][MAX_IRQ_HANDLERS];
+static int IRQHandlerCount[IRQ_COUNT];
+
 struct IDT_GateDescriptor idt[TOTALGATES];
 struct IDT_Descriptor idtr;
 
@@ -196,37 +199,54 @@ void ISRHandler(struct InterruptRegisters* regs)
     }
 }
 
-void* IRQRoutines[16] = 
+void IRQInstallHandler(int irq, IRQHandler_t handler)
 {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-};
+    if (irq < 0 || irq >= IRQ_COUNT)
+        return;
 
-void IRQInstallHandler(int irq, void (*handler)(struct InterruptRegisters *r))
-{
-    IRQRoutines[irq] = handler;
+    if (IRQHandlerCount[irq] >= MAX_IRQ_HANDLERS)
+        return;
+
+    IRQRoutines[irq][IRQHandlerCount[irq]++] = handler;
 }
 
-void IRQUninstallHandler(int irq)
+void IRQUninstallHandler(int irq, IRQHandler_t handler)
 {
-    IRQRoutines[irq] = 0;
+    if (irq < 0 || irq >= IRQ_COUNT)
+        return;
+
+    for (int i = 0; i < IRQHandlerCount[irq]; i++)
+    {
+        if (IRQRoutines[irq][i] == handler)
+        {
+            for (int j = i; j < IRQHandlerCount[irq] - 1; j++)
+            {
+                IRQRoutines[irq][j] = IRQRoutines[irq][j + 1];
+            }
+
+            IRQHandlerCount[irq]--;
+            break;
+        }
+    }
 }
 
 void IRQHandler(struct InterruptRegisters* regs)
 {
-    void (*handler)(struct InterruptRegisters *regs);
+    int irq = regs->int_no - 32;
 
-    handler = IRQRoutines[regs->int_no - 32];
-
-    if (handler)
+    if (irq >= 0 && irq < IRQ_COUNT)
     {
-        handler(regs);
+        for (int i = 0; i < IRQHandlerCount[irq]; i++)
+        {
+            if (IRQRoutines[irq][i]) 
+            {
+                IRQRoutines[irq][i](regs);
+            }
+        }
     }
 
     if (regs->int_no >= 40)
-    {
         outb(0xA0, 0x20);
-    }
 
-    outb(0x20,0x20);
+    outb(0x20, 0x20);
 }
