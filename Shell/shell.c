@@ -356,6 +356,7 @@ void ProcessShellRun(char* process)
     {
         ForceCloseWindow(terminal);
         CreateWindow(320, 160, 640, 400, 0xFF1A1A1A, "DOOM");
+        KeyboardState(0xFF);
         LoadELF(doom, 1);
     }
     else
