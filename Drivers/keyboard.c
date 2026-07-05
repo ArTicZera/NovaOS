@@ -60,6 +60,11 @@ const char* keyMap[][2] =
 void KeyboardState(int state)
 {
     enableText = state;
+
+    if (enableText == 0xFF)
+    {
+        IRQUninstallHandler(0x01, KeyboardHandler);
+    }
 }
 
 static BYTE keyDown[128] = {0};
