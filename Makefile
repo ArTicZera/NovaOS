@@ -47,6 +47,11 @@ OBJS := $(filter-out $(BIN)/Kernel/gfx/gears.o,$(OBJS))
 
 all: kernel iso
 
+remakeboot:
+	rm -f doomgeneric
+	rm -f boot.o
+	nasm -felf32 Bootloader/boot.s -o Bootloader/boot.o
+
 # ------------------------------------------------------
 # Compile C
 # ------------------------------------------------------
