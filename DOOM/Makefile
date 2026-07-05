@@ -26,6 +26,8 @@ OBJS = $(addprefix $(OBJDIR)/, $(SRC_DOOM))
 
 OBJS += libc/stdio.o libc/assert.o libc/ctype.o libc/stdlib.o libc/string.o libc/unistd.o libc/alloc.o doomwad.o
 
+OBJS += ../Include/ports.o
+
 all: $(OUTPUT)
 	cp doomgeneric ../Bootloader/doomgeneric
 
