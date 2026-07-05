@@ -4,6 +4,9 @@
 #define TOTALGATES 256
 #define CODESEG 0x08
 
+#define IRQ_COUNT 16
+#define MAX_IRQ_HANDLERS 8
+
 struct IDT_GateDescriptor
 {
     WORD offset;   //offset (0 - 15)
