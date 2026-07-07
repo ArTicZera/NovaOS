@@ -21,6 +21,7 @@ typedef struct WINDOW
     int focused;
 
     LPDWORD buffer;
+    LPDWORD frontbuffer;
 
     struct WINDOW* next;
     struct WINDOW* prev;
