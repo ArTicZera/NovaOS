@@ -50,7 +50,7 @@ int maxY = 720;
 WINDOW* terminal;
 
 //Shows a welcome message
-void PrintWelcomeMSG(int x, int y)
+void PrintWelcomeMSG()
 {
     SetCursorX(0x00);
     SetCursorY(0x00);
@@ -67,7 +67,7 @@ void PrintWelcomeMSG(int x, int y)
 //Set keyboard state to 0x02.
 void StartShellNoGUI()
 {
-    PrintWelcomeMSG(0, 0);
+    PrintWelcomeMSG();
 
     PrintCurrentDir();
 
