@@ -11,7 +11,9 @@ void StartShellNoGUI();
 void StartShellGUI(WINDOW* win);
 void PrintWelcomeMSG();
 void PrintCurrentDir();
+void SaveTerminalScreen();
 void ProcessShellCMD(char* command, int x, int y);
 void ProcessShellRun(char* proccess);
+void OnWindowMoved(WINDOW *win);
 
 #endif
