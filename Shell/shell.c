@@ -98,6 +98,34 @@ void StartShellGUI(WINDOW* win)
     PrintCurrentDir();
 
     KeyboardState(0x05);
+
+    SaveTerminalScreen();
+}
+
+void SaveTerminalScreen()
+{
+    for (int y = 0; y < terminal->h; y++)
+    {
+        for (int x = 0; x < terminal->w; x++)
+        {
+            terminal->frontbuffer[y * terminal->w + x] = GetPixel(x + terminal->x, y + terminal->y);
+        }
+    }
+}
+
+void OnWindowMoved(WINDOW *win)
+{
+    if (win == terminal)
+    {
+        winshellX = win->x;
+        winshellY = win->y + 20;
+
+        SetCursorY(winshellY + 40);
+
+        Blit(terminal->frontbuffer, win->x, win->y, win->w, win->h);
+
+        SaveTerminalScreen();
+    }
 }
 
 void ProcessShellCMD(char* command, int x, int y)
@@ -140,11 +168,8 @@ void ProcessShellCMD(char* command, int x, int y)
 
     if (GetCursorY() >= maxY)
     {
-        SetCursorX(winshellX);
-        SetCursorY(winshellY);
-
-        DrawRect(winshellX, winshellY, winshellW, winshellH, 0x00000000);
-        //ClearScreen();
+        SetCursorY(winshellY + 20 + y);
+        DrawRect(winshellX, winshellY, winshellW, winshellH, 0xFF000000);
     }
 
     //Here starts the parser
@@ -358,6 +383,8 @@ void ProcessShellRun(char* process)
         CreateWindow(320, 160, 640, 400, 0xFF1A1A1A, "DOOM");
         KeyboardState(0xFF);
         LoadELF(doom, 1);
+        ForceCloseWindow(DOOM);
+        KeyboardState(0xFE);
     }
     else
     {
