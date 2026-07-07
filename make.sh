@@ -1,3 +1,5 @@
+#BASH IS NO LONGER USED. USE MAKE!
+
 clear
 
 #Change here to your ELF compiler path
