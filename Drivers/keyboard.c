@@ -199,6 +199,8 @@ void KeyboardHandler()
                     else if (enableText == 5)
                     {
                         ProcessShellCMD(commandBuffer, 5, 5);
+
+                        SaveTerminalScreen();
                     }
 
                     commandLength = 0;
