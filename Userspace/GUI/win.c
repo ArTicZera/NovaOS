@@ -4,6 +4,7 @@
 #include "../../Memory/alloc.h"
 #include "../../Memory/mem.h"
 #include "../../Timer/timer.h"
+#include "../../Shell/shell.h"
 #include "../userspace.h"
 
 #include "win.h"
