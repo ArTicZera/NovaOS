@@ -65,6 +65,10 @@ void KeyboardState(int state)
     {
         IRQUninstallHandler(0x01, KeyboardHandler);
     }
+    if (enableText == 0xFE)
+    {
+        IRQInstallHandler(0x01, &KeyboardHandler);
+    }
 }
 
 static BYTE keyDown[128] = {0};
