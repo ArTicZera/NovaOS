@@ -264,6 +264,7 @@ void HandleWindowDragging(int mouseX, int mouseY, int pressed)
         if (isDragging && dragWindow)
         {
             DrawAllWindows();
+            OnWindowMoved(dragWindow);
             isDragging = 0;
             dragWindow = NULL;
         }
