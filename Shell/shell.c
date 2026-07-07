@@ -380,7 +380,7 @@ void ProcessShellRun(char* process)
     if (strcmp(process, "doom") == 0x00)
     {
         ForceCloseWindow(terminal);
-        CreateWindow(320, 160, 640, 400, 0xFF1A1A1A, "DOOM");
+        WINDOW* DOOM = CreateWindow(320, 160, 640, 400, 0xFF1A1A1A, "DOOM");
         KeyboardState(0xFF);
         LoadELF(doom, 1);
         ForceCloseWindow(DOOM);
