@@ -41,7 +41,6 @@ HaltKernel:
 
 section .data
 ;Images
-[GLOBAL bootscr]
 [GLOBAL backgrd]
 
 ;General Icons
@@ -56,7 +55,6 @@ section .data
 [GLOBAL      bootup]
 
         ;Images
-        bootscr: incbin "Include/logo.bmp"
         backgrd: incbin "Include/bg.bmp"
 
         ;General Icons
