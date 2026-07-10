@@ -244,6 +244,8 @@ void DrawBootScr(void)
     int dx = WSCREEN / 2 - 64;
     int dy = HSCREEN / 2 - 128;
 
+    int i = 0;
+
     for (int y = 0; y < HFONT; y++)
     {
         for (int x = 0; x < WFONT; x++)
