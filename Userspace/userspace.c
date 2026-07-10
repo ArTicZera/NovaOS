@@ -10,6 +10,7 @@
 #include "../Timer/timer.h"
 #include "../Drivers/sb16.h"
 #include "../Include/BOOTSPRITE.h"
+#include "../Include/logo.h"
 
 #include "GUI/win.h"
 #include "GUI/gui.h"
