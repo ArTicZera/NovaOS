@@ -125,3 +125,22 @@ void Blit(LPDWORD src, int dstX, int dstY, int w, int h)
             dstRow[i] = srcRow[i];
     }
 }
+
+void BlendPixel(int x, int y, DWORD color, BYTE alpha)
+{
+    DWORD dst = GetPixel(x, y);
+
+    BYTE sr = (color >> 16) & 0xFF;
+    BYTE sg = (color >> 8)  & 0xFF;
+    BYTE sb =  color        & 0xFF;
+
+    BYTE dr = (dst >> 16) & 0xFF;
+    BYTE dg = (dst >> 8)  & 0xFF;
+    BYTE db =  dst        & 0xFF;
+
+    BYTE r = (sr * alpha + dr * (255 - alpha)) / 255;
+    BYTE g = (sg * alpha + dg * (255 - alpha)) / 255;
+    BYTE b = (sb * alpha + db * (255 - alpha)) / 255;
+
+    SetPixel(x, y, (0xFF << 24) | (r << 16) | (g << 8) | b);
+}
