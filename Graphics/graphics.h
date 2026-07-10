@@ -21,5 +21,6 @@ void DrawRect(int x, int y, int w, int h, DWORD color);
 void DrawCircle(int cx, int cy, int radius, DWORD color);
 void DrawLine(int x0, int y0, int x1, int y1, DWORD color);
 void Blit(LPDWORD src, int dstX, int dstY, int w, int h);
+void BlendPixel(int x, int y, DWORD color, BYTE alpha);
 
 #endif
