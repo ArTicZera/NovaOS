@@ -17,7 +17,6 @@
 #include "desktop.h"
 #include "userspace.h"
 
-extern BYTE bootscr[];
 extern BYTE backgrd[];
 
 extern BYTE bootup[];
@@ -36,7 +35,6 @@ int currentPID = 0;
 int totalWindows = 0;
 
 DWORD startBuffer[150 * 200];
-
 
 void DrawBackground()
 {
@@ -245,20 +243,24 @@ void DrawBootScr(void)
     int dx = WSCREEN / 2 - 64;
     int dy = HSCREEN / 2 - 128;
 
-    for (int y = 0; y < 128; y++)
+    for (int y = 0; y < HFONT; y++)
     {
-        for (int x = 0; x < 128; x++)
+        for (int x = 0; x < WFONT; x++)
         {
-            int img_y = (129 - 1 - y);
-            int index = (img_y * bytes_per_row) + ((x - 110) * bytes_per_pixel) + (img_y * padding);
+            DWORD color = bootscr[i++];
 
-            BYTE b = bootscr[index];
-            BYTE g = bootscr[index + 1];
-            BYTE r = bootscr[index + 2];
+            BYTE a = (color >> 24) & 0xFF;
 
-            DWORD color = (0xFF << 24) | (r << 16) | (g << 8) | b;
+            if (a == 0) continue;
 
-            SetPixel(x + dx, y + dy, color);
+            if (a == 255)
+            {
+                SetPixel(x + dx, y + dy, color);
+            }
+            else
+            {
+                BlendPixel(x + dx, y + dy, color, a);
+            }
         }
     }
 
