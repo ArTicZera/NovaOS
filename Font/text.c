@@ -193,6 +193,13 @@ void PrintOut(char letter, DWORD color)
         cursorX -= 8;
     }
 
+    if (letter == '\n')
+    {
+        cursorX = 0;
+        cursorY += HFONT;
+        return;
+    }
+
     DrawChar(isoFont + letter * HFONT, color);
 }
 
