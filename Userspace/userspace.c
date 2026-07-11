@@ -21,7 +21,6 @@
 extern BYTE backgrd[];
 
 extern BYTE bootup[];
-extern WORD bootSize;
 
 WINDOW startMenu = { "", 0xFF1A1A1A, 0, HSCREEN - 285, 150, 250, 0 };
 WINDOW* winmgr;
