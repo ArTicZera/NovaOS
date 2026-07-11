@@ -10,14 +10,34 @@
 #include "../Userspace/GUI/win.h"
 #include "../Shell/shell.h"
 
+//Change fonts here
 #include "text.h"
-#include "font.h"
+#include "font8x18.h"
+//#include "isofont.h"
+//#include "font10x20.h"
 
 int cursorX = 0;
 int cursorY = 0;
 
 void DrawChar(BYTE* bitmap, DWORD color)
 {
+    for (int y = 0; y < HFONT; y++)
+    {
+        for (int x = 0; x < WFONT; x++)
+        {
+            int byte = x / 8;
+            int bit  = 7 - (x % 8);
+
+            if (bitmap[y * BYTES_PER_ROW + byte] & (1 << bit))
+            {
+                SetPixel(cursorX + x, cursorY + y, color);
+            }
+        }
+    }
+
+    cursorX += WFONT;
+
+    /*
     int i = 0;
 
     for (int y = 0; y < HFONT; y++)
@@ -35,18 +55,19 @@ void DrawChar(BYTE* bitmap, DWORD color)
 
         i = 0;
     }
+    */
 
     //Moves 8 pixels for the left
-    cursorX += 8;
+    //cursorX += 8;
 
     //In case the cursorX goes higher than 1280,
     //then reset the X and go to the next row.
     if (cursorX >= WSCREEN)
     {
         cursorX = 0;
-        cursorY += 16;
+        cursorY += HFONT;
     }
-
+    
 }
 
 void Print(const char* str, DWORD color)
@@ -76,7 +97,7 @@ void Print(const char* str, DWORD color)
             if (cursorX > 0)
             {
                 cursorX -= 16;
-                DrawChar(isoFont + 0x00 * HFONT, 0x00000000);
+                DrawChar(isoFont + 0 * GLYPH_SIZE, 0);
                 
                 //Returns again because DrawChar update cursor
                 // automatically
@@ -88,7 +109,7 @@ void Print(const char* str, DWORD color)
 
         if (str[i] == '\f')
         {
-            DrawChar(isoFont + 128 * HFONT, color);
+            DrawChar(isoFont + 0xDB * GLYPH_SIZE, color);
 
             continue;
         }
@@ -96,7 +117,8 @@ void Print(const char* str, DWORD color)
         //Look how I draw with the 'isoFont' bitmap (declared on font.h)
         //I use it with the size of a HFONT * the ASCII character, then
         //we get into the char bitmap to draw.
-        DrawChar(isoFont + str[i] * HFONT, color);
+        //DrawChar(isoFont + str[i] * HFONT * (WFONT / 8), color);
+        DrawChar(isoFont + (unsigned char)str[i] * GLYPH_SIZE, color);
     }
 }
 
@@ -186,11 +208,16 @@ void PrintOut(char letter, DWORD color)
 {
     if (letter == '\b')
     {
-        cursorX -= 16;
+        if (cursorX >= WFONT)
+        {
+            cursorX -= WFONT;
 
-        DrawChar(isoFont + 0x00 * HFONT, 0x00000000);
+            DrawChar(isoFont + 0x00 * HFONT, 0x00000000);
 
-        cursorX -= 8;
+            cursorX -= WFONT;
+        }
+
+        return;
     }
 
     if (letter == '\n')
@@ -200,7 +227,7 @@ void PrintOut(char letter, DWORD color)
         return;
     }
 
-    DrawChar(isoFont + letter * HFONT, color);
+    DrawChar(isoFont + letter * (HFONT * ((WFONT + 7) / 8)), color);
 }
 
 //ASCII to Integer
@@ -250,6 +277,23 @@ void PrintByteHex(BYTE b)
 
     PrintOut(hex[b >> 4], 0xFFFFFFFF);
     PrintOut(hex[b & 0xF], 0xFFFFFFFF);
+}
+
+void MapFont()
+{
+    SetCursorX(winshellX);
+
+    for (BYTE index = 0; index < 0xFF; index++)
+    {
+        PrintOut((BYTE)index, 0xFFFFFFFF);
+
+        PrintOut(' ', 0x00);
+
+        if ((index & 0x0F) == 0x0F)
+        {
+            PrintOut('\n', 0xFFFFFFFF);
+        }
+    }
 }
 
 //Here till the end consists of getting cursorX and cursorY
