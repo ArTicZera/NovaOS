@@ -301,6 +301,10 @@ void ProcessShellCMD(char* command, int x, int y)
     {
         ChangeDir(args[0]);
     }
+    else if (strcmp(cmd, "mapfont") == 0x00)
+    {
+        MapFont();
+    }
     else if (strcmp(cmd, "run") == 0x00)
     {
         ProcessShellRun(args[0]);
