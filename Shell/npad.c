@@ -19,11 +19,11 @@ void CreateNotepadFile(LPBYTE filename, LPBYTE buffer, int length)
 void ShowInfo(const char* filename)
 {
     SetCursorX(0);
-    SetCursorY(70 * 8);
+    SetCursorY(86 * 8);
 
     for (int x = 0; x < WSCREEN; x++)
     {
-        for (int y = 70 * 8; y < 72 * 8; y++)
+        for (int y = 86 * 8; y < 88 * 8; y++)
         {
             SetPixel(x, y, 0xFF00AA00);
         }
@@ -42,7 +42,7 @@ void ShowInfo(const char* filename)
     Print(filename, 0xFFFFFFFF);
 
     SetCursorX(0);
-    SetCursorY(72 * 8);
+    SetCursorY(88 * 8);
 
     Print("ESC - Exit    ^S - Save", 0xFFFFFF00);
 
