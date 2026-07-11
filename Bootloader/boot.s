@@ -68,10 +68,7 @@ section .data
 
         doom:     incbin "Bootloader/doomgeneric"
 
-        bootBase: equ $ - bootup
         bootup:   incbin "Include/bootup.pcm"
-        boot_end:
-        bootSize: dd boot_end - bootup
 
 section .bss
 
