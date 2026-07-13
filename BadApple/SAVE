@@ -1,0 +1,73 @@
+#include <opencv2/opencv.hpp>
+#include <stdint.h>
+#include <stdio.h>
+
+typedef unsigned char BYTE;
+
+#define WIDTH   160
+#define HEIGHT  120
+
+int main()
+{
+    cv::VideoCapture cap("bad_apple.mp4");
+    if (!cap.isOpened()) {
+        printf("Erro ao abrir video\n");
+        return 1;
+    }
+
+    int total_frames = (int)cap.get(cv::CAP_PROP_FRAME_COUNT);
+    double fps = cap.get(cv::CAP_PROP_FPS);
+
+    printf("Frames: %d | FPS: %.2f\n", total_frames, fps);
+
+    FILE* out = fopen("badapple.bin", "wb");
+    if (!out) {
+        puts("Erro ao criar arquivo");
+        return 1;
+    }
+
+    cv::Mat frame, gray, bw;
+
+    while (cap.read(frame))
+    {
+        // Resize
+        cv::resize(frame, frame, cv::Size(WIDTH, HEIGHT), 0, 0, cv::INTER_AREA);
+
+        // Grayscale
+        cv::cvtColor(frame, gray, cv::COLOR_BGR2GRAY);
+
+        // Threshold (0 ou 255)
+        cv::threshold(gray, bw, 127, 255, cv::THRESH_BINARY);
+
+        // 8 pixels → 1 byte
+        for (int y = 0; y < HEIGHT; y++)
+        {
+            BYTE byte = 0;
+            int bit = 7;
+
+            for (int x = 0; x < WIDTH; x++)
+            {
+                BYTE pixel = bw.at<BYTE>(y, x);
+
+                if (pixel)  // branco
+                    byte |= (1 << bit);
+
+                bit--;
+
+                if (bit < 0)
+                {
+                    fwrite(&byte, 1, 1, out);
+                    byte = 0;
+                    bit = 7;
+                }
+            }
+        }
+    }
+
+    fclose(out);
+    cap.release();
+
+    puts("badapple.bin gerado (1 bit por pixel).");
+    fflush(stdout);
+    return 0;
+}

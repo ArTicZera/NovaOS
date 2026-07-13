@@ -1,0 +1,1 @@
+g++ video_to_bits.cpp -o video_to_bits `pkg-config --cflags --libs opencv4`
