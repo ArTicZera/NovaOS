@@ -29,6 +29,7 @@
 #include "../Userspace/GUI/win.h"
 
 #include "../ELF/elf.h"
+#include "../ELF/run.h"
 
 #include "hexdump.h"
 #include "shell.h"
