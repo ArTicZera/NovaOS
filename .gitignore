@@ -1,0 +1,34 @@
+# ------------------------------------------------------
+# NovaOS build outputs
+# ------------------------------------------------------
+
+# Object tree produced by the Makefile ($(BIN))
+/Binaries/
+
+# Standalone objects built outside $(BIN)
+/Bootloader/boot.o
+/Kernel/gfx/gears.o
+
+# Linked kernel and the ISO built by `make`
+/fullkernel
+/NovaOS/boot/kernel
+/NovaOS.iso
+
+# ------------------------------------------------------
+# Runtime files created by `make run` / run.bat
+# ------------------------------------------------------
+
+/disk.raw
+/net.pcap
+*.log
+
+# ------------------------------------------------------
+# Editor and OS noise
+# ------------------------------------------------------
+
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
