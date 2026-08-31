@@ -1,10 +1,11 @@
-#!/usr/bin/env python3
+# Converts BDF font files to C header files with 
+# hexadecimal representation of the font bitmaps.
 
 import sys
 
 if len(sys.argv) < 3:
     print("Usage:")
-    print("python bdf2hex.py fonte.bdf font.c")
+    print("python bdf2hex.py font.bdf font.c")
     exit(1)
 
 input_file = sys.argv[1]
@@ -46,14 +47,9 @@ with open(input_file, "r", encoding="utf-8", errors="ignore") as f:
 bytes_per_row = (width + 7) // 8
 
 with open(output_file, "w") as out:
-
-    out.write("// Gerado automaticamente\n\n")
-    out.write("#include <stdint.h>\n\n")
-
     out.write(f"#define WFONT {width}\n")
     out.write(f"#define HFONT {height}\n\n")
-
-    out.write("const uint8_t font[] = {\n")
+    out.write("unsigned char isoFont[] = {\n")
 
     for ch in range(256):
 
