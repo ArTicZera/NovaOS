@@ -34,11 +34,6 @@
 #include "../ELF/bin.h"
 #include "../ELF/run.h"
 
-#include "../novasm/lexer.h"
-#include "../novasm/parser.h"
-#include "../novasm/encoder.h"
-#include "../novasm/assembler.h"
-
 #include "../Wayland/af_unix.h"
 #include "../Wayland/server.h"
 #include "../Wayland/client.h"
