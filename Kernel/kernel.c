@@ -24,6 +24,7 @@
 #include "../Hardware/cmos.h"
 #include "../Hardware/serial.h"
 #include "../FileSystem/memfs.h"
+#include "../Shell/shell.h"
 #include "../Userspace/GUI/win.h"
 #include "../Userspace/GUI/gui.h"
 #include "../Userspace/userspace.h"
@@ -159,6 +160,10 @@ void kmain(struct multiboot_info* mbinfo, DWORD addr)
 
     SetupSoundBlaster();
     Debug("Sound Blaster 16 Initialized!\n", 0x00);
+
+    //Network
+    //FindRTL8139();
+    //SetupRTL8139();
 
     ShowCMOSMem();
     ListDisks();
