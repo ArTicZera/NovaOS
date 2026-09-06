@@ -1,3 +1,9 @@
+/*
+    Coded by ArTic/JhoPro
+
+    Userspace syscalls
+*/
+
 #include "../Include/stdint.h"
 #include "../Font/text.h"
 #include "idt.h"
@@ -7,19 +13,34 @@ void SyscallHandler(struct InterruptRegisters* regs)
 {
     switch(regs->eax)
     {
+        /* exit */
+        case 1:
+            while (1)
+            {
+                asm volatile("cli");
+                asm volatile("hlt");
+            }
+            break;
+
+        /* putchar */
+        case 3:
+            const char c = (const char)regs->ebx;
+            PrintOut(c, regs->ecx);
+            break;
+
         /* write */
         case 4:
         {
-            //Good for DOOM Debug
-            /*
-            const char* buf = (const char*)regs->ecx;
-            size_t count = regs->edx;
+            char* buffer = (char*)regs->ecx;
+            int count = regs->edx;
 
-            for(size_t i = 0; i < count; i++)
-                PrintOut(buf[i], 0xFFFFFF00);
+            for(int i = 0; i < count; i++)
+            {
+                PrintOut(buffer[i], 0xFF00FF00);
+            }
 
             regs->eax = count;
-            */
+
             break;
         }
 
@@ -31,7 +52,7 @@ void SyscallHandler(struct InterruptRegisters* regs)
         }
 
         /* read */
-        case 3:
+        case 7:
         {
             //regs->eax = SysRead(regs->ebx, (void*)regs->ecx, regs->edx);
             break;
@@ -55,13 +76,6 @@ void SyscallHandler(struct InterruptRegisters* regs)
         case 19:
         {
             //regs->eax = SysLseek(regs->ebx, regs->ecx, regs->edx);
-            break;
-        }
-
-        /* exit */
-        case 1:
-        {
-            //SysExit(regs->ebx);
             break;
         }
 
