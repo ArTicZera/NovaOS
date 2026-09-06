@@ -21,15 +21,30 @@
 #include "../Userspace/GUI/gui.h"
 #include "../Userspace/userspace.h"
 #include "../Include/math.h"
-//#include "../Programs/badapple.h"
+#include "../minilibc/ctype.h"
+#include "../Interrupts/syscall.h"
 
 #include "../tinygl/include/GL/gl.h"
 #include "../tinygl/include/zbuffer.h"
 #include "../Kernel/gfx/gears.h"
 #include "../Userspace/GUI/win.h"
 
+
 #include "../ELF/elf.h"
+#include "../ELF/bin.h"
 #include "../ELF/run.h"
+
+#include "../novasm/lexer.h"
+#include "../novasm/parser.h"
+#include "../novasm/encoder.h"
+#include "../novasm/assembler.h"
+
+#include "../Wayland/af_unix.h"
+#include "../Wayland/server.h"
+#include "../Wayland/client.h"
+#include "../Wayland/protocol.h"
+#include "../Wayland/surface.h"
+#include "../Wayland/compositor.h"
 
 #include "hexdump.h"
 #include "shell.h"
@@ -38,17 +53,18 @@
 //ELF32 Executable
 
 extern char doom[];
+extern char ClassiCube[];
 
-int shellNOGUI = 1;
+int shellNOGUI = 0;
 
 int winshellX = 0;
 int winshellY = 0;
 int winshellW = 1280;
 int winshellH = 720;
+
 int maxY = 720;
 
-
-WINDOW* terminal;
+WLWindow* terminal;
 
 //Shows a welcome message
 void PrintWelcomeMSG()
@@ -75,7 +91,7 @@ void StartShellNoGUI()
     KeyboardState(0x02);
 }
 
-void StartShellGUI(WINDOW* win)
+void StartShellGUI(WLWindow* win)
 {
     terminal = win;
 
@@ -87,22 +103,24 @@ void StartShellGUI(WINDOW* win)
     winshellH = win->h;
     maxY = win->h;
 
-    DrawRect(win->x, win->y + 20, win->w, win->h, 0xFF000000);
+    WLDrawRect(win->buffer, win->w, win->h, 0, 20, win->w, win->h, 0xFF000000);
 
     SetCursorX(winshellX);
     SetCursorY(winshellY);
 
-    Print("Welcome to NovaOS Shell! ", 0xFFFFFFFF);
-    Print("(GUI)\n\n", 0xFF00FF00);
-    Print("Type 'help' to start using the shell.\n\n", 0xFFFFFFFF);
+    //PrintBuffer(terminal->buffer, terminal->w, terminal->h, GetCursorX(), GetCursorY(), "Welcome to NovaOS Shell! ", 0xFFFFFFFF);
+    //PrintBuffer(terminal->buffer, terminal->w, terminal->h, GetCursorX(), GetCursorY(), "(GUI)\n\n", 0xFF00FF00);
+    //PrintBuffer(terminal->buffer, terminal->w, terminal->h, GetCursorX(), GetCursorY(), "Type 'help' to start using the shell.\n\n", 0xFFFFFFFF);
+
 
     PrintCurrentDir();
 
     KeyboardState(0x05);
 
-    SaveTerminalScreen();
+    //SaveTerminalScreen();
 }
 
+/*
 void SaveTerminalScreen()
 {
     for (int y = 0; y < terminal->h; y++)
@@ -118,6 +136,12 @@ void OnWindowMoved(WINDOW *win)
 {
     if (win == terminal)
     {
+        //int dx = win->x - winshellX;
+        //int dy = (win->y + 20) - winshellY;
+
+        //winshellX = win->x;
+        //winshellY = win->y + 20;
+
         winshellX = win->x;
         winshellY = win->y + 20;
 
@@ -127,7 +151,7 @@ void OnWindowMoved(WINDOW *win)
 
         SaveTerminalScreen();
     }
-}
+}*/
 
 void ProcessShellCMD(char* command, int x, int y)
 {
@@ -142,6 +166,7 @@ void ProcessShellCMD(char* command, int x, int y)
     {
         cmd[cmdIndex++] = command[i++];
     }
+
     cmd[cmdIndex] = '\0';
 
     if (command[i] == ' ') i++;
@@ -302,32 +327,13 @@ void ProcessShellCMD(char* command, int x, int y)
     {
         ChangeDir(args[0]);
     }
-    else if (strcmp(cmd, "mapfont") == 0x00)
-    {
-        MapFont();
-    }
     else if (strcmp(cmd, "run") == 0x00)
     {
         ProcessShellRun(args[0]);
     }
-    else if (strcmp(cmd, "hexdump") == 0x00)
-    {
-        BYTE buffer[512];
-        DWORD bufsize;
-
-        int size = ReadFile(args[0], buffer, &bufsize);
-
-        if (size < 0)
-        {
-            Print("\nFile Not Found!\n", 0xFFFF0000);
-            return;
-        }
-
-        HexDump(buffer, bufsize);
-    }
     else if (strcmp(cmd, "ping") == 0x00)
     {
-        //ICMPSendEcho((DWORD)args[0]);
+        //ICMPSendEcho(IPStringToDWORD(args[0]));
     }
     else if (strcmp(cmd, "npad") == 0x00)
     {
@@ -366,9 +372,125 @@ void ProcessShellCMD(char* command, int x, int y)
 
         //PlayBadApple(buffer, size);
     }
+    else if (strcmp(cmd, "mapfont") == 0x00)
+    {
+        MapFont();
+    }
+    else if (strcmp(cmd, "mkwin") == 0x00)
+    {
+        if (GetKeyboardState() != 2)
+        {
+            int s = socket(AF_UNIX, SOCK_STREAM);
+
+            if(connect(s, "/run/wayland-0") == 0)
+            {
+                WLWindow* win;
+
+                win = WLCreateWindow(100, 300, 400, 300, "TESTE");
+            }
+        }
+        else
+        {
+            Print("\n", 0x00);
+            Debug("NO GUI IN SHELL\n", 0x01);
+        }
+    }
     else if (strcmp(cmd, "run") == 0x00)
     {
         RunProgram(args[0]);
+    }
+    else if (strcmp(cmd, "runbin") == 0x00)
+    {
+        int fileSize;
+
+        void* img = (void*)0x04000000;
+
+        if (ReadFile(args[0], img, &fileSize) == 0x00)
+        {
+            LoadBIN(img);
+        }
+    }
+    else if (strcmp(cmd, "hexdump") == 0x00)
+    {
+        BYTE buffer[512];
+        DWORD bufsize;
+
+        int size = ReadFile(args[0], buffer, &bufsize);
+
+        if (size < 0)
+        {
+            Print("\nFile Not Found!\n", 0xFFFF0000);
+            return;
+        }
+
+        HexDump(buffer, bufsize);
+    }
+    else if (strcmp(cmd, "novasm") == 0x00)
+    {
+        DWORD size;
+        LPBYTE buffer = AllocateMemory(1024 * 1024);
+
+        if (ReadFile(args[0], buffer, &size) != 0)
+        {
+            Print("\n\nInvalid File!", 0xFFFF0000);
+            return;
+        }
+
+        buffer[size] = '\0';
+
+        Assemble(buffer);
+        
+        /*
+        Lexer lexer;
+        Parser parser;
+
+        LexerInit(&lexer, (char*)buffer);
+        ParserInit(&parser, &lexer);
+
+        outPos = 0;
+
+        ParserFunc(&parser);
+        */
+
+        CreateFile("output.bin",  output, outPos, PERM_R | PERM_X);
+    }
+    else if (strcmp(cmd, "debug") == 0)
+    {   
+        DWORD size;
+        LPBYTE buffer = AllocateMemory(1024 * 1024);
+
+        if (ReadFile(args[0], buffer, &size) != 0)
+        {
+            Print("\n\nInvalid File!", 0xFFFF0000);
+            return;
+        }
+
+        Token t;
+        Lexer lexer;
+        LexerInit(&lexer, buffer);
+
+        do
+        {
+            t = NextToken(&lexer);
+
+            switch (t.type)
+            {
+                case TOKEN_IDENTIFIER:
+                    Print("\nIDENTIFIER: ", 0xFF00FF00);
+                    Print(t.lexeme, 0xFFFFFFFF);
+                    break;
+
+                case TOKEN_NUMBER:
+                    Print("\nNUMBER: ", 0xFF00FF00);
+                    PrintInt(t.num, 0xFFFFFFFF);
+                    break;
+            }
+
+        } while (t.type != TOKEN_EOF);
+    }
+    else if (strcmp(cmd, "panic") == 0x00)
+    {
+        //int i = 1 / 0;
     }
     else
     {
@@ -384,12 +506,16 @@ void ProcessShellRun(char* process)
 {
     if (strcmp(process, "doom") == 0x00)
     {
-        ForceCloseWindow(terminal);
+        //ForceCloseWindow(terminal);
         WINDOW* DOOM = CreateWindow(320, 160, 640, 400, 0xFF1A1A1A, "DOOM");
         KeyboardState(0xFF);
         LoadELF(doom, 1);
-        ForceCloseWindow(DOOM);
+        //ForceCloseWindow(DOOM);
         KeyboardState(0xFE);
+    }
+    else if (strcmp(process, "minecraft") == 0x00)
+    {
+        LoadELF(ClassiCube, 0x01);
     }
     else
     {
