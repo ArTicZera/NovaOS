@@ -22,39 +22,36 @@
 #include "../Hardware/pci.h"
 #include "../Hardware/disk.h"
 #include "../Hardware/cmos.h"
-// extension by nicolasbickhoff11
 #include "../Hardware/serial.h"
 #include "../FileSystem/memfs.h"
-//#include "../FileSystem/tarhdr.h"
-#include "../Shell/shell.h"
-//#include "../Programs/badapple.h"
 #include "../Userspace/GUI/win.h"
 #include "../Userspace/GUI/gui.h"
-//#include "../Include/gif.h"
 #include "../Userspace/userspace.h"
 #include "../GDT/gdt.h"
+
+#include "../Network/rtl8139.h"
+
+#include "../Wayland/af_unix.h"
+#include "../Wayland/client.h"
+#include "../Wayland/ipc.h"
+#include "../Wayland/protocol.h"
+#include "../Wayland/server.h"
+#include "../Wayland/surface.h"
+#include "../Wayland/compositor.h"
 
 // expanded by nicolasbickhoff11
 #include "../Font/printf.h"
 
-/*
-static DWORD OctalToInt(char* str)
-{
-    DWORD value = 0;
-
-    while (*str >= '0' && *str <= '7')
-    {
-        value = (value * 8) + (*str - '0');
-        str++;
-    }
-
-    return value;
-}
-*/
-
-void main(struct multiboot_info* mbinfo, DWORD addr)
+void kmain(struct multiboot_info* mbinfo, DWORD addr)
 {
     struct vbe_mode_info_t* vbe = (struct vbe_mode_info_t*)mbinfo->vbe_mode_info;
+    struct multiboot_mmap_entry* mmap = (struct multiboot_mmap_entry*)mbinfo->mmap_addr; 
+
+    SocketInit();
+    IPCInit();
+    WLClientInit();
+    WLSurfaceInit();
+    WLServerInit();
 
     InitGraphics(vbe->framebuffer, vbe->pitch);
     Debug("VESA 800x600 32BPP Started!\n", 0x00);
@@ -75,7 +72,23 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
 
     Debug("Valid Magic Number!: 0x2BADB002\n", 0x00);
 
-    /*
+    while ((DWORD)mmap < mbinfo->mmap_addr + mbinfo->mmap_length)
+    {
+        if (mmap->type == 0x01)
+        {
+            //Usable memory
+            Debug("Usable Memory: ", 0x00);
+            PrintHex(mmap->addr_low, 0xFFFFFFFF);
+            Print(" - ", 0xFFFFFFFF);
+            PrintHex(mmap->addr_low + mmap->len_low, 0xFFFFFFFF);
+            Print(" (", 0xFFFFFFFF);
+            PrintHex(mmap->len_low, 0xFFFFFFFF);
+            Print(" bytes)\n", 0xFFFFFFFF);
+        }
+
+        mmap = (struct multiboot_mmap_entry*)((DWORD)mmap + mmap->size + sizeof(mmap->size));
+    }
+
     for (int i = 0; i < mbinfo->mmap_length; i += sizeof(struct multiboot_mmap_entry))
     {
         struct multiboot_mmap_entry* entry = (struct multiboot_mmap_entry*)(mbinfo->mmap_addr + i);
@@ -94,7 +107,6 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
         PrintInt(entry->type, 0xFFFFFFFF);
         Print("\n", 0x00);
     }
-*/
 
     Debug("Kernel loaded!\n", 0x00);
 
@@ -108,66 +120,13 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
     InitVirtualMemory();
     Debug("Virtual Memory Manager Started!\n", 0x00);
 
-    printf("TEST from printf, values: %d, %s, %lx, %lX\n", 10, "Test from printf", 0xDEADBEEF, 0xDEADBEBE);
-
     DWORD aligned = (mbinfo->mods_addr + 3) & ~3;
-    //struct multiboot_module_t* mods = (struct multiboot_module_t*) mbinfo->mods_addr;
     struct multiboot_module_t* mods = (struct multiboot_module_t*)(DWORD)aligned;
 
 
     InitFileSystem();
     MakeDir("bin");
 
-
-    /*
-    BYTE* ptr = (BYTE*)mods[0].mod_start;
-
-    while (1)
-    {
-        TarHeader* hdr = (TarHeader*)ptr;
-
-        // fim do TAR
-        if (hdr->name[0] == '\0')
-            break;
-
-        DWORD size = OctalToInt(hdr->size);
-
-        // ignora diretórios
-        if (hdr->typeflag == '0' || hdr->typeflag == '\0')
-        {
-                BYTE* data = ptr + 512;
-
-                char* filename = hdr->name;
-
-                // remove "./" do início
-                if (filename[0] == '.' && filename[1] == '/')
-                    filename += 2;
-
-                Debug("Loading: ", 0x0F);
-                Debug(filename, 0x0F);
-                Debug("\n", 0x0F);
-
-                if (size > 0)
-                {
-                    int r = CreateFile(
-                        filename,
-                        data,
-                        size,
-                        PERM_R | PERM_W | PERM_X
-                    );
-
-                    Debug("Result: ", 0x0F);
-                    PrintInt(r, 0xFFFFFFFF);
-                    Debug("\n", 0x0F);
-                }
-            }
-
-            // próximo arquivo
-            ptr += 512;
-            ptr += ((size + 511) / 512) * 512;
-    }*/
-
-    
     for (int i = 0; i < mbinfo->mods_count; i++)
     {
         void* start = (void*) mods[i].mod_start;
@@ -181,7 +140,8 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
 
     MakeDir("home");
     MakeDir("dev");
-    MakeDir("tmp");
+    //MakeDir("tmp");
+    MakeDir("run");
     Debug("MemFS File System Loaded!\n", 0x00);
 
     InitTimer();
@@ -202,10 +162,29 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
     SetupSoundBlaster();
     Debug("Sound Blaster 16 Initialized!\n", 0x00);
 
+    //Network
+    //FindRTL8139();
+    //SetupRTL8139();
+
     ShowCMOSMem();
     ListDisks();
     ShowCPUInfo();
     ShowPCIDevices();
+
+    //SocketInit();
+    //IPCInit();
+    //WLClientInit();
+    //WLSurfaceInit();
+    //WLServerInit();
+    //InitCompositor();
+
+    //int s = socket(AF_UNIX, SOCK_STREAM);
+    //int r = connect(s, "/run/wayland-0");
+
+    //WLServerUpdate();
+
+    SocketDump();
+
 
     Sleep(2);
 
