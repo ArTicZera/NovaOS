@@ -6,4 +6,7 @@ void Sleep(int seconds);
 void InitTimer();
 unsigned int GetTicks();
 
+void RTCReadTime(int *hour, int *minute, int *second);
+void RTCIRQHandler();
+
 #endif
