@@ -31,8 +31,8 @@ _start:
 
         xor     ebp, ebp
 
-        extern  main
-        call    main
+        extern  kmain
+        call    kmain
 
 HaltKernel:
         hlt
@@ -41,6 +41,7 @@ HaltKernel:
 
 section .data
 ;Images
+;[GLOBAL bootscr]
 [GLOBAL backgrd]
 
 ;General Icons
@@ -50,12 +51,20 @@ section .data
 [GLOBAL      info]
 [GLOBAL      user]
 [GLOBAL     user2]
+;[GLOBAL    sprite]
+;[GLOBAL  terminal]
+
 
 [GLOBAL        doom]
+[GLOBAL  ClassiCube]
 [GLOBAL      bootup]
 
         ;Images
+        ;bootscr: incbin "Include/logo.bmp"
         backgrd: incbin "Include/bg.bmp"
+        
+        ;sprite: incbin "Include/Icons/gridicons.bmp"
+        
 
         ;General Icons
         ;error:    incbin "Include/Icons/error.vad"
@@ -66,7 +75,13 @@ section .data
         user2:    incbin "Include/Icons/user2.vad"
         ;terminal: incbin "Include/Icons/terminal.vad"
 
-        doom:     incbin "Bootloader/doomgeneric"
+        ;File Extensions
+        txt: incbin "Include/Icons/txt.bmp"
+        ;exe: incbin "Include/Icons/exe.bmp"
+        non: incbin "Include/Icons/default.vad"
+
+        doom:       incbin "Bootloader/doomgeneric"
+        ClassiCube: incbin "Bootloader/ClassiCube.elf"
 
         bootup:   incbin "Include/bootup.pcm"
 
