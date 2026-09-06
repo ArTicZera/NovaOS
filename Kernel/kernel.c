@@ -29,8 +29,6 @@
 #include "../Userspace/userspace.h"
 #include "../GDT/gdt.h"
 
-#include "../Network/rtl8139.h"
-
 #include "../Wayland/af_unix.h"
 #include "../Wayland/client.h"
 #include "../Wayland/ipc.h"
@@ -161,10 +159,6 @@ void kmain(struct multiboot_info* mbinfo, DWORD addr)
 
     SetupSoundBlaster();
     Debug("Sound Blaster 16 Initialized!\n", 0x00);
-
-    //Network
-    //FindRTL8139();
-    //SetupRTL8139();
 
     ShowCMOSMem();
     ListDisks();
