@@ -12,13 +12,11 @@
 #include "../Userspace/GUI/win.h"
 #include "../Shell/shell.h"
 
-#include "../Hardware/serial.h"
+#include "text.h" 
+#include "font10x20.h"
+#include "../Wayland/compositor.h"
 
-//Change fonts here
-#include "text.h"
-#include "font8x18.h"
-//#include "isofont.h"
-//#include "font10x20.h"
+#include "../Hardware/serial.h"
 
 int cursorX = 0;
 int cursorY = 0;
@@ -41,31 +39,6 @@ void DrawChar(BYTE* bitmap, DWORD color)
 
     cursorX += WFONT;
 
-    /*
-    int i = 0;
-
-    for (int y = 0; y < HFONT; y++)
-    {
-        for (int x = WFONT - 1; x >= 0; x--)
-        {
-            //Read each bit.
-            if (bitmap[y] & (1 << x))
-            {
-                SetPixel(i + cursorX, y + cursorY, color);
-            }
-
-            i++;
-        }
-
-        i = 0;
-    }
-    */
-
-    //Moves 8 pixels for the left
-    //cursorX += 8;
-
-    //In case the cursorX goes higher than 1280,
-    //then reset the X and go to the next row.
     if (cursorX >= WSCREEN)
     {
         cursorX = 0;
@@ -75,6 +48,25 @@ void DrawChar(BYTE* bitmap, DWORD color)
 }
 
 extern int inGUI;
+
+void DrawCharBuffer(DWORD* buffer, int w, int h, int x, int y, char c, DWORD color)
+{
+    unsigned char* bitmap = &isoFont[(unsigned char)c * HFONT * ((WFONT + 7) / 8)];
+
+    for (int py = 0; py < HFONT; py++)
+    {
+        for (int px = 0; px < WFONT; px++)
+        {
+            int byte = px / 8;
+            int bit  = 7 - (px % 8);
+
+            if (bitmap[py * BYTES_PER_ROW + byte] & (1 << bit))
+            {
+                BufferSetPixel(buffer, w, h, x + px, y + py, color);
+            }
+        }
+    }
+}
 
 void Print(const char* str, DWORD color)
 {
@@ -105,12 +97,12 @@ void Print(const char* str, DWORD color)
         {
             if (cursorX > 0)
             {
-                cursorX -= 16;
+                cursorX -= WFONT;
                 DrawChar(isoFont + 0 * GLYPH_SIZE, 0);
 
                 //Returns again because DrawChar update cursor
                 // automatically
-                cursorX -= 8;
+                cursorX -= WFONT;
 
             continue;
             }
@@ -131,7 +123,8 @@ void Print(const char* str, DWORD color)
     }
 }
 
-void fbPutChar(char character) {
+void fbPutChar(char character) 
+{
     if (character == '\n')
     {
        if (shellNOGUI)
@@ -152,12 +145,12 @@ void fbPutChar(char character) {
     {
         if (cursorX > 0)
         {
-            cursorX -= 16;
+            cursorX -= WFONT;
             DrawChar(isoFont + 0 * GLYPH_SIZE, 0xFFFFFFFF);
 
             //Returns again because DrawChar update cursor
             // automatically
-            cursorX -= 8;
+            cursorX -= WFONT;
 
             return;
         }
@@ -173,9 +166,80 @@ void fbPutChar(char character) {
     DrawChar(isoFont + (unsigned char)character * GLYPH_SIZE, 0xFFFFFFFF);
 }
 
-void PutChar(char character) {
+void PutChar(char character) 
+{
     fbPutChar(character);
     com1PutChar(character);
+}
+
+void PrintBuffer(DWORD* buffer, int w, int h, int x, int y, const char* str, DWORD color)
+{
+    for (int i = 0; str[i] != '\0'; i++)
+    {
+        //If its '\n' goest to the next line.
+        if (str[i] == '\n')
+        {
+            if (shellNOGUI)
+            {
+                cursorX = 0;
+                cursorY += HFONT;
+            }
+            if (!shellNOGUI)
+            {
+                cursorX = winshellX;
+                cursorY += HFONT;
+                //shellNOGUI = 1;
+            }
+
+            continue;
+        }
+
+        if (str[i] == '\b')
+        {
+            if (cursorX > 0)
+            {
+                cursorX -= WFONT;
+                DrawCharBuffer(buffer, w, h, cursorX, cursorY, 0, 0);
+                
+                //Returns again because DrawChar update cursor
+                // automatically
+                cursorX -= WFONT;
+
+            continue;
+            }
+        }
+
+        if (str[i] == '\f')
+        {
+            DrawCharBuffer(buffer, w, h, cursorX, cursorY, 0xDB, color);
+            //DrawCharBuffer(isoFont + 0xDB * GLYPH_SIZE, color);
+
+            continue;
+        }
+
+        DrawCharBuffer(buffer, w, h, cursorX, cursorY, str[i], color);
+    }
+}
+
+void DrawTextBuffer(DWORD *buffer, int w, int h, int x, int y, const char *text, DWORD color)
+{
+    int startX = x;
+
+    while(*text)
+    {
+        if(*text == '\n')
+        {
+            x = startX;
+            y += HFONT;
+        }
+        else
+        {
+            DrawCharBuffer(buffer, w, h, x, y, *text, color);
+            x += WFONT;
+        }
+
+        text++;
+    }
 }
 
 //Just for debugging code
@@ -258,13 +322,10 @@ void PrintHex(int value, DWORD color)
 
     Print(buffer, color);
 }
-
+ 
 //Thats our custom DrawChar, but with ASCII data
 void PrintOut(char letter, DWORD color)
 {
-    if (!inGUI)
-        com1PutChar(letter);
-
     if (letter == '\b')
     {
         if (cursorX >= WFONT)
@@ -287,7 +348,7 @@ void PrintOut(char letter, DWORD color)
     }
 
     DrawChar(isoFont + letter * (HFONT * ((WFONT + 7) / 8)), color);
-}
+} 
 
 //ASCII to Integer
 static int atoi(const char* str) 
@@ -341,6 +402,7 @@ void PrintByteHex(BYTE b)
 void MapFont()
 {
     SetCursorX(winshellX);
+    SetCursorY(GetCursorY() + HFONT);
 
     for (BYTE index = 0; index < 0xFF; index++)
     {
