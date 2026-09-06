@@ -23,8 +23,6 @@
 #include "../Wayland/client.h"
 #include "../Wayland/protocol.h"
 #include "../Wayland/af_unix.h"
-#include "../Wayland/backbuffer.h"
-
 
 extern BYTE backgrd[];
 
