@@ -176,16 +176,16 @@ void LBA28_write_sector(BYTE drive, DWORD LBA, DWORD sector, LPWORD buffer)
 	
 	wait_BSY();
 
-	outb(0x1F6, drive | ((LBA >> 24) & 0xF));		// send drive and bits 24 - 27 of LBA
+	outb(0x1F6, drive | ((LBA >> 24) & 0xF));
 
 	ata_delay_400ns();
 
-	outb(0x1F1, 0x00);								// ?
-	outb(0x1F2, sector);							// send number of sectors
-	outb(0x1F3, (BYTE) LBA);						// send bits 0-7 of LBA
-	outb(0x1F4, (BYTE) (LBA >> 8));				// 8-15
-	outb(0x1F5, (BYTE) (LBA >> 16)); 			// 16-23
-	outb(0x1F7,0x30); 								// 0x30 = 'Write' Command
+	outb(0x1F1, 0x00);
+	outb(0x1F2, sector);
+	outb(0x1F3, (BYTE) LBA);
+	outb(0x1F4, (BYTE) (LBA >> 8));
+	outb(0x1F5, (BYTE) (LBA >> 16));
+	outb(0x1F7,0x30);
 
 	ata_delay_400ns();
 
