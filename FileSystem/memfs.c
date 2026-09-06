@@ -351,23 +351,22 @@ void PrintCurrentDir()
     Print("novaos", 0xFF00FFFF);
     Print(":", 0xFFFFFFFF);
 
-    char path[256] = ""; // Start empty string
+    char path[256] = "";
     Directory* temp = currentDir;
 
     while (temp != NULL)
     {
-        char buffer[MAXFILENAME + 2]; // +2 to include "/" e and null terminator
-        buffer[0] = '/'; // Adds "/" in the start
-        strncpy(buffer + 1, temp->name, MAXFILENAME); // Copy dirs name after "/"
-        buffer[MAXFILENAME + 1] = '\0'; // Make it finishes with null
+        char buffer[MAXFILENAME + 2];
+        buffer[0] = '/';
+        strncpy(buffer + 1, temp->name, MAXFILENAME);
+        buffer[MAXFILENAME + 1] = '\0';
 
-        //Adds actuall dir to its address
         char tempPath[256];
-        strcpy(tempPath, path); //Save path
-        strcpy(path, buffer);   //Start new Dir
+        strcpy(tempPath, path);
+        strcpy(path, buffer);
         strcat(path, tempPath);
 
-        temp = temp->parent; //Fathers dir
+        temp = temp->parent;
     }
 
     for (int i = 0; i < 256; i++)
@@ -378,64 +377,6 @@ void PrintCurrentDir()
     Print(path,  0xFFFFFFFF);
     Print("]# ", 0xFFFFFFFF);
 }
-
-//#if 0
-
-/*void RunProgram(char* filename)
-{
-    for (int i = 0; filename[i]; i++)
-    {
-        if (filename[i] == '\n' || filename[i] == '\r')
-        {
-            Debug("Comparing with: [", 0x02);
-            Print(currentDir->files[i].filename, 0xFF00FFFF);
-            Print("]\n", 0xFF00FFFF);
-            
-            filename[i] = '\0';
-            break;
-        }
-    }
-
-    DWORD size;
-    LPBYTE buffer = AllocateMemory(1024 * 1024);
-
-    Print("\n", 0x00);
-    Debug("Trying to open: [", 0x02);
-    Print(filename, 0xFFFFFFFF);
-    Print("]\n", 0xFFFFFFFF);
-
-    if (ReadFile(filename, buffer, &size) != 0)
-    {
-        Debug("Searching for: [", 0x02);
-        Print(filename, 0xFFFFFF00);
-        Print("]\n", 0xFFFFFF00);
-    }
-
-    Debug("Magic: ", 0x02);
-    PrintHex(*(DWORD*)buffer, 0xFFFFFFFF);
-    Print("\n", 0x00);
-
-    Debug("File loaded!\n", 0x02);
-
-    void (*entry)() = (void (*)()) LoadELF(buffer, 1);
-
-    if (!entry)
-    {
-        Debug("Invalid ELF!\n", 0x01);
-        return;
-    }
-
-    Debug("Entry: ", 0x02);
-    PrintHex((DWORD)entry, 0xFFFFFFFF);
-    Print("\n", 0x00);
-
-    Debug("Executing...\n", 0x02);
-
-    entry();
-}
-*/
-
-//#endif
 
 char* get_filename(char* path)
 {
