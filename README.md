@@ -52,6 +52,7 @@ https://github.com/user-attachments/assets/696a708d-3408-4850-8edd-a12c05431517
 - ✅ **Serial Support**
 - ✅ **Printf Support**
 - 🚧 **Integrated Development Environment (IDE)**
+- 🚧 **Assembly Compiler (novasm)**
 - ❌ **C/C++ Compiler**
 - ❌ **POSIX-like**
 - ❌ **Processes**
