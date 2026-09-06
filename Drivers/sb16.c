@@ -3,6 +3,7 @@
 
     A Sound Blaster 16 Audio Driver Implementation
 */
+
 #include "../Include/stdint.h"
 #include "../Include/ports.h"
 #include "../Font/text.h"
@@ -59,7 +60,7 @@ void SoundBlasterPlay(LPBYTE buffer, WORD size)
 {
     playing = 0x01;
 
-    // Configurar DMA antes de iniciar a reprodução
+    //Setup DMA before start
     SetupDMA(buffer, size);
 
     WriteDSP(0x40);
