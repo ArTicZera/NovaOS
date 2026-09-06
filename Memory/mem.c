@@ -205,6 +205,7 @@ int strncasecmp(const char *s1, const char *s2, unsigned int n)
         c1 = *s1;
         c2 = *s2;
 
+        // converte para minúsculo (A–Z)
         if (c1 >= 'A' && c1 <= 'Z')
             c1 = c1 - 'A' + 'a';
 
@@ -261,6 +262,7 @@ char *strchr(const char *s, int c)
         s++;
     }
 
+    // permite buscar '\0'
     if (ch == '\0')
         return (char *)s;
 
@@ -276,15 +278,90 @@ char *strdup(const char *s)
     if (!s)
         return 0;
 
+    // calcula tamanho
     while (s[len])
         len++;
 
+    // aloca memória (+1 para '\0')
     dup = (char *)AllocateMemory(len + 1);
     if (!dup)
         return 0;
 
+    // copia string
     for (i = 0; i <= len; i++)
         dup[i] = s[i];
 
     return dup;
+}
+
+char* strtok(char* str, const char* delimiters)
+{
+    static char* next = NULL;
+
+    if (str != NULL)
+        next = str;
+
+    if (next == NULL)
+        return NULL;
+
+    // pula delimitadores no começo
+    while (*next)
+    {
+        const char* d = delimiters;
+        int isDelim = 0;
+
+        while (*d)
+        {
+            if (*next == *d)
+            {
+                isDelim = 1;
+                break;
+            }
+
+            d++;
+        }
+
+        if (!isDelim)
+            break;
+
+        next++;
+    }
+
+    // chegou no fim
+    if (*next == '\0')
+    {
+        next = NULL;
+        return NULL;
+    }
+
+    char* token = next;
+
+    // procura próximo delimitador
+    while (*next)
+    {
+        const char* d = delimiters;
+        int isDelim = 0;
+
+        while (*d)
+        {
+            if (*next == *d)
+            {
+                isDelim = 1;
+                break;
+            }
+
+            d++;
+        }
+
+        if (isDelim)
+        {
+            *next = '\0';
+            next++;
+            break;
+        }
+
+        next++;
+    }
+
+    return token;
 }
