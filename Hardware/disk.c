@@ -10,17 +10,30 @@
 
 #include "disk.h"
 
-void WaitForReady(WORD base)
+int WaitForReady(WORD base)
 {
-    while (1) 
+    for (int i = 0; i < 100000; i++)
     {
-        BYTE status = inw(base + 7);
+        BYTE status = inb(base + 7);
 
-        if (status & IDE_STATUS_READY) 
+        //An empty channel floats to 0x00 or 0xFF, so there is nothing to wait for
+        if (status == 0x00 || status == 0xFF)
         {
-            break;
+            return 0x00;
+        }
+
+        if (status & IDE_STATUS_ERROR)
+        {
+            return 0x00;
+        }
+
+        if ((status & IDE_STATUS_BUSY) == 0x00 && (status & IDE_STATUS_READY))
+        {
+            return 0x01;
         }
     }
+
+    return 0x00;
 }
 
 DWORD GetDiskCapacity(WORD base)
@@ -28,7 +41,10 @@ DWORD GetDiskCapacity(WORD base)
     outw(base + 6, 0xA0);
     outw(base + 7, 0xEC);
 
-    WaitForReady(base);
+    if (!WaitForReady(base))
+    {
+        return 0;
+    }
 
     WORD data[256];
 

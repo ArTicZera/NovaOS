@@ -69,11 +69,13 @@ https://github.com/user-attachments/assets/696a708d-3408-4850-8edd-a12c05431517
 
 # ⚙️ Building
 ### 🧰 Necessary Components
-gcc and nasm
+`gcc`, `nasm`, `xorriso`, `grub-pc-bin`, `mtools`.
+`grub-pc-bin` is what supplies the BIOS boot image, without it `grub-mkrescue` silently produces a non-bootable ISO.
 ### 📄 Compiling
-Run the Makefile using make 
+Run the Makefile using `make`. Confirm the output with `file NovaOS.iso`, which must report `(bootable)`.
 ### 🚀 Running
-use run.bat for Windows.
+Use `make run` on Linux, or `run.bat` for Windows.
+NovaOS starts in the text shell — type `gfx` at the prompt to launch the GUI.
 
 # 🤝 Contribute
 NovaOS is an Open Source project, so everyone can contibute for it! You can help me starring/forking this project or help with code using pull requests (and optimize more!)

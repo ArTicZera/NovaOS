@@ -12,16 +12,43 @@
 
 int playing;
 
+//0x00 when no card answered the DSP reset, so we never talk to dead ports
+static int present;
+
 void ResetSoundBlaster()
 {
+    present = 0x00;
+
     outb(0x226, 0x01);
+    for (volatile int i = 0; i < 10000; i++);
     outb(0x226, 0x00);
+
+    //A real DSP raises bit 7 of the read-buffer status and answers 0xAA
+    for (int i = 0; i < 100000; i++)
+    {
+        if ((inb(0x22E) & 0x80) != 0x00)
+        {
+            if (inb(0x22A) == 0xAA) present = 0x01;
+            break;
+        }
+    }
 }
 
 void WriteDSP(BYTE cmd)
 {
-    while ((inb(0x22C) & 0x80) != 0x00);
-    outb(0x22C, cmd);
+    if (!present) return;
+
+    //Bounded wait: an absent card floats the port high and would spin forever
+    for (int i = 0; i < 100000; i++)
+    {
+        if ((inb(0x22C) & 0x80) == 0x00)
+        {
+            outb(0x22C, cmd);
+            return;
+        }
+    }
+
+    present = 0x00;
 }
 
 void SoundBlasterHandler()
@@ -58,6 +85,8 @@ void SetupDMA(LPBYTE buffer, WORD size)
 
 void SoundBlasterPlay(LPBYTE buffer, WORD size)
 {
+    if (!present) return;
+
     playing = 0x01;
 
     //Setup DMA before start
