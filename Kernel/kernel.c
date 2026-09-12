@@ -17,7 +17,6 @@
 #include "../Drivers/keyboard.h"
 #include "../Drivers/mouse.h"
 #include "../Drivers/sb16.h"
-#include "../Drivers/ata.h"
 #include "../Hardware/cpu.h"
 #include "../Hardware/pci.h"
 #include "../Hardware/disk.h"
