@@ -24,6 +24,8 @@
 #include "../Hardware/disk.h"
 #include "../Hardware/cmos.h"
 #include "../FileSystem/memfs.h"
+#include "../Network/arp.h"
+#include "../Network/net.h"
 //#include "../FileSystem/tarhdr.h"
 #include "../Shell/shell.h"
 //#include "../Programs/badapple.h"
@@ -196,6 +198,10 @@ void main(struct multiboot_info* mbinfo, DWORD addr)
     SetupSoundBlaster();
     Debug("Sound Blaster 16 Initialized!\n", 0x00);
 
+    InitEthernet();
+    InitARP();
+    Debug("Ethernet Started!\n", 0x00);
+    
     ShowCMOSMem();
     ListDisks();
     ShowCPUInfo();
