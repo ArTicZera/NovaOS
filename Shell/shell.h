@@ -2,18 +2,16 @@
 #define SHELL_H
 
 #include "../Userspace/GUI/win.h"
+#include "../Wayland/compositor.h"
 
 extern int shellNOGUI;
 extern int winshellX;
 extern int winshellY;
 
 void StartShellNoGUI();
-void StartShellGUI(WINDOW* win);
+void StartShellGUI(WLWindow* win);
 void PrintWelcomeMSG();
 void PrintCurrentDir();
-void SaveTerminalScreen();
 void ProcessShellCMD(char* command, int x, int y);
 void ProcessShellRun(char* proccess);
-void OnWindowMoved(WINDOW *win);
-
 #endif

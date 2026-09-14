@@ -18,6 +18,12 @@
 #include "desktop.h"
 #include "userspace.h"
 
+#include "../Wayland/compositor.h"
+#include "../Wayland/server.h"
+#include "../Wayland/client.h"
+#include "../Wayland/protocol.h"
+#include "../Wayland/af_unix.h"
+
 extern BYTE backgrd[];
 
 extern BYTE bootup[];
@@ -335,13 +341,33 @@ void UserSpace()
 
     UpdateExplorer();
 
+    int s = socket(AF_UNIX, SOCK_STREAM);
+
+    connect(s, "/run/wayland-0");
+
+    //InitBackBuffer(WSCREEN, HSCREEN);
+
     int lastPressed = 0;
+    int lastX = -1;
+    int lastY = -1;
 
     while (TRUE)
     {
         int x, y, pressed;
         
         GetMouseState(&x, &y, &pressed);
+
+        WLServerUpdate();
+
+        if (x != lastX || y != lastY)
+        {
+            WLPointerMotion(x, y);
+        }
+
+        if (pressed != lastPressed)
+        {
+            WLPointerButton(MOUSE_LEFT, pressed, x, y);
+        }
 
         StartButtonHandler(x, y, pressed);
 
@@ -352,5 +378,13 @@ void UserSpace()
         HandleWindowDragging(x, y, pressed);
     
         CloseWindow(x, y, pressed);
+
+        WLCompositorUpdate();
+        
+        //Present();
+
+        lastX = x;
+        lastY = y;
+        lastPressed = pressed;
     }
 }

@@ -20,6 +20,12 @@
 #include "../Userspace/userspace.h"
 #include "../Userspace/login.h"
 
+#include "../Wayland/af_unix.h"
+#include "../Wayland/protocol.h"
+#include "../Wayland/compositor.h"
+
+#include "../DOOM/doomkeys.h"
+
 #include "keyboard.h"
 
 extern char* file;
@@ -63,12 +69,17 @@ void KeyboardState(int state)
 
     if (enableText == 0xFF)
     {
-        IRQUninstallHandler(0x01, KeyboardHandler);
+        IRQUninstallHandler(0x01, &KeyboardHandler);
     }
     if (enableText == 0xFE)
     {
         IRQInstallHandler(0x01, &KeyboardHandler);
     }
+}
+
+int GetKeyboardState()
+{
+    return enableText;
 }
 
 static BYTE keyDown[128] = {0};
@@ -79,28 +90,28 @@ void HandleCharacter(int scan)
 
     char c = (shift || caps) ? keyMap[scan][1][0] : keyMap[scan][0][0];
 
-    // Armazena no buffer
+    //Store in buffer
     commandBuffer[commandLength] = c;
     notepadBuffer[notepadLength] = c;
 
-    // Imprime e incrementa **apenas uma vez**
-    if (enableText == 3) // Senha
+    //Print and inc once
+    if (enableText == 3) //Password
     {
         PrintOut('*', 0xFFFFFFFF);
         commandLength++;
     }
-    else if (enableText == 4) // Notepad
+    else if (enableText == 4) //Notepad
     {
         PrintOut(c, 0xFFFFFFFF);
         commandLength++;
         notepadLength++;
     }
-    else if (enableText == 2) // Shell
+    else if (enableText == 2) //Shell
     {
         PrintOut(c, 0xFFFFFFFF);
         commandLength++;
     }
-    else if (enableText == 5) // Shell
+    else if (enableText == 5) //Shell
     {
         PrintOut(c, 0xFFFFFFFF);
         commandLength++;
@@ -132,20 +143,21 @@ void KeyboardHandler()
         switch (scan)
         {
             case 0x01:
-                if (isPress)
+                if (isPress && enableText == 4)
                 {
                     EscapeNotepad();
                 }
                 break;
 
+            //In case of changing font, change the WIDTH
             case 0x0E:
                 if (isPress)
                 {
-                    SetCursorX(GetCursorX() - 8);
+                    SetCursorX(GetCursorX() - 10);
 
                     Print("\f", 0x00000000);
 
-                    SetCursorX(GetCursorX() - 8);
+                    SetCursorX(GetCursorX() - 10);
 
                     commandLength--;
                 }
@@ -204,7 +216,7 @@ void KeyboardHandler()
                     {
                         ProcessShellCMD(commandBuffer, 5, 5);
 
-                        SaveTerminalScreen();
+                        //SaveTerminalScreen();
                     }
 
                     commandLength = 0;
@@ -216,9 +228,10 @@ void KeyboardHandler()
             case 0x5B:
             case 0x5C:
                 if (isPress && enableText == 1)
-                {
-                    WINDOW* win = CreateWindow(80, 80, 650, 400, 0xFF1A1A1A, "Terminal");
-                    StartShellGUI(win);
+                {  
+                    WLWindow* win = WLCreateWindow(40, 40, 650, 492, "Terminal");
+                    StartShellGUI(win);         
+                    
                 }
 
                 break;

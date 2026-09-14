@@ -116,6 +116,7 @@ iso: kernel
 # ------------------------------------------------------
 
 run: iso
+	qemu-img create -f raw disk.raw 256M
 	qemu-system-x86_64 \
 		-device sb16 \
 		-netdev user,id=net0 \

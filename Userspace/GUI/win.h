@@ -42,7 +42,7 @@ void HandleWindowDragging(int mouseX, int mouseY, int mousePressed);
 void DrawButton(int x, int y, int size, const char* icon, DWORD color);
 void DrawWindowButtons(WINDOW window);
 void CloseWindow(int x, int y, int pressed);
-void ForceCloseWindow(WINDOW* win);
+//void ForceCloseWindow(WINDOW* win);
 
 void SaveBackgroundArea(WINDOW* win);
 void SaveWindowArea(WINDOW* win);

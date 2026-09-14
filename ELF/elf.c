@@ -7,15 +7,6 @@
     Fortunately it's working perfectly now! :D
 */
 
-/*
-    Coded by ArTic/JhoPro
-
-    This was a pain in the ass to do. But as the functions says
-    it loads and run an ELF32 file. (ONLY STATIC ELFs).
-
-    Fortunately it's working perfectly now! :D
-*/
-
 #include "../Include/stdint.h"
 #include "../Font/text.h"
 #include "../Memory/mem.h"

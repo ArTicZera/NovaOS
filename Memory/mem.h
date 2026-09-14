@@ -16,5 +16,6 @@ int strncasecmp(const char *s1, const char *s2, unsigned int n);
 int strcasecmp(const char *s1, const char *s2);
 char *strchr(const char *s, int c);
 char *strdup(const char *s);
+char* strtok(char* str, const char* delimiters);
 
 #endif

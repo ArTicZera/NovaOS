@@ -17,6 +17,8 @@
 #include "userspace.h"
 #include "desktop.h"
 
+#include "../Wayland/compositor.h"
+
 extern char doom[];
 
 DesktopItem items[MAXITEMS];
@@ -51,12 +53,12 @@ void HandleDesktopClick(int x, int y, int pressed)
             {
                 if (strcmp(item->name, "Terminal") == 0)
                 {
-                    WINDOW* win = CreateWindow(80, 80, 650, 432, 0xFF1A1A1A, "Terminal");
+                    WLWindow* win = WLCreateWindow(80, 80, 650, 432, "Terminal");
                     StartShellGUI(win);
                 }
                 else if (strcmp(item->name, "DOOM") == 0)
                 {
-                    CreateWindow(320, 160, 640, 400, 0xFF1A1A1A, "DOOM");
+                    WINDOW* DOOM = CreateWindow(320, 160, 640, 400, 0xFF1A1A1A, "DOOM");
                     KeyboardState(6);
                     LoadELF(doom, 0);
                 }

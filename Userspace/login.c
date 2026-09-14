@@ -12,11 +12,13 @@ extern char user2[];
 
 char userPass[16];
 int loginLoop = 1;
+int inGUI = 0;
 
 void LoginScreen()
 {
+    inGUI = 1;
     DrawRect(0, 0, WSCREEN, HSCREEN, 0xFF2F2F2F);
-    
+
     int w = 300;
     int h = 150;
 

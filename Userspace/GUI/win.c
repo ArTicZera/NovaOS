@@ -1,9 +1,11 @@
 #include "../../Include/stdint.h"
 #include "../../Graphics/graphics.h"
 #include "../../Font/text.h"
+#include "../../Interrupts/idt.h"
 #include "../../Memory/alloc.h"
 #include "../../Memory/mem.h"
 #include "../../Timer/timer.h"
+#include "../../Timer/clock.h"
 #include "../../Shell/shell.h"
 #include "../userspace.h"
 
@@ -264,7 +266,7 @@ void HandleWindowDragging(int mouseX, int mouseY, int pressed)
             
 
             //Added here
-            OnWindowMoved(dragWindow);
+            //OnWindowMoved(dragWindow);
 
             isDragging = 0;
             dragWindow = NULL;
@@ -295,9 +297,6 @@ void HandleMouseClick(int x, int y, int pressed)
 {
     static int lastPressed = 0;
 
-    //Drawn on
-    static int drawClock = 0;
-
     if (pressed && !lastPressed)
     {
         WINDOW* win = GetWindowAt(x, y);
@@ -313,8 +312,8 @@ void HandleMouseClick(int x, int y, int pressed)
 
             if (x > WSCREEN - 100 && y > HSCREEN - 100)
             {
-                CreateWindow(1080, 440, 200, 250, 0xFF1A1A1A, "Clock");
-                drawClock = 1;
+                InitClock();
+                ClockIRQ();
             }
         }
 
