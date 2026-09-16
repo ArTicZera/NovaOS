@@ -20,8 +20,6 @@
 # 🌟 About NovaOS
 NovaOS is a x86 protected mode operating system made in C and x86 Assembly by ArTic/JhoPro. It has a lot of features, including a GUI and a shell! This project is being actively developed as a personal journey to dive deeper into the world of operating systems. As such, NovaOS is constantly evolving, with new features and improvements being added over time. It’s a work in progress, but every update pushes the boundaries of what’s possible in this ambitious endeavor.
 
-(remaked by Danoni631)
-
 https://github.com/user-attachments/assets/696a708d-3408-4850-8edd-a12c05431517
 
 # 🛠️ Current Progress
