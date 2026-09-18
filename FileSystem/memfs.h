@@ -56,6 +56,7 @@ void RunProgram(char* filename);
 int MakeDir(const char* dir);
 int DeleteDir(const char* dirname);
 int ChangeDir(const char* dirname);
+int RenameDir(const char* oldDirname, const char* newDirname);
 void ListDirs();
 
 char* get_filename(char* path);
