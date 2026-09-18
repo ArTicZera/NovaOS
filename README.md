@@ -51,6 +51,8 @@ https://github.com/user-attachments/assets/696a708d-3408-4850-8edd-a12c05431517
 - ✅ **DOOM**
 - ✅ **Serial Support**
 - ✅ **Printf Support**
+- ✅ **Web browser library**
+- ✅ **Javascript run engine**
 - 🚧 **Integrated Development Environment (IDE)**
 - 🚧 **Assembly Compiler (novasm)**
 - ❌ **C/C++ Compiler**
@@ -58,7 +60,7 @@ https://github.com/user-attachments/assets/696a708d-3408-4850-8edd-a12c05431517
 - ❌ **Processes**
 - ❌ **Multitasking**
 - ❌ **Installation Setup**
-- ❌ **Web Browser**
+- 🚧 **Web Browser**
 - ❌ **User Documentation**
 
 # TODO
@@ -77,4 +79,4 @@ use run.bat for Windows.
 
 # 🤝 Contribute
 NovaOS is an Open Source project, so everyone can contibute for it! You can help me starring/forking this project or help with code using pull requests (and optimize more!)
-Tho are special credits for Leo Ono and Carbrito
+Tho are special credits for Leo Ono, Danoni631, Fabrice Bellard, Charlie Gordon and Carbrito
