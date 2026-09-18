@@ -20,6 +20,20 @@ void InitMemory()
     mgr.freeBlocks->used = 0;
 }
 
+void EnablePaging()
+{
+    asm volatile
+    (
+        "mov %cr4, %ebx \n"
+        "or $0x10, %ebx \n"
+        "mov %ebx, %cr4 \n"
+
+        "mov %cr0, %ebx \n"
+        "or $0x80000000, %ebx \n"
+        "mov %ebx, %cr0 \n"
+    );
+}
+
 void* AllocateMemory(DWORD size) 
 {
     MemoryBlock* block = mgr.freeBlocks;
