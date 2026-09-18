@@ -1,5 +1,7 @@
 /*
     Coded by ArTic/JhoPro
+
+    Extension by Danoni631
     
     Here we have a lot of drawing functions and frames manipulation.
     Take a look at it!
@@ -266,4 +268,129 @@ void AlphaBlend(int x, int y, int w, int h, DWORD color, BYTE alpha)
     DWORD b = (sb * alpha + db * (255 - alpha)) / 255;
 
     framebuffer[y * w + x] = (0xFF << 24) | (r << 16) | (g << 8) | b;
+}
+
+// Extension
+static float HueToRGB(float p, float q, float t)
+{
+	if (t < 0.0f) t += 1.0f;
+	if (t > 1.0f) t -= 1.0f;
+	if (t < 1.0f / 6.0f) return p + (q - p) * 6.0f * t;
+	if (t < 1.0f / 2.0f) return q;
+	if (t < 2.0f / 3.0f) return p + (q - p) * (2.0f / 3.0f - t) * 6.0f;
+	return p;
+}
+
+// HSL functions
+RGBQUAD_t HSLtoRGB(HSL hsl)
+{
+	RGBQUAD_t rgb;
+	rgb.reserved = 0;
+
+	if (hsl.s == 0.0f)
+	{
+		BYTE val = (BYTE)(hsl.l * 255.0f);
+		rgb.r = val;
+		rgb.g = val;
+		rgb.b = val;
+	}
+	
+	else
+	{
+		float q = (hsl.l < 0.5f) ? (hsl.l * (1.0f + hsl.s)) : (hsl.l + hsl.s - hsl.l * hsl.s);
+		float p = 2.0f * hsl.l - q;
+
+		rgb.r = (BYTE)(HueToRGB(p, q, hsl.h + 1.0f / 3.0f) * 255.0f);
+		rgb.g = (BYTE)(HueToRGB(p, q, hsl.h) * 255.0f);
+		rgb.b = (BYTE)(HueToRGB(p, q, hsl.h - 1.0f / 3.0f) * 255.0f);
+	}
+	
+	return rgb;
+}
+
+HSL RGBtoHSL(RGBQUAD_t rgb)
+{	
+	float r = rgb.r / 255.0f;
+    float g = rgb.g / 255.0f;
+    float b = rgb.b / 255.0f;
+    
+	float max = fmaxf(r, fmaxf(g, b)), min = fminf(r, fminf(g, b));
+	float h, s, l = (max + min) / 2.0f;
+
+	if (max == min)
+	{
+		h = s = 0;
+	}
+	
+	else
+	{
+		float d = max - min;
+		s = l > 0.5f ? d / (2 - max - min) : d / (max + min);
+		if (max == r) h = (g - b) / d + (g < b ? 6 : 0);
+		else if (max == g) h = (b - r) / d + 2;
+		else h = (r - g) / d + 4;
+		h /= 6;
+	}
+
+	return { h, s, l };
+}
+
+// HSV functions
+
+HSV RGBtoHSV(RGBQUAD_t rgb)
+{
+	HSV hsv;
+
+	float r = rgb.r / 255.0f;
+	float g = rgb.g / 255.0f;
+	float b = rgb.b / 255.0f;
+
+	float cmax = max(max(r, g), b);
+	float cmin = min(min(r, g), b);
+	float delta = cmax - cmin;
+
+	hsv.v = cmax;
+	hsv.s = (cmax > 0.0f) ? (delta / cmax) : 0.0f;
+
+	if (delta > 0.0f)
+	{
+		if (cmax == r) hsv.h = 60.0f * fmod((g - b) / delta, 6.0f);
+		else if (cmax == g) hsv.h = 60.0f * ((b - r) / delta + 2.0f);
+		else if (cmax == b) hsv.h = 60.0f * ((r - g) / delta + 4.0f);
+		if (hsv.h < 0.0f) hsv.h += 360.0f;
+	}
+
+	else
+	{
+		hsv.h = 0.0f;
+	}
+	
+	return hsv;
+}
+
+RGBQUAD_t HSVtoRGB(HSV hsv)
+{
+	RGBQUAD_t rgb = { 0 };
+	int hi = (int)floor(hsv.h / 60.0f) % 6;
+	float f = hsv.h / 60.0f - floor(hsv.h / 60.0f);
+	float p = hsv.v * (1.0f - hsv.s);
+	float q = hsv.v * (1.0f - f * hsv.s);
+	float t = hsv.v * (1.0f - (1.0f - f) * hsv.s);
+
+	float r = 0, g = 0, b = 0;
+	
+    switch (hi)
+	{
+		case 0: r = hsv.v; g = t;     b = p;     break;
+		case 1: r = q;     g = hsv.v; b = p;     break;
+		case 2: r = p;     g = hsv.v; b = t;     break;
+		case 3: r = p;     g = q;     b = hsv.v; break;
+		case 4: r = t;     g = p;     b = hsv.v; break;
+		case 5: r = hsv.v; g = p;     b = q;     break;
+	}
+
+	rgb.r = (BYTE)(r * 255);
+	rgb.g = (BYTE)(g * 255);
+	rgb.b = (BYTE)(b * 255);
+	return rgb;
 }
