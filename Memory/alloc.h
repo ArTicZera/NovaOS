@@ -19,6 +19,7 @@ typedef struct {
 
 
 void InitMemory();
+void EnablePaging();
 void* AllocateMemory(DWORD size);
 void FreeMemory(void* ptr);
 void* CAllocateMemory(int count, int size);
