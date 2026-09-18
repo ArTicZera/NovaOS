@@ -20,6 +20,7 @@
 #include "../Hardware/cpu.h"
 #include "../Hardware/pci.h"
 #include "../Hardware/disk.h"
+#include "../Hardware/gpu.h"
 #include "../Hardware/cmos.h"
 #include "../Hardware/serial.h"
 #include "../FileSystem/memfs.h"
@@ -136,6 +137,7 @@ void kmain(struct multiboot_info* mbinfo, DWORD addr)
         CreateFile(filename, (LPBYTE)start, size, PERM_R | PERM_W | PERM_X);
     }
 
+    MakeDir("shell");
     MakeDir("home");
     MakeDir("dev");
     //MakeDir("tmp");
@@ -168,6 +170,15 @@ void kmain(struct multiboot_info* mbinfo, DWORD addr)
     ListDisks();
     ShowCPUInfo();
     ShowPCIDevices();
+
+    DetectGPU();
+    GetGPUVendor(vendor);
+    GetGPUModel(model);
+    GetGPUName(name);
+    GetGPUVideoRAM();
+
+    ShowGPUInfo();
+    ShowGPUName();
 
     //SocketInit();
     //IPCInit();
