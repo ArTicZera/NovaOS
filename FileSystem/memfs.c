@@ -2,6 +2,7 @@
     Coded by ArTic/JhoPro
 
     Extension by nicolasbickhoff11
+    Rename folder function by Danoni631 (a member of Bad Forks)
 
     A RAM File system implementation. It's very simple and useful
     We can create files, directories, etc.
@@ -324,6 +325,40 @@ int ChangeDir(const char* dirname)
     }
 
     return -2;
+}
+
+int FindDir(const char* dirname) 
+{
+    for (int i = 0; i < MAXSUBDIR; i++) 
+    {
+        if (strncmp(currentDir->files[i].filename, dirname, MAXFILENAME) == 0) 
+        {
+            return i;
+        }
+    }
+
+    Print("\n\nInvalid Folder", 0xFFFF0000);
+
+    return -1;
+}
+
+void RenameDir(const char* oldDirname, const char* newDirname)
+{
+    int fileIndex = FindDir(oldDirname);
+
+    if (fileIndex == -1) 
+    {
+        return -1;
+    }
+
+    if (strlen(newDirname) >= MAXFILENAME) 
+    {
+        return -2; 
+    }
+
+    strncpy(currentDir->files[fileIndex].filename, newDirname, MAXFILENAME);
+
+    return 0x00;
 }
 
 void ListDirs()
