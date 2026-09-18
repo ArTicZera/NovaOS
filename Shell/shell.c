@@ -12,6 +12,7 @@
 #include "../Drivers/qemu.h"
 #include "../Hardware/cpu.h"
 #include "../Hardware/cmos.h"
+#include "../Hardware/gpu.h"
 #include "../Graphics/graphics.h"
 #include "../Timer/timer.h"
 #include "../Memory/mem.h"
@@ -107,19 +108,18 @@ void StartShellGUI(WLWindow* win)
     SetCursorX(winshellX);
     SetCursorY(winshellY);
 
-    //PrintBuffer(terminal->buffer, terminal->w, terminal->h, GetCursorX(), GetCursorY(), "Welcome to NovaOS Shell! ", 0xFFFFFFFF);
-    //PrintBuffer(terminal->buffer, terminal->w, terminal->h, GetCursorX(), GetCursorY(), "(GUI)\n\n", 0xFF00FF00);
-    //PrintBuffer(terminal->buffer, terminal->w, terminal->h, GetCursorX(), GetCursorY(), "Type 'help' to start using the shell.\n\n", 0xFFFFFFFF);
+    PrintBuffer(terminal->buffer, terminal->w, terminal->h, GetCursorX(), GetCursorY(), "Welcome to NovaOS Shell! ", 0xFFFFFFFF);
+    PrintBuffer(terminal->buffer, terminal->w, terminal->h, GetCursorX(), GetCursorY(), "(GUI)\n\n", 0xFF00FF00);
+    PrintBuffer(terminal->buffer, terminal->w, terminal->h, GetCursorX(), GetCursorY(), "Type 'help' to start using the shell.\n\n", 0xFFFFFFFF);
 
 
     PrintCurrentDir();
 
     KeyboardState(0x05);
 
-    //SaveTerminalScreen();
+    SaveTerminalScreen();
 }
 
-/*
 void SaveTerminalScreen()
 {
     for (int y = 0; y < terminal->h; y++)
@@ -135,8 +135,8 @@ void OnWindowMoved(WINDOW *win)
 {
     if (win == terminal)
     {
-        //int dx = win->x - winshellX;
-        //int dy = (win->y + 20) - winshellY;
+        int dx = win->x - winshellX;
+        int dy = (win->y + 20) - winshellY;
 
         //winshellX = win->x;
         //winshellY = win->y + 20;
@@ -150,7 +150,7 @@ void OnWindowMoved(WINDOW *win)
 
         SaveTerminalScreen();
     }
-}*/
+}
 
 void ProcessShellCMD(char* command, int x, int y)
 {
@@ -264,7 +264,7 @@ void ProcessShellCMD(char* command, int x, int y)
         Print(" ###       ############       Video Mode: ", 0xFF00FFFF); Print("VESA BIOS Extensions\n", 0xFFFFFFFF);
         Print(" ###        ##########        CPU: ", 0xFF00FFFF); ShowCPUName();
         Print(" ###       ###########        Date: ", 0xFF00FFFF); GetCMOSDate(); Print("\n", 0x00);
-        Print(" ###      #####   #####       \n", 0xFF00FFFF);
+        Print(" ###      #####   #####       GPU: ", 0xFF00FFFF); ShowGPUName(); Print("\n", 0x00);
         Print("   #      ####      ###       ", 0xFF00FFFF);
         Print("\f\f", 0xFF0E1A14);
         Print("\f\f", 0xFF1B2A21);
@@ -309,6 +309,10 @@ void ProcessShellCMD(char* command, int x, int y)
     {
         RenameFile(args[0], args[1]);
     }
+    else if (strcmp(cmd, "renamedir") == 0x00)
+    {
+        RenameDir(args[0), args[1]);
+    }
     else if (strcmp(cmd, "del") == 0x00)
     {
         DeleteFile(args[0]);
@@ -332,7 +336,8 @@ void ProcessShellCMD(char* command, int x, int y)
     }
     else if (strcmp(cmd, "ping") == 0x00)
     {
-        //ICMPSendEcho(IPStringToDWORD(args[0]));
+        ICMPSendEcho(IPStringToDWORD(args[0]));
+        Print("Ping sended\n\n", 0xFFFFFFFF);
     }
     else if (strcmp(cmd, "npad") == 0x00)
     {
@@ -369,7 +374,7 @@ void ProcessShellCMD(char* command, int x, int y)
 
         ReadFile("badapple.bin", buffer, (LPDWORD)&size);
 
-        //PlayBadApple(buffer, size);
+        PlayBadApple(buffer, size);
     }
     else if (strcmp(cmd, "mapfont") == 0x00)
     {
@@ -439,7 +444,6 @@ void ProcessShellCMD(char* command, int x, int y)
 
         Assemble(buffer);
         
-        /*
         Lexer lexer;
         Parser parser;
 
@@ -449,7 +453,6 @@ void ProcessShellCMD(char* command, int x, int y)
         outPos = 0;
 
         ParserFunc(&parser);
-        */
 
         CreateFile("output.bin",  output, outPos, PERM_R | PERM_X);
     }
@@ -489,7 +492,7 @@ void ProcessShellCMD(char* command, int x, int y)
     }
     else if (strcmp(cmd, "panic") == 0x00)
     {
-        //int i = 1 / 0;
+        int i = 1 / 0;
     }
     else
     {
@@ -505,11 +508,11 @@ void ProcessShellRun(char* process)
 {
     if (strcmp(process, "doom") == 0x00)
     {
-        //ForceCloseWindow(terminal);
+        ForceCloseWindow(terminal);
         WINDOW* DOOM = CreateWindow(320, 160, 640, 400, 0xFF1A1A1A, "DOOM");
         KeyboardState(0xFF);
         LoadELF(doom, 1);
-        //ForceCloseWindow(DOOM);
+        ForceCloseWindow(DOOM);
         KeyboardState(0xFE);
     }
     else if (strcmp(process, "minecraft") == 0x00)
