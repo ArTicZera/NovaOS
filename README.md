@@ -69,7 +69,7 @@ https://github.com/user-attachments/assets/696a708d-3408-4850-8edd-a12c05431517
 
 # ⚙️ Building
 ### 🧰 Necessary Components
-gcc and nasm
+gcc, nasm, grub-pc, grub2-common, xorriso, mtools
 ### 📄 Compiling
 Run the Makefile using make 
 ### 🚀 Running
