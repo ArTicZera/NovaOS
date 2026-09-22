@@ -109,8 +109,6 @@ void RTCReadTime(int *hour, int *minute, int *second)
 
 void InitTimer(void)
 {
-    IRQInstallHandler(0x00, &PITIRQ0);
-
     DWORD divisor = 1193180 / 100;
 
     outb(0x43, 0x36);
