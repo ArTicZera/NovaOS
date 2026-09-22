@@ -142,8 +142,11 @@ void kmain(struct multiboot_info* mbinfo, DWORD addr)
     MakeDir("run");
     Debug("MemFS File System Loaded!\n", 0x00);
 
-    InitTimer();
-    Debug("Timer Started!\n", 0x00);
+    SchedulerInit();
+    Debug("Scheduler Started!\n", 0x00);
+    
+    //InitTimer();
+    //Debug("Timer Started!\n", 0x00);
 
     InitKeyboard();
     Debug("Keyboard Started!\n", 0x00);
