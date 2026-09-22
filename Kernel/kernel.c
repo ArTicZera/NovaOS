@@ -37,6 +37,8 @@
 #include "../Wayland/surface.h"
 #include "../Wayland/compositor.h"
 
+#include "../Multitasking/task.h"
+
 // expanded by nicolasbickhoff11
 #include "../Font/printf.h"
 
