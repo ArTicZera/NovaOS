@@ -17,6 +17,7 @@
 #include "idt.h"
 #include "syscall.h"
 
+extern void TimerIRQ();
 extern void LoadIDT(DWORD);
 
 static IRQHandler_t IRQRoutines[IRQ_COUNT][MAX_IRQ_HANDLERS];
@@ -99,7 +100,7 @@ void SetupIDT(void)
     SetupIDTGate(31, (DWORD)isr31, 0x08, 0x8E);
 
     //Interrupt Request Lines
-    SetupIDTGate(32, (DWORD)irq0, 0x08, 0x8E);
+    SetupIDTGate(32, (DWORD)TimerIRQ, 0x08, 0x8E);
     SetupIDTGate(33, (DWORD)irq1, 0x08, 0x8E);
     SetupIDTGate(34, (DWORD)irq2, 0x08, 0x8E);
     SetupIDTGate(35, (DWORD)irq3, 0x08, 0x8E);
